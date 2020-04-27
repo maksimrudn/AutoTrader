@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3EFC5869-F549-4DAD-81D9-6F6AF6AA1328}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AutoTraderSDK</RootNamespace>
+    <AssemblyName>AutoTraderSDK</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\InputXML\board.cs" />
+    <Compile Include="Domain\InputXML\boards.cs" />
+    <Compile Include="Domain\InputXML\candle.cs" />
+    <Compile Include="Domain\InputXML\candlekinds.cs" />
+    <Compile Include="Domain\InputXML\candles.cs" />
+    <Compile Include="Domain\InputXML\client.cs" />
+    <Compile Include="Domain\InputXML\error.cs" />
+    <Compile Include="Domain\InputXML\forts_collaterals.cs" />
+    <Compile Include="Domain\InputXML\forts_money.cs" />
+    <Compile Include="Domain\InputXML\forts_position.cs" />
+    <Compile Include="Domain\InputXML\kind.cs" />
+    <Compile Include="Domain\InputXML\market.cs" />
+    <Compile Include="Domain\InputXML\markets.cs" />
+    <Compile Include="Domain\InputXML\money_position.cs" />
+    <Compile Include="Domain\InputXML\opmask.cs" />
+    <Compile Include="Domain\InputXML\order.cs" />
+    <Compile Include="Domain\InputXML\orders.cs" />
+    <Compile Include="Domain\InputXML\overnight.cs" />
+    <Compile Include="Domain\InputXML\pit.cs" />
+    <Compile Include="Domain\InputXML\pits.cs" />
+    <Compile Include="Domain\InputXML\positions.cs" />
+    <Compile Include="Domain\InputXML\quote.cs" />
+    <Compile Include="Domain\InputXML\quotes.cs" />
+    <Compile Include="Domain\InputXML\result.cs" />
+    <Compile Include="Domain\InputXML\securities.cs" />
+    <Compile Include="Domain\InputXML\security.cs" />
+    <Compile Include="Domain\InputXML\sec_info_upd.cs" />
+    <Compile Include="Domain\InputXML\sec_position.cs" />
+    <Compile Include="Domain\InputXML\server_status.cs" />
+    <Compile Include="Domain\InputXML\spot_limit.cs" />
+    <Compile Include="Domain\InputXML\status.cs" />
+    <Compile Include="Domain\InputXML\trade.cs" />
+    <Compile Include="Domain\InputXML\trades.cs" />
+    <Compile Include="Domain\OutputXML\alltrades.cs" />
+    <Compile Include="Domain\OutputXML\boards.cs" />
+    <Compile Include="Domain\OutputXML\buysell.cs" />
+    <Compile Include="Domain\OutputXML\bymarket.cs" />
+    <Compile Include="Domain\OutputXML\command.cs" />
+    <Compile Include="Domain\OutputXML\command_id.cs" />
+    <Compile Include="Domain\OutputXML\cond_type.cs" />
+    <Compile Include="Domain\OutputXML\proxy.cs" />
+    <Compile Include="Domain\OutputXML\quotations.cs" />
+    <Compile Include="Domain\OutputXML\quotes.cs" />
+    <Compile Include="Domain\OutputXML\stoploss.cs" />
+    <Compile Include="Domain\OutputXML\takeprofit.cs" />
+    <Compile Include="Domain\OutputXML\unfilled.cs" />
+    <Compile Include="Domain\OutputXML\validbefore.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Kernel\TXMLConnectorWrapper2.cs" />
+    <Compile Include="Kernel\InputStreamEventArgs.cs" />
+    <Compile Include="Kernel\ITXMLConnectorWrapper.cs" />
+    <Compile Include="Kernel\QuotesLogger.cs" />
+    <Compile Include="Kernel\log.cs" />
+    <Compile Include="Kernel\MarshalUTF8.cs" />
+    <Compile Include="Kernel\Trader.cs" />
+    <Compile Include="Kernel\TXMLConnectorWrapper.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="txmlconnector1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="txmlconnector2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Kernel\ПорядокЗагрузкиБиблиотекиКоннектора.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
