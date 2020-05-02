@@ -91,14 +91,19 @@
     <Compile Include="Domain\OutputXML\validbefore.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="Kernel\NativeMethods.cs" />
+    <Compile Include="Kernel\TXMLConnector.cs" />
+    <Compile Include="Kernel\TXMLConnectorBase.cs" />
+    <Compile Include="Kernel\TXMLConnectorCallbackableBase.cs" />
     <Compile Include="Kernel\TXMLConnectorWrapper2.cs" />
     <Compile Include="Kernel\InputStreamEventArgs.cs" />
-    <Compile Include="Kernel\ITXMLConnectorWrapper.cs" />
+    <Compile Include="Kernel\ITXMLConnector.cs" />
     <Compile Include="Kernel\QuotesLogger.cs" />
     <Compile Include="Kernel\log.cs" />
     <Compile Include="Kernel\MarshalUTF8.cs" />
     <Compile Include="Kernel\Trader.cs" />
     <Compile Include="Kernel\TXMLConnectorWrapper.cs" />
+    <Compile Include="Kernel\XMLHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

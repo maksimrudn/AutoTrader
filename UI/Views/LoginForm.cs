@@ -12,9 +12,9 @@ namespace WindowsFormsApplication1
 {
     public partial class LoginForm : Form
     {
-        AutoTraderSDK.Kernel.TXMLConnectorWrapper _cl = null;
+        AutoTraderSDK.Kernel.ITXMLConnector _cl = null;
 
-        public LoginForm(AutoTraderSDK.Kernel.TXMLConnectorWrapper cl)
+        public LoginForm(AutoTraderSDK.Kernel.ITXMLConnector cl)
         {
             InitializeComponent();
 

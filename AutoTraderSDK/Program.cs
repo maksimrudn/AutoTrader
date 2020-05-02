@@ -18,6 +18,8 @@ namespace AutoTraderSDK
         static void Main(string[] args)
         {
             
+
+            
             //string server = "78.41.194.72";
             //int port = 3939;
 
@@ -31,11 +33,8 @@ namespace AutoTraderSDK
 
                 string demoserver = "tr1-demo5.finam.ru";
 
-                    //cl.Login(username, password);
 
-                    //cl.Login(username, password);
-
-                    cl.NewOrder(boardsCode.FUT, "SiM0", buysell.B, bymarket.yes, 66350, 1);
+                    //cl.NewOrder(boardsCode.FUT, "SiM0", buysell.B, bymarket.yes, 66350, 1);
 
                     //cl.NewCondOrder(boardsCode.FUT, "SiM6", buysell.S, bymarket.yes, cond_type.Ask, 66400, 1);
 
