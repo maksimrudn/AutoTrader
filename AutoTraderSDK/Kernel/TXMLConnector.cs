@@ -202,8 +202,6 @@ namespace AutoTraderSDK.Kernel
                     Application.DoEvents();
                 }
             }
-
-            GetSecurities();
         }
 
         public void ChangePassword(string oldpass, string newpass)
@@ -518,8 +516,9 @@ namespace AutoTraderSDK.Kernel
             return res;
         }
 
-        public void GetSecurities()
+        public List<security> GetSecurities()
         {
+            List<security> res = new List<security>();
             command com = command.CreateGetSecurities();
 
             result sendResult = ConnectorSendCommand(com, typeof(command));
@@ -532,6 +531,7 @@ namespace AutoTraderSDK.Kernel
 
                     if (_securities.Count > 0)
                     {
+                        res = _securities.ToList();
                         break;
                     }
                 }
@@ -541,6 +541,7 @@ namespace AutoTraderSDK.Kernel
                 throw new Exception(sendResult.message);
             }
 
+            return res;
         }
     }
 }

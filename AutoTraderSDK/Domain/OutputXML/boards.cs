@@ -27,6 +27,14 @@ namespace AutoTraderSDK.Domain.OutputXML
         DVP,
         TQOB,
         TQIF,
-        TQQI
+        TQQI,
+        EQQI,
+        FBCB,
+        CETS,
+        INDEXR,
+        RPEU,
+        PSAU,
+        INDEXE,
+        PSEU
     }
 }

@@ -17,8 +17,8 @@ namespace WindowsFormsApplication1
 {
     public partial class MainForm : Form
     {
-        ITXMLConnector _cl1 = new TXMLConnector("txmlconnector1.dll");
-        ITXMLConnector _cl2 = new TXMLConnector("txmlconnector2.dll");
+        TXMLConnector _cl1 = new TXMLConnector("txmlconnector1.dll");
+        TXMLConnector _cl2 = new TXMLConnector("txmlconnector2.dll");
 
         
         public MainForm()
@@ -27,6 +27,8 @@ namespace WindowsFormsApplication1
 
             var loginForm = new LoginForm(_cl1);
             loginForm.ShowDialog();
+
+            comboBoxSeccode.DataSource = _cl1.GetSecurities().Where(x=>x.board == boardsCode.FUT).Select(x=>x.seccode).ToList();
         }
 
         private void buttonCombo_Click(object sender, EventArgs e)
