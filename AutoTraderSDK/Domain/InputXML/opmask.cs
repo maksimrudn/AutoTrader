@@ -15,6 +15,10 @@ namespace AutoTraderSDK.Domain.InputXML
         [XmlAttribute]
         public string nosplit { get; set; }
         [XmlAttribute]
+        public string fok { get; set; }
+        [XmlAttribute]
+        public string ioc { get; set; }
+        [XmlAttribute]
         public string immorcancel { get; set; }
         [XmlAttribute]
         public string cancelbalance { get; set; }

@@ -139,6 +139,15 @@ namespace AutoTraderSDK.Domain.OutputXML
             return res;
         }
 
+        public static command CreateGetSecurities()
+        {
+            command res = new command();
+
+            res.id = command_id.get_securities;
+
+            return res;
+        }
+
 
         #endregion
 
@@ -485,6 +494,7 @@ namespace AutoTraderSDK.Domain.OutputXML
 
         [XmlElement(IsNullable = false)]
         public string nosplit { get; set; }
+        
 
         [XmlElement(IsNullable = false)]
         public string brokerref { get; set; }

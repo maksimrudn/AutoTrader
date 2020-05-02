@@ -23,13 +23,13 @@ namespace AutoTraderSDK.Kernel
 
         protected static TXMLConnectorWrapper _txmlconnector1 = null;
 
-        
 
-        protected static TXMLConnectorWrapper _txmlconnector2 = null;
-
-
-
+        /// <summary>
+        /// Результат подключения к серверу
+        /// Заполняется с помощью обработчика _handleData
+        /// </summary>
         protected static string _serverStatus = null;
+
         protected static client _client = null;
         protected static positions _positions = null;
         protected static candle _currentCandle = null;
@@ -63,11 +63,6 @@ namespace AutoTraderSDK.Kernel
             return res;
         }
 
-        
-        protected static double _ask = 0;
-
-        protected static double _bid = 0;
-        protected static double _bid1 = 0;
 
 
         protected static event EventHandler<InputStreamEventArgs> _newInputData;
@@ -195,9 +190,10 @@ namespace AutoTraderSDK.Kernel
 
 
 
-
         protected TXMLConnectorWrapper()
         {
+            
+
             _quotes = new HashSet<quote>();
             _orders = new HashSet<order>();
             _trades = new HashSet<trade>();
@@ -274,7 +270,7 @@ namespace AutoTraderSDK.Kernel
         {
             string result = arg.Data;
 
-            string nodeName = _getNodeName(result);
+            string nodeName = XMLHelper.GetNodeName(result);
 
             switch (nodeName)
             {
@@ -306,14 +302,14 @@ namespace AutoTraderSDK.Kernel
 
 
                 case "client":
-                    var clientInfo = (client)_deserialize(result, typeof(client));
+                    var clientInfo = (client)XMLHelper.Deserialize(result, typeof(client));
 
                     if (clientInfo.forts_acc != null)
                         _client = clientInfo;
                     break;
 
                 case "positions":
-                    _positions = (positions)_deserialize(result, typeof(positions));
+                    _positions = (positions)XMLHelper.Deserialize(result, typeof(positions));
 
                     _positionsIsActual = true;
                     break;
@@ -325,19 +321,19 @@ namespace AutoTraderSDK.Kernel
 
 
                 case "trades":
-                    var trades = (trades)_deserialize(result, typeof(trades));
+                    var trades = (trades)XMLHelper.Deserialize(result, typeof(trades));
                     _tradesHandle(trades);
                     break;
 
                 case "orders":
-                    var orders = (orders)_deserialize(result, typeof(orders));
+                    var orders = (orders)XMLHelper.Deserialize(result, typeof(orders));
                     
 
                     _ordersHandle(orders);
                     break;
 
                 case "candles":
-                    var candles = (candles)_deserialize(result, typeof(candles));
+                    var candles = (candles)XMLHelper.Deserialize(result, typeof(candles));
                     _currentCandle = candles.candle[0];
                     break;
 
@@ -352,7 +348,7 @@ namespace AutoTraderSDK.Kernel
                 case "quotations":
                     break;
                 case "quotes":
-                    var q = (AutoTraderSDK.Domain.InputXML.quotes)_deserialize(result, typeof(AutoTraderSDK.Domain.InputXML.quotes));
+                    var q = (AutoTraderSDK.Domain.InputXML.quotes)XMLHelper.Deserialize(result, typeof(AutoTraderSDK.Domain.InputXML.quotes));
                     _quotesHandle(q);
                     break;
 
@@ -442,22 +438,6 @@ namespace AutoTraderSDK.Kernel
 
         }
         
-        protected static string _getNodeName(string data)
-        {
-            log.WriteLog("ServerData: " + data);
-
-
-            XmlReaderSettings xs = new XmlReaderSettings();
-            xs.IgnoreWhitespace = true;
-            xs.ConformanceLevel = ConformanceLevel.Fragment;
-            xs.ProhibitDtd = false;
-            XmlReader xr = XmlReader.Create(new System.IO.StringReader(data), xs);
-            
-
-            xr.Read();
-            return xr.Name;
-            
-        }
 
         #endregion
 
@@ -491,8 +471,10 @@ namespace AutoTraderSDK.Kernel
 
             var com = command.CreateConnectionCommand(username, password, server, port);
 
+            // отправляем команду подключения
             var res = ConnectorSendCommand(com, com.GetType());
 
+            // ждём ассинхронный ответ о результате подключения
             if (res.success == false)
             {
                 throw new Exception(res.message);
@@ -1012,11 +994,8 @@ namespace AutoTraderSDK.Kernel
         //        <error> Текст сообщения об ошибке</error>
         [DllImport("txmlconnector1.dll", CallingConvention = CallingConvention.StdCall)]
         static extern IntPtr SendCommand(IntPtr pData);
-                    
 
-
-
-
+        
         [DllImport("txmlconnector1.dll", CallingConvention = CallingConvention.StdCall)]
         static extern bool FreeMemory(IntPtr pData);
 

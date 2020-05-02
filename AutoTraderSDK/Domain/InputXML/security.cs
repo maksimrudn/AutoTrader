@@ -15,6 +15,12 @@ namespace AutoTraderSDK.Domain.InputXML
         public string seccode { get; set; }
 
         [XmlElement(IsNullable = false)]
+        public string instrclass { get; set; }
+
+        [XmlElement(IsNullable = false)]
+        public string currency { get; set; }
+
+        [XmlElement(IsNullable = false)]
         public boardsCode board { get; set; }
 
         [XmlElement(IsNullable = false)]

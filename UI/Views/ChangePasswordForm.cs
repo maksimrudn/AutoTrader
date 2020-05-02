@@ -12,9 +12,9 @@ namespace WindowsFormsApplication1
 {
     public partial class ChangePasswordForm : Form
     {
-        AutoTraderSDK.Kernel.TXMLConnectorWrapper _cl = null;
+        AutoTraderSDK.Kernel.ITXMLConnector _cl = null;
 
-        public ChangePasswordForm(AutoTraderSDK.Kernel.TXMLConnectorWrapper cl)
+        public ChangePasswordForm(AutoTraderSDK.Kernel.ITXMLConnector cl)
         {
             InitializeComponent();
 
