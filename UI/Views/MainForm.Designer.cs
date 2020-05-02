@@ -30,7 +30,6 @@
         {
             this.textBoxSL = new System.Windows.Forms.TextBox();
             this.buttonComboBuy = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -42,6 +41,7 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonComboSell = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -51,7 +51,7 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.buttonOldTest = new System.Windows.Forms.Button();
             this.buttonChangePassword = new System.Windows.Forms.Button();
-            this.buttonComboSell = new System.Windows.Forms.Button();
+            this.comboBoxSeccode = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -73,13 +73,6 @@
             this.buttonComboBuy.Text = "COMBO BUY";
             this.buttonComboBuy.UseVisualStyleBackColor = true;
             this.buttonComboBuy.Click += new System.EventHandler(this.buttonCombo_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(26, 36);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 3;
             // 
             // label2
             // 
@@ -199,6 +192,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Order Settings";
             // 
+            // buttonComboSell
+            // 
+            this.buttonComboSell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonComboSell.Location = new System.Drawing.Point(486, 37);
+            this.buttonComboSell.Name = "buttonComboSell";
+            this.buttonComboSell.Size = new System.Drawing.Size(120, 72);
+            this.buttonComboSell.TabIndex = 22;
+            this.buttonComboSell.Text = "COMBO SELL";
+            this.buttonComboSell.UseVisualStyleBackColor = true;
+            this.buttonComboSell.Click += new System.EventHandler(this.buttonComboSell_Click);
+            // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -281,22 +285,20 @@
             this.buttonChangePassword.UseVisualStyleBackColor = true;
             this.buttonChangePassword.Click += new System.EventHandler(this.buttonChangePassword_Click);
             // 
-            // buttonComboSell
+            // comboBoxSeccode
             // 
-            this.buttonComboSell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonComboSell.Location = new System.Drawing.Point(486, 37);
-            this.buttonComboSell.Name = "buttonComboSell";
-            this.buttonComboSell.Size = new System.Drawing.Size(120, 72);
-            this.buttonComboSell.TabIndex = 22;
-            this.buttonComboSell.Text = "COMBO SELL";
-            this.buttonComboSell.UseVisualStyleBackColor = true;
-            this.buttonComboSell.Click += new System.EventHandler(this.buttonComboSell_Click);
+            this.comboBoxSeccode.FormattingEnabled = true;
+            this.comboBoxSeccode.Location = new System.Drawing.Point(26, 39);
+            this.comboBoxSeccode.Name = "comboBoxSeccode";
+            this.comboBoxSeccode.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxSeccode.TabIndex = 17;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(644, 584);
+            this.Controls.Add(this.comboBoxSeccode);
             this.Controls.Add(this.buttonChangePassword);
             this.Controls.Add(this.buttonOldTest);
             this.Controls.Add(this.groupBox1);
@@ -307,7 +309,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
             this.Name = "MainForm";
             this.Text = "Main";
             this.groupBox1.ResumeLayout(false);
@@ -322,7 +323,6 @@
 
         private System.Windows.Forms.TextBox textBoxSL;
         private System.Windows.Forms.Button buttonComboBuy;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
@@ -344,5 +344,6 @@
         private System.Windows.Forms.Button buttonOldTest;
         private System.Windows.Forms.Button buttonChangePassword;
         private System.Windows.Forms.Button buttonComboSell;
+        private System.Windows.Forms.ComboBox comboBoxSeccode;
     }
 }

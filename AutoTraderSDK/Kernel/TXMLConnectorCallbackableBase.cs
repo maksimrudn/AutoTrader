@@ -133,8 +133,9 @@ namespace AutoTraderSDK.Kernel
             lock(_securities)
             {
                 foreach (var sec in security)
-                {                    
-                    _securities.Add(sec);
+                {    
+                    if (_securities.Where(x=>x.seccode==sec.seccode).FirstOrDefault() == null)
+                        _securities.Add(sec);
                 }
             }
         }
