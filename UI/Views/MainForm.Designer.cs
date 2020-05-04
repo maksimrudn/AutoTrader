@@ -37,18 +37,18 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.checkBoxByMarket = new System.Windows.Forms.CheckBox();
+            this.textBoxPrice = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonComboSell = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBoxVolume = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBoxTP = new System.Windows.Forms.TextBox();
             this.buttonOldTest = new System.Windows.Forms.Button();
             this.buttonChangePassword = new System.Windows.Forms.Button();
             this.comboBoxSeccode = new System.Windows.Forms.ComboBox();
@@ -62,6 +62,7 @@
             this.textBoxSL.Name = "textBoxSL";
             this.textBoxSL.Size = new System.Drawing.Size(100, 20);
             this.textBoxSL.TabIndex = 0;
+            this.textBoxSL.Text = "0";
             // 
             // buttonComboBuy
             // 
@@ -72,7 +73,7 @@
             this.buttonComboBuy.TabIndex = 2;
             this.buttonComboBuy.Text = "COMBO BUY";
             this.buttonComboBuy.UseVisualStyleBackColor = true;
-            this.buttonComboBuy.Click += new System.EventHandler(this.buttonCombo_Click);
+            this.buttonComboBuy.Click += new System.EventHandler(this.buttonComboBuy_Click);
             // 
             // label2
             // 
@@ -142,23 +143,26 @@
             this.label7.TabIndex = 9;
             this.label7.Text = "SUM";
             // 
-            // checkBox1
+            // checkBoxByMarket
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBox1.Location = new System.Drawing.Point(163, 65);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(83, 17);
-            this.checkBox1.TabIndex = 11;
-            this.checkBox1.Text = "By Market";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBoxByMarket.AutoSize = true;
+            this.checkBoxByMarket.Checked = true;
+            this.checkBoxByMarket.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxByMarket.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkBoxByMarket.Location = new System.Drawing.Point(163, 65);
+            this.checkBoxByMarket.Name = "checkBoxByMarket";
+            this.checkBoxByMarket.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxByMarket.TabIndex = 11;
+            this.checkBoxByMarket.Text = "By Market";
+            this.checkBoxByMarket.UseVisualStyleBackColor = true;
             // 
-            // textBox2
+            // textBoxPrice
             // 
-            this.textBox2.Location = new System.Drawing.Point(57, 63);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 12;
+            this.textBoxPrice.Location = new System.Drawing.Point(57, 63);
+            this.textBoxPrice.Name = "textBoxPrice";
+            this.textBoxPrice.Size = new System.Drawing.Size(100, 20);
+            this.textBoxPrice.TabIndex = 12;
+            this.textBoxPrice.Text = "0";
             // 
             // label8
             // 
@@ -176,14 +180,14 @@
             this.groupBox1.Controls.Add(this.dataGridView1);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.textBox4);
+            this.groupBox1.Controls.Add(this.textBoxVolume);
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Controls.Add(this.textBoxTP);
+            this.groupBox1.Controls.Add(this.checkBoxByMarket);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.textBoxSL);
-            this.groupBox1.Controls.Add(this.textBox2);
+            this.groupBox1.Controls.Add(this.textBoxPrice);
             this.groupBox1.Controls.Add(this.buttonComboBuy);
             this.groupBox1.Location = new System.Drawing.Point(13, 158);
             this.groupBox1.Name = "groupBox1";
@@ -231,12 +235,13 @@
             this.label1.TabIndex = 19;
             this.label1.Text = "VOL";
             // 
-            // textBox4
+            // textBoxVolume
             // 
-            this.textBox4.Location = new System.Drawing.Point(289, 62);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(62, 20);
-            this.textBox4.TabIndex = 18;
+            this.textBoxVolume.Location = new System.Drawing.Point(289, 62);
+            this.textBoxVolume.Name = "textBoxVolume";
+            this.textBoxVolume.Size = new System.Drawing.Size(62, 20);
+            this.textBoxVolume.TabIndex = 18;
+            this.textBoxVolume.Text = "0";
             // 
             // label10
             // 
@@ -258,12 +263,13 @@
             this.label9.TabIndex = 15;
             this.label9.Text = "TP";
             // 
-            // textBox3
+            // textBoxTP
             // 
-            this.textBox3.Location = new System.Drawing.Point(57, 37);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 14;
+            this.textBoxTP.Location = new System.Drawing.Point(57, 37);
+            this.textBoxTP.Name = "textBoxTP";
+            this.textBoxTP.Size = new System.Drawing.Size(100, 20);
+            this.textBoxTP.TabIndex = 14;
+            this.textBoxTP.Text = "0";
             // 
             // buttonOldTest
             // 
@@ -287,6 +293,7 @@
             // 
             // comboBoxSeccode
             // 
+            this.comboBoxSeccode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSeccode.FormattingEnabled = true;
             this.comboBoxSeccode.Location = new System.Drawing.Point(26, 39);
             this.comboBoxSeccode.Name = "comboBoxSeccode";
@@ -310,7 +317,8 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Name = "MainForm";
-            this.Text = "Main";
+            this.Text = "AUTO TRADER";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -330,17 +338,17 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.CheckBox checkBoxByMarket;
+        private System.Windows.Forms.TextBox textBoxPrice;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBoxVolume;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBoxTP;
         private System.Windows.Forms.Button buttonOldTest;
         private System.Windows.Forms.Button buttonChangePassword;
         private System.Windows.Forms.Button buttonComboSell;

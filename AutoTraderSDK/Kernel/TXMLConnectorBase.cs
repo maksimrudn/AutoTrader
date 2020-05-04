@@ -28,13 +28,14 @@ namespace AutoTraderSDK.Kernel
             IntPtr setCallbackPtr = NativeMethods.GetProcAddress(_tConnectorDll, "SetCallback");
             IntPtr sendCommandPtr = NativeMethods.GetProcAddress(_tConnectorDll, "SendCommand");
             IntPtr unInitializePtr = NativeMethods.GetProcAddress(_tConnectorDll, "UnInitialize");
+            IntPtr setLogLevelPtr = NativeMethods.GetProcAddress(_tConnectorDll, "SetLogLevel");
 
             _initialize = (Initialize)Marshal.GetDelegateForFunctionPointer(initializePtr, typeof(Initialize));
             _freeMemory = (FreeMemory)Marshal.GetDelegateForFunctionPointer(freeMemoryPtr, typeof(FreeMemory));
             _setCallback = (SetCallback)Marshal.GetDelegateForFunctionPointer(setCallbackPtr, typeof(SetCallback));
             _sendCommand = (SendCommand)Marshal.GetDelegateForFunctionPointer(sendCommandPtr, typeof(SendCommand));
-            _unInitialize = (UnInitialize)Marshal.GetDelegateForFunctionPointer(sendCommandPtr, typeof(UnInitialize));
-            _setLogLevel = (SetLogLevel)Marshal.GetDelegateForFunctionPointer(sendCommandPtr, typeof(SetLogLevel));
+            _unInitialize = (UnInitialize)Marshal.GetDelegateForFunctionPointer(unInitializePtr, typeof(UnInitialize));
+            _setLogLevel = (SetLogLevel)Marshal.GetDelegateForFunctionPointer(setLogLevelPtr, typeof(SetLogLevel));
 
             // шаг 1 - инициализация
             IntPtr pPath = Kernel.MarshalUTF8.StringToHGlobalUTF8(_logpath);
@@ -183,8 +184,6 @@ namespace AutoTraderSDK.Kernel
             _freeMemory(pData);
 
             _handleData(result);
-
-            //_newInputData.Invoke(null, new InputStreamEventArgs() { Data = result });
 
             return res;
         }

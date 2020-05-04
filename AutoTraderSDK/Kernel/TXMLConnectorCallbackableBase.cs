@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -10,11 +11,16 @@ namespace AutoTraderSDK.Kernel
 {
     public abstract class TXMLConnectorCallbackableBase: TXMLConnectorBase
     {
+        public static AutoResetEvent statusConnected = new AutoResetEvent(false);
+        public static AutoResetEvent securitiesLoaded = new AutoResetEvent(false);
+
+        public bool Connected { get; protected set; }
+
         /// <summary>
         /// Результат подключения к серверу
         /// Заполняется с помощью обработчика _handleData
         /// </summary>
-        protected string _serverStatus = null;
+        protected server_status _serverStatus = null;
 
         protected static client _client = null;
         protected static positions _positions = null;
@@ -43,7 +49,11 @@ namespace AutoTraderSDK.Kernel
             switch (nodeName)
             {
                 case "server_status":
-                    _serverStatus = result;
+                    _serverStatus = (server_status)XMLHelper.Deserialize(result, typeof(server_status));
+
+                    if (_serverStatus.connected == "true") Connected = true;
+                    else Connected = false;
+                    statusConnected.Set();
 
                     break;
 
@@ -60,6 +70,7 @@ namespace AutoTraderSDK.Kernel
                     var securities = (securities)XMLHelper.Deserialize(result, typeof(securities));
 
                     _securitiesHandle(securities.security);
+                    securitiesLoaded.Set();
                     break;
 
                 case "pits":
@@ -127,6 +138,7 @@ namespace AutoTraderSDK.Kernel
 
             }
         }
+
 
         private void _securitiesHandle(List<security> security)
         {

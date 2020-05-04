@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -13,18 +14,16 @@ using System.Xml.Serialization;
 
 namespace AutoTraderSDK.Kernel
 {
-    public class TXMLConnector: TXMLConnectorCallbackableBase, ITXMLConnector
+    public class TXMLConnector: TXMLConnectorCallbackableBase //, ITXMLConnector
     {
         
-        
-
         public bool PositionsIsActual
         {
             get { return _positionsIsActual; }
             set { _positionsIsActual = value; }
         }
 
-        public bool IsConnected { get; private set; }
+        
         public string ClientId { get { return (_client != null) ? _client.forts_acc : null; } }
         public List<quote> QuotesBuy
         {
@@ -144,14 +143,6 @@ namespace AutoTraderSDK.Kernel
             
         }
 
-        ~TXMLConnector()
-        {
-            Console.WriteLine("Finalizing object");
-
-            Logout();
-        }
-
-
 
 
         public void Login(string username, string password, string server = "tr1.finam.ru", int port = 3900)
@@ -170,36 +161,11 @@ namespace AutoTraderSDK.Kernel
             }
             else
             {
-                while (true)
+                statusConnected.WaitOne();
+
+                if (_serverStatus.connected == "error")
                 {
-                    server_status serverStatus = null;
-
-                    if (_serverStatus == null) continue;
-
-                    try
-                    {
-                        serverStatus = (server_status)XMLHelper.Deserialize(_serverStatus, typeof(server_status));
-                    }
-                    catch { }
-
-
-
-                    if (serverStatus.connected == "error")
-                    {
-                        throw new Exception(serverStatus.InnerText);
-                    }
-                    else if (serverStatus != null && _client != null)
-                    {
-                        if (_client != null)
-                        {
-                            IsConnected = true;
-                            break;
-                        }
-
-                    }
-                    //else if (serverStatus.)
-
-                    Application.DoEvents();
+                    throw new Exception(_serverStatus.InnerText);
                 }
             }
         }
@@ -220,15 +186,36 @@ namespace AutoTraderSDK.Kernel
         {
             var com = command.CreateDisconnectCommand();
 
+            statusConnected.Reset();
             var res = ConnectorSendCommand(com, com.GetType());
+        }
 
-            _unInitialize();
+        public void UnInitialize()
+        {
+            if (Connected)
+            {
+                Logout();
+                statusConnected.WaitOne(25 * 1000);
+            }
 
+            IntPtr pResult = _unInitialize();
+
+            if (!pResult.Equals(IntPtr.Zero))
+            {
+                String result = MarshalUTF8.PtrToStringUTF8(pResult);
+                _freeMemory(pResult);
+                log.WriteLog(result);
+            }
+            else
+            {
+                log.WriteLog("UnInitialize() OK");
+            }
         }
 
         public void Dispose()
         {
-            Logout();
+            UnInitialize();
+            statusConnected.Dispose();
             base.Dispose();
         }
 
@@ -320,13 +307,19 @@ namespace AutoTraderSDK.Kernel
             //return res;
         }
 
-        public int NewOrder(boardsCode board, string seccode, buysell buysell, bymarket bymarket, double price, int volume)
+        public int NewOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, double price, int volume)
         {
-            if (!IsConnected) throw new Exception("Соединение не установлено. Операция не может быть выполнена");
+            if (!Connected) throw new Exception("Соединение не установлено. Операция не может быть выполнена");
 
             int res = 0;
 
-            command com = command.CreateNewOrder(this.ClientId, board, seccode, buysell, bymarket, price, volume);
+            command com = command.CreateNewOrder(this.ClientId, 
+                                                        board, 
+                                                        seccode, 
+                                                        buysell, 
+                                                        bymarket? Domain.OutputXML.bymarket.yes: Domain.OutputXML.bymarket.no, 
+                                                        price, 
+                                                        volume);
 
 
             result sendResult = ConnectorSendCommand(com, typeof(command));
@@ -400,7 +393,13 @@ namespace AutoTraderSDK.Kernel
             return res;
         }
 
-        public int NewCondOrder(boardsCode board, string seccode, Domain.OutputXML.buysell buysell, Domain.OutputXML.bymarket bymarket, cond_type condtype, double condvalue, int volume)
+        public int NewCondOrder(boardsCode board, 
+                                    string seccode, 
+                                    Domain.OutputXML.buysell buysell, 
+                                    bool bymarket, 
+                                    cond_type condtype, 
+                                    double condvalue, 
+                                    int volume)
         {
             int res = 0;
 
@@ -408,17 +407,12 @@ namespace AutoTraderSDK.Kernel
             com.id = command_id.newcondorder;
             com.security.board = board;
             com.security.seccode = seccode;
-
             com.buysellValue = buysell;
             com.client = ClientId;
-
-
             com.cond_typeValue = condtype;
             com.cond_valueValue = condvalue;
-
             com.quantityValue = volume;
-
-            //com.bymarket = bymarket;
+            com.bymarketValue = bymarket?Domain.OutputXML.bymarket.yes: Domain.OutputXML.bymarket.no;
 
             result sendResult = ConnectorSendCommand(com, typeof(command));
 
@@ -434,63 +428,68 @@ namespace AutoTraderSDK.Kernel
             return res;
         }
 
-        public void NewComboOrder(boardsCode board, string seccode, buysell buysell, int volume, int slDistance, int tpDistance)
+        /// <summary>
+        /// Выставляет открывающую заявку и при наличии условий по sl, tp закрывающие заявки
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="seccode"></param>
+        /// <param name="buysell"></param>
+        /// <param name="bymarket"></param>
+        /// <param name="price"></param>
+        /// <param name="volume"></param>
+        /// <param name="slDistance"></param>
+        /// <param name="tpDistance"></param>
+        public void NewComboOrder(boardsCode board, 
+                                        string seccode, 
+                                        buysell buysell,
+                                        bool bymarket,
+                                        int price,
+                                        int volume, 
+                                        int slDistance, 
+                                        int tpDistance)
         {
-            bymarket bymarket = Domain.OutputXML.bymarket.yes;
-
-            int tid = NewOrder(board, seccode, buysell, bymarket, 0, volume);
-
+            
+            int tid = NewOrder(board, 
+                                seccode, 
+                                buysell, 
+                                bymarket, 
+                                price, 
+                                volume);
             order ord = null;
-
             while (ord == null) { Application.DoEvents(); ord = GetOrderByTransactionId(tid); }
 
+            // получение номера выполненного порузчение
             trade tr = null;
-
             while (tr == null) { Application.DoEvents(); tr = GetTradeByOrderNo(ord.orderno); }
 
             var closeOrderBysell = (buysell == buysell.B) ? buysell.S : buysell.B;
-            double slPrice = (buysell == buysell.B) ? tr.price - slDistance : tr.price + slDistance;
-            double tpPrice = (buysell == buysell.B) ? tr.price + tpDistance : tr.price - tpDistance;
-            var closeCondition = (buysell == buysell.B) ? cond_type.AskOrLast : cond_type.BidOrLast;
 
-            NewCondOrder(board,
-                        seccode,
-                        closeOrderBysell,
-                        bymarket,
-                        closeCondition,
-                        slPrice,
-                        volume);
+            // открытие sl заявки
+            if (slDistance > 0)
+            {
+                double slPrice = (buysell == buysell.B) ? tr.price - slDistance : tr.price + slDistance;
+                var closeCondition = (buysell == buysell.B) ? cond_type.AskOrLast : cond_type.BidOrLast;
 
+                NewCondOrder(board,
+                            seccode,
+                            closeOrderBysell,
+                            bymarket,
+                            closeCondition,
+                            slPrice,
+                            volume);
+            }
 
-            if (tpDistance != 0)
-                NewOrder(board, seccode, closeOrderBysell, bymarket.no, tpPrice, volume);
+            // открытие tp заявки
+            if (tpDistance > 0)
+            {
+
+                double tpPrice = (buysell == buysell.B) ? tr.price + tpDistance : tr.price - tpDistance;
+                NewOrder(board, seccode, closeOrderBysell, bymarket, tpPrice, volume);
+            }
+               
         }
 
-        //Выставляет рыночную заявку и условную на закрытие при невыгодной цене 
-        public void NewMarketOrderWithCondOrder(boardsCode board, string seccode, buysell buysell, int volume, int slDistance)
-        {
-            bymarket bymarket = Domain.OutputXML.bymarket.yes;
-
-            int tid = NewOrder(board, seccode, buysell, bymarket, 0, volume);
-
-            order ord = null;
-
-            while (ord == null) { Application.DoEvents(); ord = GetOrderByTransactionId(tid); }
-
-            trade tr = null;
-
-            while (tr == null) { Application.DoEvents(); tr = GetTradeByOrderNo(ord.orderno); }
-
-            var condOrderBysell = (buysell == buysell.B) ? buysell.S : buysell.B;
-
-            NewCondOrder(board,
-                        seccode,
-                        condOrderBysell,
-                        bymarket,
-                        (condOrderBysell == Domain.OutputXML.buysell.B) ? cond_type.AskOrLast : cond_type.BidOrLast,
-                        (condOrderBysell == Domain.OutputXML.buysell.B) ? ord.price + slDistance : ord.price - slDistance,
-                        volume);
-        }
+        
 
         public order GetOrderByTransactionId(int transactionid)
         {
@@ -521,20 +520,14 @@ namespace AutoTraderSDK.Kernel
             List<security> res = new List<security>();
             command com = command.CreateGetSecurities();
 
+            securitiesLoaded.Reset();
             result sendResult = ConnectorSendCommand(com, typeof(command));
 
             if (sendResult.success == true)
             {
-                while (true)
-                {
-                    Application.DoEvents();
+                securitiesLoaded.WaitOne();
 
-                    if (_securities.Count > 0)
-                    {
-                        res = _securities.ToList();
-                        break;
-                    }
-                }
+                res = _securities.ToList();
             }
             else
             {
