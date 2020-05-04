@@ -28,29 +28,57 @@ namespace WindowsFormsApplication1
             var loginForm = new LoginForm(_cl1);
             loginForm.ShowDialog();
 
-            comboBoxSeccode.DataSource = _cl1.GetSecurities().Where(x=>x.board == boardsCode.FUT).Select(x=>x.seccode).ToList();
+            comboBoxSeccode.DataSource = _cl1.GetSecurities().Where(x=>x.board == boardsCode.FUT).Select(x=>x.seccode).OrderBy(x=>x).ToList();
         }
 
-        private void buttonCombo_Click(object sender, EventArgs e)
-        {
-            int sl = int.Parse(textBoxSL.Text.Trim());
-
-            _cl1.NewComboOrder(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, "SiM6", buysell.B, 1, sl, 0);
-        }
-
-        private void buttonOldTest_Click(object sender, EventArgs e)
+        private void buttonComboBuy_Click(object sender, EventArgs e)
         {
             try
             {
-                //_cl1.NewOrder(boardsCode.FUT, "SiM0", buysell.B, bymarket.yes, 66350, 1);
-
-
-                _cl1.NewComboOrder(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, "SiM0", buysell.B, 1, 10, 0);
+                _handleComboOperation(buysell.B);
             }
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+        private void buttonComboSell_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _handleComboOperation(buysell.S);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void _handleComboOperation(buysell buysell)
+        {
+            int sl = int.Parse(textBoxSL.Text.Trim());
+            int tp = int.Parse(textBoxTP.Text.Trim());
+            int price = int.Parse(textBoxPrice.Text.Trim());
+            int vol = int.Parse(textBoxVolume.Text.Trim());
+            bool bymarket = checkBoxByMarket.Checked;
+            string seccode = comboBoxSeccode.Text;
+
+            if (string.IsNullOrEmpty(seccode))
+            {
+                MessageBox.Show("Не выбран код инструмента");
+            }
+            else
+            {
+                _cl1.NewComboOrder(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, seccode, buysell, bymarket, price, vol, sl, tp);
+            }
+        }
+
+        
+
+        private void buttonOldTest_Click(object sender, EventArgs e)
+        {
+           
+
         }
 
         private void buttonChangePassword_Click(object sender, EventArgs e)
@@ -60,10 +88,9 @@ namespace WindowsFormsApplication1
             changePassForm.Show();
         }
 
-        private void buttonComboSell_Click(object sender, EventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-
-            //_cl2.NewComboOrder(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, "SiM6", buysell.S, 1, sl, 0);
+            _cl1.Dispose();
         }
     }
 }
