@@ -25,10 +25,8 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
 
-            var loginForm = new LoginForm(_cl1);
-            loginForm.ShowDialog();
 
-            comboBoxSeccode.DataSource = _cl1.GetSecurities().Where(x=>x.board == boardsCode.FUT).Select(x=>x.seccode).OrderBy(x=>x).ToList();
+            _handleDisconnected();            
         }
 
         private void buttonComboBuy_Click(object sender, EventArgs e)
@@ -73,24 +71,71 @@ namespace WindowsFormsApplication1
             }
         }
 
+
+
         
-
-        private void buttonOldTest_Click(object sender, EventArgs e)
-        {
-           
-
-        }
-
-        private void buttonChangePassword_Click(object sender, EventArgs e)
-        {
-            var changePassForm = new ChangePasswordForm(_cl1);
-
-            changePassForm.Show();
-        }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _cl1.Dispose();
+        }
+
+        private void buttonLogin_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _cl1.Login(textBoxUsername.Text, textBoxPassword.Text);
+                _handleConnected();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void buttonLogout_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _cl1.Logout();
+                _handleDisconnected();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        
+
+        private void buttonChangePassword_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _cl1.ChangePassword(textBoxPasswordOld.Text, textBoxPasswordNew.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void _handleConnected()
+        {
+            comboBoxSeccode.DataSource = _cl1.GetSecurities().Where(x => x.board == boardsCode.FUT).Select(x => x.seccode).OrderBy(x => x).ToList();
+
+            ((Control)tabPage1).Enabled = true;
+            groupBoxChangePassword.Enabled = true;
+            buttonLogin.Enabled = false;
+            buttonLogout.Enabled = true;
+        }
+
+        private void _handleDisconnected()
+        {
+            ((Control)tabPage1).Enabled = false;
+            groupBoxChangePassword.Enabled = false;
+            buttonLogin.Enabled = true;
+            buttonLogout.Enabled = false;
         }
     }
 }

@@ -170,6 +170,14 @@ namespace AutoTraderSDK.Kernel
             }
         }
 
+        public void Logout()
+        {
+            var com = command.CreateDisconnectCommand();
+
+            statusConnected.Reset();
+            var res = ConnectorSendCommand(com, com.GetType());
+        }
+
         public void ChangePassword(string oldpass, string newpass)
         {
             var com = command.CreateChangePasswordCommand(oldpass, newpass);
@@ -182,13 +190,7 @@ namespace AutoTraderSDK.Kernel
             }
         }
 
-        public void Logout()
-        {
-            var com = command.CreateDisconnectCommand();
-
-            statusConnected.Reset();
-            var res = ConnectorSendCommand(com, com.GetType());
-        }
+        
 
         public void UnInitialize()
         {
