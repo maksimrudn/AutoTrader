@@ -31,16 +31,9 @@
             this.textBoxSL = new System.Windows.Forms.TextBox();
             this.buttonComboBuy = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.checkBoxByMarket = new System.Windows.Forms.CheckBox();
             this.textBoxPrice = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonComboSell = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
@@ -49,16 +42,34 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.textBoxTP = new System.Windows.Forms.TextBox();
-            this.buttonOldTest = new System.Windows.Forms.Button();
             this.buttonChangePassword = new System.Windows.Forms.Button();
             this.comboBoxSeccode = new System.Windows.Forms.ComboBox();
-            this.groupBox1.SuspendLayout();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBoxLogin = new System.Windows.Forms.GroupBox();
+            this.groupBoxChangePassword = new System.Windows.Forms.GroupBox();
+            this.textBoxPasswordNew = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBoxPasswordOld = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.buttonLogin = new System.Windows.Forms.Button();
+            this.textBoxPassword = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.textBoxUsername = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.buttonLogout = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBoxLogin.SuspendLayout();
+            this.groupBoxChangePassword.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxSL
             // 
-            this.textBoxSL.Location = new System.Drawing.Point(57, 89);
+            this.textBoxSL.Location = new System.Drawing.Point(54, 124);
             this.textBoxSL.Name = "textBoxSL";
             this.textBoxSL.Size = new System.Drawing.Size(100, 20);
             this.textBoxSL.TabIndex = 0;
@@ -67,7 +78,7 @@
             // buttonComboBuy
             // 
             this.buttonComboBuy.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonComboBuy.Location = new System.Drawing.Point(357, 37);
+            this.buttonComboBuy.Location = new System.Drawing.Point(354, 72);
             this.buttonComboBuy.Name = "buttonComboBuy";
             this.buttonComboBuy.Size = new System.Drawing.Size(120, 72);
             this.buttonComboBuy.TabIndex = 2;
@@ -79,69 +90,11 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(23, 20);
+            this.label2.Location = new System.Drawing.Point(9, 13);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.Size = new System.Drawing.Size(110, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "SYMBOL";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(161, 20);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(57, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "SYMBOL";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(161, 39);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Current Price";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(26, 93);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(100, 21);
-            this.comboBox1.TabIndex = 7;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(23, 77);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(39, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Client";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(161, 96);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(28, 13);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Sum";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label7.Location = new System.Drawing.Point(161, 77);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(34, 13);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "SUM";
+            this.label2.Text = "FORTS SECCODE";
             // 
             // checkBoxByMarket
             // 
@@ -149,7 +102,7 @@
             this.checkBoxByMarket.Checked = true;
             this.checkBoxByMarket.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxByMarket.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBoxByMarket.Location = new System.Drawing.Point(163, 65);
+            this.checkBoxByMarket.Location = new System.Drawing.Point(160, 100);
             this.checkBoxByMarket.Name = "checkBoxByMarket";
             this.checkBoxByMarket.Size = new System.Drawing.Size(83, 17);
             this.checkBoxByMarket.TabIndex = 11;
@@ -158,7 +111,7 @@
             // 
             // textBoxPrice
             // 
-            this.textBoxPrice.Location = new System.Drawing.Point(57, 63);
+            this.textBoxPrice.Location = new System.Drawing.Point(54, 98);
             this.textBoxPrice.Name = "textBoxPrice";
             this.textBoxPrice.Size = new System.Drawing.Size(100, 20);
             this.textBoxPrice.TabIndex = 12;
@@ -168,38 +121,16 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label8.Location = new System.Drawing.Point(12, 67);
+            this.label8.Location = new System.Drawing.Point(9, 102);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(36, 13);
             this.label8.TabIndex = 13;
             this.label8.Text = "Price";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.buttonComboSell);
-            this.groupBox1.Controls.Add(this.dataGridView1);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.textBoxVolume);
-            this.groupBox1.Controls.Add(this.label10);
-            this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.textBoxTP);
-            this.groupBox1.Controls.Add(this.checkBoxByMarket);
-            this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.textBoxSL);
-            this.groupBox1.Controls.Add(this.textBoxPrice);
-            this.groupBox1.Controls.Add(this.buttonComboBuy);
-            this.groupBox1.Location = new System.Drawing.Point(13, 158);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(619, 414);
-            this.groupBox1.TabIndex = 14;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Order Settings";
-            // 
             // buttonComboSell
             // 
             this.buttonComboSell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonComboSell.Location = new System.Drawing.Point(486, 37);
+            this.buttonComboSell.Location = new System.Drawing.Point(483, 72);
             this.buttonComboSell.Name = "buttonComboSell";
             this.buttonComboSell.Size = new System.Drawing.Size(120, 72);
             this.buttonComboSell.TabIndex = 22;
@@ -210,7 +141,7 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(15, 246);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 244);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(598, 162);
             this.dataGridView1.TabIndex = 21;
@@ -218,7 +149,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(13, 186);
+            this.button1.Location = new System.Drawing.Point(10, 184);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(600, 54);
             this.button1.TabIndex = 20;
@@ -229,7 +160,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(244, 66);
+            this.label1.Location = new System.Drawing.Point(241, 101);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(31, 13);
             this.label1.TabIndex = 19;
@@ -237,7 +168,7 @@
             // 
             // textBoxVolume
             // 
-            this.textBoxVolume.Location = new System.Drawing.Point(289, 62);
+            this.textBoxVolume.Location = new System.Drawing.Point(286, 97);
             this.textBoxVolume.Name = "textBoxVolume";
             this.textBoxVolume.Size = new System.Drawing.Size(62, 20);
             this.textBoxVolume.TabIndex = 18;
@@ -247,7 +178,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.Location = new System.Drawing.Point(12, 93);
+            this.label10.Location = new System.Drawing.Point(9, 128);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(22, 13);
             this.label10.TabIndex = 17;
@@ -257,7 +188,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.Location = new System.Drawing.Point(12, 41);
+            this.label9.Location = new System.Drawing.Point(9, 76);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(23, 13);
             this.label9.TabIndex = 15;
@@ -265,29 +196,19 @@
             // 
             // textBoxTP
             // 
-            this.textBoxTP.Location = new System.Drawing.Point(57, 37);
+            this.textBoxTP.Location = new System.Drawing.Point(54, 72);
             this.textBoxTP.Name = "textBoxTP";
             this.textBoxTP.Size = new System.Drawing.Size(100, 20);
             this.textBoxTP.TabIndex = 14;
             this.textBoxTP.Text = "0";
             // 
-            // buttonOldTest
-            // 
-            this.buttonOldTest.Location = new System.Drawing.Point(265, 20);
-            this.buttonOldTest.Name = "buttonOldTest";
-            this.buttonOldTest.Size = new System.Drawing.Size(205, 94);
-            this.buttonOldTest.TabIndex = 15;
-            this.buttonOldTest.Text = "OldTest";
-            this.buttonOldTest.UseVisualStyleBackColor = true;
-            this.buttonOldTest.Click += new System.EventHandler(this.buttonOldTest_Click);
-            // 
             // buttonChangePassword
             // 
-            this.buttonChangePassword.Location = new System.Drawing.Point(499, 20);
+            this.buttonChangePassword.Location = new System.Drawing.Point(303, 17);
             this.buttonChangePassword.Name = "buttonChangePassword";
-            this.buttonChangePassword.Size = new System.Drawing.Size(127, 94);
+            this.buttonChangePassword.Size = new System.Drawing.Size(336, 48);
             this.buttonChangePassword.TabIndex = 16;
-            this.buttonChangePassword.Text = "Изменить пароль";
+            this.buttonChangePassword.Text = "Change password";
             this.buttonChangePassword.UseVisualStyleBackColor = true;
             this.buttonChangePassword.Click += new System.EventHandler(this.buttonChangePassword_Click);
             // 
@@ -295,35 +216,191 @@
             // 
             this.comboBoxSeccode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSeccode.FormattingEnabled = true;
-            this.comboBoxSeccode.Location = new System.Drawing.Point(26, 39);
+            this.comboBoxSeccode.Location = new System.Drawing.Point(12, 32);
             this.comboBoxSeccode.Name = "comboBoxSeccode";
             this.comboBoxSeccode.Size = new System.Drawing.Size(121, 21);
             this.comboBoxSeccode.TabIndex = 17;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(12, 40);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(669, 457);
+            this.tabControl1.TabIndex = 18;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.dataGridView1);
+            this.tabPage1.Controls.Add(this.comboBoxSeccode);
+            this.tabPage1.Controls.Add(this.button1);
+            this.tabPage1.Controls.Add(this.buttonComboSell);
+            this.tabPage1.Controls.Add(this.textBoxTP);
+            this.tabPage1.Controls.Add(this.buttonComboBuy);
+            this.tabPage1.Controls.Add(this.textBoxPrice);
+            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.textBoxSL);
+            this.tabPage1.Controls.Add(this.textBoxVolume);
+            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Controls.Add(this.label8);
+            this.tabPage1.Controls.Add(this.label10);
+            this.tabPage1.Controls.Add(this.checkBoxByMarket);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(661, 431);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Trading";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.groupBoxChangePassword);
+            this.tabPage2.Controls.Add(this.groupBoxLogin);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(661, 431);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Settings";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxLogin
+            // 
+            this.groupBoxLogin.Controls.Add(this.buttonLogout);
+            this.groupBoxLogin.Controls.Add(this.buttonLogin);
+            this.groupBoxLogin.Controls.Add(this.textBoxPassword);
+            this.groupBoxLogin.Controls.Add(this.label13);
+            this.groupBoxLogin.Controls.Add(this.textBoxUsername);
+            this.groupBoxLogin.Controls.Add(this.label14);
+            this.groupBoxLogin.Location = new System.Drawing.Point(10, 7);
+            this.groupBoxLogin.Name = "groupBoxLogin";
+            this.groupBoxLogin.Size = new System.Drawing.Size(645, 99);
+            this.groupBoxLogin.TabIndex = 17;
+            this.groupBoxLogin.TabStop = false;
+            this.groupBoxLogin.Text = "Connection";
+            // 
+            // groupBoxChangePassword
+            // 
+            this.groupBoxChangePassword.Controls.Add(this.textBoxPasswordNew);
+            this.groupBoxChangePassword.Controls.Add(this.label11);
+            this.groupBoxChangePassword.Controls.Add(this.textBoxPasswordOld);
+            this.groupBoxChangePassword.Controls.Add(this.label12);
+            this.groupBoxChangePassword.Controls.Add(this.buttonChangePassword);
+            this.groupBoxChangePassword.Location = new System.Drawing.Point(10, 112);
+            this.groupBoxChangePassword.Name = "groupBoxChangePassword";
+            this.groupBoxChangePassword.Size = new System.Drawing.Size(645, 117);
+            this.groupBoxChangePassword.TabIndex = 18;
+            this.groupBoxChangePassword.TabStop = false;
+            this.groupBoxChangePassword.Text = "Change Password";
+            // 
+            // textBoxPasswordNew
+            // 
+            this.textBoxPasswordNew.Location = new System.Drawing.Point(35, 45);
+            this.textBoxPasswordNew.Name = "textBoxPasswordNew";
+            this.textBoxPasswordNew.Size = new System.Drawing.Size(262, 20);
+            this.textBoxPasswordNew.TabIndex = 20;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 48);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(29, 13);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "New";
+            // 
+            // textBoxPasswordOld
+            // 
+            this.textBoxPasswordOld.Location = new System.Drawing.Point(35, 19);
+            this.textBoxPasswordOld.Name = "textBoxPasswordOld";
+            this.textBoxPasswordOld.Size = new System.Drawing.Size(262, 20);
+            this.textBoxPasswordOld.TabIndex = 18;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 22);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(23, 13);
+            this.label12.TabIndex = 17;
+            this.label12.Text = "Old";
+            // 
+            // buttonLogin
+            // 
+            this.buttonLogin.Location = new System.Drawing.Point(303, 17);
+            this.buttonLogin.Name = "buttonLogin";
+            this.buttonLogin.Size = new System.Drawing.Size(168, 48);
+            this.buttonLogin.TabIndex = 9;
+            this.buttonLogin.Text = "Login";
+            this.buttonLogin.UseVisualStyleBackColor = true;
+            this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
+            // 
+            // textBoxPassword
+            // 
+            this.textBoxPassword.Location = new System.Drawing.Point(69, 45);
+            this.textBoxPassword.Name = "textBoxPassword";
+            this.textBoxPassword.PasswordChar = 'X';
+            this.textBoxPassword.Size = new System.Drawing.Size(224, 20);
+            this.textBoxPassword.TabIndex = 8;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(8, 48);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(53, 13);
+            this.label13.TabIndex = 7;
+            this.label13.Text = "Password";
+            // 
+            // textBoxUsername
+            // 
+            this.textBoxUsername.Location = new System.Drawing.Point(69, 19);
+            this.textBoxUsername.Name = "textBoxUsername";
+            this.textBoxUsername.Size = new System.Drawing.Size(224, 20);
+            this.textBoxUsername.TabIndex = 6;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 22);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(55, 13);
+            this.label14.TabIndex = 5;
+            this.label14.Text = "Username";
+            // 
+            // buttonLogout
+            // 
+            this.buttonLogout.Location = new System.Drawing.Point(477, 17);
+            this.buttonLogout.Name = "buttonLogout";
+            this.buttonLogout.Size = new System.Drawing.Size(162, 48);
+            this.buttonLogout.TabIndex = 10;
+            this.buttonLogout.Text = "Logout";
+            this.buttonLogout.UseVisualStyleBackColor = true;
+            this.buttonLogout.Click += new System.EventHandler(this.buttonLogout_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(644, 584);
-            this.Controls.Add(this.comboBoxSeccode);
-            this.Controls.Add(this.buttonChangePassword);
-            this.Controls.Add(this.buttonOldTest);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.ClientSize = new System.Drawing.Size(690, 509);
+            this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";
             this.Text = "AUTO TRADER";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.groupBoxLogin.ResumeLayout(false);
+            this.groupBoxLogin.PerformLayout();
+            this.groupBoxChangePassword.ResumeLayout(false);
+            this.groupBoxChangePassword.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -332,16 +409,9 @@
         private System.Windows.Forms.TextBox textBoxSL;
         private System.Windows.Forms.Button buttonComboBuy;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox checkBoxByMarket;
         private System.Windows.Forms.TextBox textBoxPrice;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
@@ -349,9 +419,23 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textBoxTP;
-        private System.Windows.Forms.Button buttonOldTest;
         private System.Windows.Forms.Button buttonChangePassword;
         private System.Windows.Forms.Button buttonComboSell;
         private System.Windows.Forms.ComboBox comboBoxSeccode;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.GroupBox groupBoxChangePassword;
+        private System.Windows.Forms.GroupBox groupBoxLogin;
+        private System.Windows.Forms.TextBox textBoxPasswordNew;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBoxPasswordOld;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button buttonLogout;
+        private System.Windows.Forms.Button buttonLogin;
+        private System.Windows.Forms.TextBox textBoxPassword;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox textBoxUsername;
+        private System.Windows.Forms.Label label14;
     }
 }
