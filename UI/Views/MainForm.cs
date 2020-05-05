@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApplication;
 
 namespace WindowsFormsApplication1
 {
@@ -26,7 +27,38 @@ namespace WindowsFormsApplication1
             InitializeComponent();
 
 
-            _handleDisconnected();            
+            _handleDisconnected();
+            _loadSettings();
+        }
+
+        private void _loadSeccodeSettings()
+        {
+            comboBoxSeccode.SelectedItem = Globals.Settings.Seccode;
+        }
+
+        private void _loadSettings()
+        {
+            textBoxUsername.Text = Globals.Settings.GetUsername();
+            textBoxPassword.Text = Globals.Settings.GetPassword();
+            textBoxTP.Text = Globals.Settings.TP.ToString();
+            textBoxSL.Text = Globals.Settings.SL.ToString();
+            textBoxPrice.Text = Globals.Settings.Price.ToString();
+            checkBoxByMarket.Checked = Globals.Settings.ByMarket;
+            textBoxVolume.Text = Globals.Settings.Volume.ToString();
+            
+        }
+
+        private void _saveSettings()
+        {
+            Globals.Settings.SetUsername(textBoxUsername.Text);
+            Globals.Settings.SetPassword(textBoxPassword.Text);
+            Globals.Settings.TP = int.Parse(textBoxTP.Text);
+            Globals.Settings.SL = int.Parse(textBoxSL.Text);
+            Globals.Settings.Price = int.Parse(textBoxPrice.Text);
+            Globals.Settings.Volume = int.Parse(textBoxVolume.Text);
+            Globals.Settings.Seccode = comboBoxSeccode.Text;
+            Globals.Settings.ByMarket = checkBoxByMarket.Checked;
+            Globals.Settings.Save();
         }
 
         private void buttonComboBuy_Click(object sender, EventArgs e)
@@ -77,8 +109,11 @@ namespace WindowsFormsApplication1
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _saveSettings();
             _cl1.Dispose();
         }
+
+        
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
@@ -86,6 +121,7 @@ namespace WindowsFormsApplication1
             {
                 _cl1.Login(textBoxUsername.Text, textBoxPassword.Text);
                 _handleConnected();
+                
             }
             catch (Exception ex)
             {
@@ -123,6 +159,7 @@ namespace WindowsFormsApplication1
         private void _handleConnected()
         {
             comboBoxSeccode.DataSource = _cl1.GetSecurities().Where(x => x.board == boardsCode.FUT).Select(x => x.seccode).OrderBy(x => x).ToList();
+            _loadSeccodeSettings();
 
             ((Control)tabPage1).Enabled = true;
             groupBoxChangePassword.Enabled = true;
