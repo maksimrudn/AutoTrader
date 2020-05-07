@@ -154,7 +154,7 @@ namespace AutoTraderSDK.Domain.OutputXML
         #region CONSTRUCTORS
         public command()
         {
-            
+
         }
         #endregion
 
@@ -361,6 +361,7 @@ namespace AutoTraderSDK.Domain.OutputXML
         public string logsdir { get; set; }
 
         #region ORDER
+        // todo проверить будут ли проблемы, если этот параметр заполнять в конструкторе
         [XmlElement(IsNullable=false)]
         public security security { get; set; }
 

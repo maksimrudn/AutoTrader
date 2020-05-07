@@ -11,8 +11,8 @@ namespace AutoTraderSDK.Kernel
 {
     public abstract class TXMLConnectorCallbackableBase: TXMLConnectorBase
     {
-        public static AutoResetEvent statusConnected = new AutoResetEvent(false);
-        public static AutoResetEvent securitiesLoaded = new AutoResetEvent(false);
+        public AutoResetEvent statusConnected = new AutoResetEvent(false);
+        public AutoResetEvent securitiesLoaded = new AutoResetEvent(false);
 
         public bool Connected { get; protected set; }
 
@@ -22,17 +22,17 @@ namespace AutoTraderSDK.Kernel
         /// </summary>
         protected server_status _serverStatus = null;
 
-        protected static client _client = null;
-        protected static positions _positions = null;
-        protected static candle _currentCandle = null;
+        protected client _client = null;
+        protected positions _positions = null;
+        protected candle _currentCandle = null;
 
-        protected static bool _positionsIsActual = false;
+        protected bool _positionsIsActual = false;
 
-        protected static HashSet<quote> _quotes { get; set; }
-        protected static HashSet<order> _orders { get; set; }
-        protected static HashSet<trade> _trades { get; set; }
+        protected HashSet<quote> _quotes { get; set; }
+        protected HashSet<order> _orders { get; set; }
+        protected HashSet<trade> _trades { get; set; }
 
-        protected static HashSet<security> _securities { get; set; }
+        protected HashSet<security> _securities { get; set; }
 
         public TXMLConnectorCallbackableBase(string tConnFile) : base(tConnFile)
         {

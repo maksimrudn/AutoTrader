@@ -16,11 +16,12 @@ namespace AutoTraderSDK.Kernel
         IntPtr _tConnectorDll;
         string _logpath = Globals.GetWorkFolder() + "\0";
         int _loglevel = 3;
-
+        protected string _tconfFile;
         
 
         public TXMLConnectorBase(string tconFile = "txmlconnector1.dll")
         {
+            _tconfFile = tconFile;
             _tConnectorDll = NativeMethods.LoadLibrary(tconFile);
 
             IntPtr initializePtr = NativeMethods.GetProcAddress(_tConnectorDll, "Initialize");
