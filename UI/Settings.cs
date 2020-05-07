@@ -65,6 +65,10 @@ namespace WindowsFormsApplication
 
         public string Password { get; set; }
 
+        public string Username2 { get; set; }
+
+        public string Password2 { get; set; }
+
         public string Seccode { get; set; }
 
         public int TP { get; set; }
@@ -76,6 +80,10 @@ namespace WindowsFormsApplication
         public int Volume { get; set; }
 
         public bool ByMarket { get; set; }
+
+        // 1 - condition
+        // 2 - stop
+        public int ComboOrderType { get; set; } = 1;
 
         #endregion
 
@@ -118,6 +126,47 @@ namespace WindowsFormsApplication
         public void SetPassword(string text)
         {
             Password = Crypter.Encrypt(text);
+        }
+
+        public void SetUsername2(string text)
+        {
+            Username2 = Crypter.Encrypt(text);
+        }
+        public string GetUsername2()
+        {
+            string res;
+
+            try
+            {
+                res = Crypter.Decrypt(Username2);
+            }
+            catch
+            {
+                res = Username2;
+            }
+
+            return res;
+        }
+
+        public string GetPassword2()
+        {
+            string res;
+
+            try
+            {
+                res = Crypter.Decrypt(Password2);
+            }
+            catch
+            {
+                res = Password2;
+            }
+
+            return res;
+        }
+
+        public void SetPassword2(string text)
+        {
+            Password2 = Crypter.Encrypt(text);
         }
     }
 }

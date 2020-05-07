@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\ComboOrder.cs" />
     <Compile Include="Domain\InputXML\board.cs" />
     <Compile Include="Domain\InputXML\boards.cs" />
     <Compile Include="Domain\InputXML\candle.cs" />

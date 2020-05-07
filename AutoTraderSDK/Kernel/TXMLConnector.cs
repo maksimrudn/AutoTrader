@@ -1,4 +1,5 @@
-﻿using AutoTraderSDK.Domain.InputXML;
+﻿using AutoTraderSDK.Domain;
+using AutoTraderSDK.Domain.InputXML;
 using AutoTraderSDK.Domain.OutputXML;
 using System;
 using System.Collections.Generic;
@@ -170,6 +171,8 @@ namespace AutoTraderSDK.Kernel
             }
         }
 
+        
+
         public void Logout()
         {
             var com = command.CreateDisconnectCommand();
@@ -247,6 +250,7 @@ namespace AutoTraderSDK.Kernel
 
             if (sendResult.success == true)
             {
+                // todo перейти autoreset
                 while (true)
                 {
                     Application.DoEvents();
@@ -349,14 +353,21 @@ namespace AutoTraderSDK.Kernel
                                 orderno);
         }
 
-        public int NewStopOrder(boardsCode board, string seccode, buysell buysell, double SLPrice, double TPPrice, int volume, Int64 orderno = 0, double correction = 0)
+        public int NewStopOrder(boardsCode board, 
+                                    string seccode, 
+                                    buysell buysell, 
+                                    double SLPrice, 
+                                    double TPPrice, 
+                                    int volume, 
+                                    Int64 orderno = 0, 
+                                    double correction = 0)
         {
-            throw new Exception("не работает");
-
+            
             int res = 0;
 
             command com = new command();
             com.id = command_id.newstoporder;
+            com.security = new security();
             com.security.board = board;
             com.security.seccode = seccode;
 
@@ -430,6 +441,13 @@ namespace AutoTraderSDK.Kernel
             return res;
         }
 
+        public void NewComboOrder(ComboOrder co)
+        {
+            if (co.BuySell == null) throw new Exception("Не установлен параметр BuySell");
+
+            NewComboOrder(co.Board, co.Seccode, co.BuySell.Value, co.ByMarket, co.Price, co.Vol, co.SL, co.TP);
+        }
+
         /// <summary>
         /// Выставляет открывающую заявку и при наличии условий по sl, tp закрывающие заявки
         /// </summary>
@@ -448,7 +466,8 @@ namespace AutoTraderSDK.Kernel
                                         int price,
                                         int volume, 
                                         int slDistance, 
-                                        int tpDistance)
+                                        int tpDistance,
+                                        int comboType = 1)
         {
             
             int tid = NewOrder(board, 
@@ -457,6 +476,8 @@ namespace AutoTraderSDK.Kernel
                                 bymarket, 
                                 price, 
                                 volume);
+
+            // todo перейти на AutoResetEvent
             order ord = null;
             while (ord == null) { Application.DoEvents(); ord = GetOrderByTransactionId(tid); }
 
@@ -466,29 +487,38 @@ namespace AutoTraderSDK.Kernel
 
             var closeOrderBysell = (buysell == buysell.B) ? buysell.S : buysell.B;
 
-            // открытие sl заявки
-            if (slDistance > 0)
+            if (comboType == 1)
             {
-                double slPrice = (buysell == buysell.B) ? tr.price - slDistance : tr.price + slDistance;
-                var closeCondition = (buysell == buysell.B) ? cond_type.AskOrLast : cond_type.BidOrLast;
+                // открытие sl заявки
+                if (slDistance > 0)
+                {
+                    double slPrice = (buysell == buysell.B) ? tr.price - slDistance : tr.price + slDistance;
+                    var closeCondition = (buysell == buysell.B) ? cond_type.AskOrLast : cond_type.BidOrLast;
 
-                NewCondOrder(board,
-                            seccode,
-                            closeOrderBysell,
-                            bymarket,
-                            closeCondition,
-                            slPrice,
-                            volume);
+                    NewCondOrder(board,
+                                seccode,
+                                closeOrderBysell,
+                                bymarket,
+                                closeCondition,
+                                slPrice,
+                                volume);
+                }
+
+                // открытие tp заявки
+                if (tpDistance > 0)
+                {
+
+                    double tpPrice = (buysell == buysell.B) ? tr.price + tpDistance : tr.price - tpDistance;
+                    NewOrder(board, seccode, closeOrderBysell, bymarket, tpPrice, volume);
+                }
             }
-
-            // открытие tp заявки
-            if (tpDistance > 0)
+            else
             {
-
-                double tpPrice = (buysell == buysell.B) ? tr.price + tpDistance : tr.price - tpDistance;
-                NewOrder(board, seccode, closeOrderBysell, bymarket, tpPrice, volume);
+                // todo доаписать
+                //NewStopOrder(board, seccode, buysell, )
             }
-               
+              
+
         }
 
         

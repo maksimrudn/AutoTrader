@@ -46,30 +46,56 @@
             this.comboBoxSeccode = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
+            this.dateTimePickerMultidirectExecute = new System.Windows.Forms.DateTimePicker();
+            this.buttonStartMultidirectTimer = new System.Windows.Forms.Button();
+            this.buttonMakeMultidirect = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButtonComboTypeStop = new System.Windows.Forms.RadioButton();
+            this.radioButtonComboTypeContidion = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBoxLogin = new System.Windows.Forms.GroupBox();
             this.groupBoxChangePassword = new System.Windows.Forms.GroupBox();
             this.textBoxPasswordNew = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.textBoxPasswordOld = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.groupBoxLogin = new System.Windows.Forms.GroupBox();
+            this.buttonLogout = new System.Windows.Forms.Button();
             this.buttonLogin = new System.Windows.Forms.Button();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.textBoxUsername = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.buttonLogout = new System.Windows.Forms.Button();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBoxPasswordNew2 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxPasswordOld2 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.buttonChangePassword2 = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.buttonLogout2 = new System.Windows.Forms.Button();
+            this.buttonLogin2 = new System.Windows.Forms.Button();
+            this.textBoxPassword2 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBoxUsername2 = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.labelTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBoxLogin.SuspendLayout();
             this.groupBoxChangePassword.SuspendLayout();
+            this.groupBoxLogin.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxSL
             // 
-            this.textBoxSL.Location = new System.Drawing.Point(54, 124);
+            this.textBoxSL.Location = new System.Drawing.Point(54, 137);
             this.textBoxSL.Name = "textBoxSL";
             this.textBoxSL.Size = new System.Drawing.Size(100, 20);
             this.textBoxSL.TabIndex = 0;
@@ -78,7 +104,7 @@
             // buttonComboBuy
             // 
             this.buttonComboBuy.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonComboBuy.Location = new System.Drawing.Point(354, 72);
+            this.buttonComboBuy.Location = new System.Drawing.Point(354, 85);
             this.buttonComboBuy.Name = "buttonComboBuy";
             this.buttonComboBuy.Size = new System.Drawing.Size(120, 72);
             this.buttonComboBuy.TabIndex = 2;
@@ -90,7 +116,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(9, 13);
+            this.label2.Location = new System.Drawing.Point(9, 26);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(110, 13);
             this.label2.TabIndex = 4;
@@ -102,7 +128,7 @@
             this.checkBoxByMarket.Checked = true;
             this.checkBoxByMarket.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxByMarket.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkBoxByMarket.Location = new System.Drawing.Point(160, 100);
+            this.checkBoxByMarket.Location = new System.Drawing.Point(160, 113);
             this.checkBoxByMarket.Name = "checkBoxByMarket";
             this.checkBoxByMarket.Size = new System.Drawing.Size(83, 17);
             this.checkBoxByMarket.TabIndex = 11;
@@ -111,7 +137,7 @@
             // 
             // textBoxPrice
             // 
-            this.textBoxPrice.Location = new System.Drawing.Point(54, 98);
+            this.textBoxPrice.Location = new System.Drawing.Point(54, 111);
             this.textBoxPrice.Name = "textBoxPrice";
             this.textBoxPrice.Size = new System.Drawing.Size(100, 20);
             this.textBoxPrice.TabIndex = 12;
@@ -121,7 +147,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label8.Location = new System.Drawing.Point(9, 102);
+            this.label8.Location = new System.Drawing.Point(9, 115);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(36, 13);
             this.label8.TabIndex = 13;
@@ -130,7 +156,7 @@
             // buttonComboSell
             // 
             this.buttonComboSell.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonComboSell.Location = new System.Drawing.Point(483, 72);
+            this.buttonComboSell.Location = new System.Drawing.Point(483, 85);
             this.buttonComboSell.Name = "buttonComboSell";
             this.buttonComboSell.Size = new System.Drawing.Size(120, 72);
             this.buttonComboSell.TabIndex = 22;
@@ -141,26 +167,27 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 244);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 320);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(598, 162);
+            this.dataGridView1.Size = new System.Drawing.Size(598, 86);
             this.dataGridView1.TabIndex = 21;
             // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(10, 184);
+            this.button1.Location = new System.Drawing.Point(12, 260);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(600, 54);
             this.button1.TabIndex = 20;
             this.button1.Text = "CLOSE ALL";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(241, 101);
+            this.label1.Location = new System.Drawing.Point(241, 114);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(31, 13);
             this.label1.TabIndex = 19;
@@ -168,7 +195,7 @@
             // 
             // textBoxVolume
             // 
-            this.textBoxVolume.Location = new System.Drawing.Point(286, 97);
+            this.textBoxVolume.Location = new System.Drawing.Point(286, 110);
             this.textBoxVolume.Name = "textBoxVolume";
             this.textBoxVolume.Size = new System.Drawing.Size(62, 20);
             this.textBoxVolume.TabIndex = 18;
@@ -178,7 +205,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.Location = new System.Drawing.Point(9, 128);
+            this.label10.Location = new System.Drawing.Point(9, 141);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(22, 13);
             this.label10.TabIndex = 17;
@@ -188,7 +215,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.Location = new System.Drawing.Point(9, 76);
+            this.label9.Location = new System.Drawing.Point(9, 89);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(23, 13);
             this.label9.TabIndex = 15;
@@ -196,7 +223,7 @@
             // 
             // textBoxTP
             // 
-            this.textBoxTP.Location = new System.Drawing.Point(54, 72);
+            this.textBoxTP.Location = new System.Drawing.Point(54, 85);
             this.textBoxTP.Name = "textBoxTP";
             this.textBoxTP.Size = new System.Drawing.Size(100, 20);
             this.textBoxTP.TabIndex = 14;
@@ -216,7 +243,7 @@
             // 
             this.comboBoxSeccode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSeccode.FormattingEnabled = true;
-            this.comboBoxSeccode.Location = new System.Drawing.Point(12, 32);
+            this.comboBoxSeccode.Location = new System.Drawing.Point(12, 45);
             this.comboBoxSeccode.Name = "comboBoxSeccode";
             this.comboBoxSeccode.Size = new System.Drawing.Size(121, 21);
             this.comboBoxSeccode.TabIndex = 17;
@@ -225,6 +252,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(12, 40);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -233,6 +261,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label7);
+            this.tabPage1.Controls.Add(this.dateTimePickerMultidirectExecute);
+            this.tabPage1.Controls.Add(this.buttonStartMultidirectTimer);
+            this.tabPage1.Controls.Add(this.buttonMakeMultidirect);
+            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.dataGridView1);
             this.tabPage1.Controls.Add(this.comboBoxSeccode);
             this.tabPage1.Controls.Add(this.button1);
@@ -256,6 +289,80 @@
             this.tabPage1.Text = "Trading";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(227, 210);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(121, 13);
+            this.label7.TabIndex = 29;
+            this.label7.Text = "Time to make multidirect";
+            // 
+            // dateTimePickerMultidirectExecute
+            // 
+            this.dateTimePickerMultidirectExecute.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dateTimePickerMultidirectExecute.Location = new System.Drawing.Point(230, 226);
+            this.dateTimePickerMultidirectExecute.Name = "dateTimePickerMultidirectExecute";
+            this.dateTimePickerMultidirectExecute.Size = new System.Drawing.Size(118, 20);
+            this.dateTimePickerMultidirectExecute.TabIndex = 28;
+            // 
+            // buttonStartMultidirectTimer
+            // 
+            this.buttonStartMultidirectTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonStartMultidirectTimer.ForeColor = System.Drawing.Color.Red;
+            this.buttonStartMultidirectTimer.Location = new System.Drawing.Point(354, 210);
+            this.buttonStartMultidirectTimer.Name = "buttonStartMultidirectTimer";
+            this.buttonStartMultidirectTimer.Size = new System.Drawing.Size(249, 41);
+            this.buttonStartMultidirectTimer.TabIndex = 27;
+            this.buttonStartMultidirectTimer.Text = "MULTIDIRECT BY TIMER";
+            this.buttonStartMultidirectTimer.UseVisualStyleBackColor = true;
+            this.buttonStartMultidirectTimer.Click += new System.EventHandler(this.buttonStartMultidirectTimer_Click);
+            // 
+            // buttonMakeMultidirect
+            // 
+            this.buttonMakeMultidirect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonMakeMultidirect.ForeColor = System.Drawing.Color.Red;
+            this.buttonMakeMultidirect.Location = new System.Drawing.Point(354, 163);
+            this.buttonMakeMultidirect.Name = "buttonMakeMultidirect";
+            this.buttonMakeMultidirect.Size = new System.Drawing.Size(249, 41);
+            this.buttonMakeMultidirect.TabIndex = 26;
+            this.buttonMakeMultidirect.Text = "MULTIDIRECT!";
+            this.buttonMakeMultidirect.UseVisualStyleBackColor = true;
+            this.buttonMakeMultidirect.Click += new System.EventHandler(this.buttonMakeMultidirect_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButtonComboTypeStop);
+            this.groupBox1.Controls.Add(this.radioButtonComboTypeContidion);
+            this.groupBox1.Location = new System.Drawing.Point(354, 7);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(249, 72);
+            this.groupBox1.TabIndex = 25;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Combo order type";
+            // 
+            // radioButtonComboTypeStop
+            // 
+            this.radioButtonComboTypeStop.AutoSize = true;
+            this.radioButtonComboTypeStop.Location = new System.Drawing.Point(6, 49);
+            this.radioButtonComboTypeStop.Name = "radioButtonComboTypeStop";
+            this.radioButtonComboTypeStop.Size = new System.Drawing.Size(101, 17);
+            this.radioButtonComboTypeStop.TabIndex = 23;
+            this.radioButtonComboTypeStop.Text = "With Stop Order";
+            this.radioButtonComboTypeStop.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonComboTypeContidion
+            // 
+            this.radioButtonComboTypeContidion.AutoSize = true;
+            this.radioButtonComboTypeContidion.Checked = true;
+            this.radioButtonComboTypeContidion.Location = new System.Drawing.Point(6, 21);
+            this.radioButtonComboTypeContidion.Name = "radioButtonComboTypeContidion";
+            this.radioButtonComboTypeContidion.Size = new System.Drawing.Size(123, 17);
+            this.radioButtonComboTypeContidion.TabIndex = 24;
+            this.radioButtonComboTypeContidion.TabStop = true;
+            this.radioButtonComboTypeContidion.Text = "With Condition Order";
+            this.radioButtonComboTypeContidion.UseVisualStyleBackColor = true;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.groupBoxChangePassword);
@@ -265,23 +372,8 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(661, 431);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Settings";
+            this.tabPage2.Text = "Settings 1";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxLogin
-            // 
-            this.groupBoxLogin.Controls.Add(this.buttonLogout);
-            this.groupBoxLogin.Controls.Add(this.buttonLogin);
-            this.groupBoxLogin.Controls.Add(this.textBoxPassword);
-            this.groupBoxLogin.Controls.Add(this.label13);
-            this.groupBoxLogin.Controls.Add(this.textBoxUsername);
-            this.groupBoxLogin.Controls.Add(this.label14);
-            this.groupBoxLogin.Location = new System.Drawing.Point(10, 7);
-            this.groupBoxLogin.Name = "groupBoxLogin";
-            this.groupBoxLogin.Size = new System.Drawing.Size(645, 99);
-            this.groupBoxLogin.TabIndex = 17;
-            this.groupBoxLogin.TabStop = false;
-            this.groupBoxLogin.Text = "Connection";
             // 
             // groupBoxChangePassword
             // 
@@ -329,6 +421,31 @@
             this.label12.TabIndex = 17;
             this.label12.Text = "Old";
             // 
+            // groupBoxLogin
+            // 
+            this.groupBoxLogin.Controls.Add(this.buttonLogout);
+            this.groupBoxLogin.Controls.Add(this.buttonLogin);
+            this.groupBoxLogin.Controls.Add(this.textBoxPassword);
+            this.groupBoxLogin.Controls.Add(this.label13);
+            this.groupBoxLogin.Controls.Add(this.textBoxUsername);
+            this.groupBoxLogin.Controls.Add(this.label14);
+            this.groupBoxLogin.Location = new System.Drawing.Point(10, 7);
+            this.groupBoxLogin.Name = "groupBoxLogin";
+            this.groupBoxLogin.Size = new System.Drawing.Size(645, 99);
+            this.groupBoxLogin.TabIndex = 17;
+            this.groupBoxLogin.TabStop = false;
+            this.groupBoxLogin.Text = "Connection";
+            // 
+            // buttonLogout
+            // 
+            this.buttonLogout.Location = new System.Drawing.Point(477, 17);
+            this.buttonLogout.Name = "buttonLogout";
+            this.buttonLogout.Size = new System.Drawing.Size(162, 48);
+            this.buttonLogout.TabIndex = 10;
+            this.buttonLogout.Text = "Logout";
+            this.buttonLogout.UseVisualStyleBackColor = true;
+            this.buttonLogout.Click += new System.EventHandler(this.buttonLogout_Click);
+            // 
             // buttonLogin
             // 
             this.buttonLogin.Location = new System.Drawing.Point(303, 17);
@@ -372,21 +489,157 @@
             this.label14.TabIndex = 5;
             this.label14.Text = "Username";
             // 
-            // buttonLogout
+            // tabPage3
             // 
-            this.buttonLogout.Location = new System.Drawing.Point(477, 17);
-            this.buttonLogout.Name = "buttonLogout";
-            this.buttonLogout.Size = new System.Drawing.Size(162, 48);
-            this.buttonLogout.TabIndex = 10;
-            this.buttonLogout.Text = "Logout";
-            this.buttonLogout.UseVisualStyleBackColor = true;
-            this.buttonLogout.Click += new System.EventHandler(this.buttonLogout_Click);
+            this.tabPage3.Controls.Add(this.groupBox2);
+            this.tabPage3.Controls.Add(this.groupBox3);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(661, 431);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Settings 2";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.textBoxPasswordNew2);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.textBoxPasswordOld2);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.buttonChangePassword2);
+            this.groupBox2.Location = new System.Drawing.Point(6, 111);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(645, 117);
+            this.groupBox2.TabIndex = 20;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Change Password";
+            // 
+            // textBoxPasswordNew2
+            // 
+            this.textBoxPasswordNew2.Location = new System.Drawing.Point(35, 45);
+            this.textBoxPasswordNew2.Name = "textBoxPasswordNew2";
+            this.textBoxPasswordNew2.Size = new System.Drawing.Size(262, 20);
+            this.textBoxPasswordNew2.TabIndex = 20;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 48);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 13);
+            this.label3.TabIndex = 19;
+            this.label3.Text = "New";
+            // 
+            // textBoxPasswordOld2
+            // 
+            this.textBoxPasswordOld2.Location = new System.Drawing.Point(35, 19);
+            this.textBoxPasswordOld2.Name = "textBoxPasswordOld2";
+            this.textBoxPasswordOld2.Size = new System.Drawing.Size(262, 20);
+            this.textBoxPasswordOld2.TabIndex = 18;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 22);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(23, 13);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Old";
+            // 
+            // buttonChangePassword2
+            // 
+            this.buttonChangePassword2.Location = new System.Drawing.Point(303, 17);
+            this.buttonChangePassword2.Name = "buttonChangePassword2";
+            this.buttonChangePassword2.Size = new System.Drawing.Size(336, 48);
+            this.buttonChangePassword2.TabIndex = 16;
+            this.buttonChangePassword2.Text = "Change password";
+            this.buttonChangePassword2.UseVisualStyleBackColor = true;
+            this.buttonChangePassword2.Click += new System.EventHandler(this.buttonChangePassword2_Click);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.buttonLogout2);
+            this.groupBox3.Controls.Add(this.buttonLogin2);
+            this.groupBox3.Controls.Add(this.textBoxPassword2);
+            this.groupBox3.Controls.Add(this.label5);
+            this.groupBox3.Controls.Add(this.textBoxUsername2);
+            this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Location = new System.Drawing.Point(6, 6);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(645, 99);
+            this.groupBox3.TabIndex = 19;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Connection";
+            // 
+            // buttonLogout2
+            // 
+            this.buttonLogout2.Location = new System.Drawing.Point(477, 17);
+            this.buttonLogout2.Name = "buttonLogout2";
+            this.buttonLogout2.Size = new System.Drawing.Size(162, 48);
+            this.buttonLogout2.TabIndex = 10;
+            this.buttonLogout2.Text = "Logout";
+            this.buttonLogout2.UseVisualStyleBackColor = true;
+            // 
+            // buttonLogin2
+            // 
+            this.buttonLogin2.Location = new System.Drawing.Point(303, 17);
+            this.buttonLogin2.Name = "buttonLogin2";
+            this.buttonLogin2.Size = new System.Drawing.Size(168, 48);
+            this.buttonLogin2.TabIndex = 9;
+            this.buttonLogin2.Text = "Login";
+            this.buttonLogin2.UseVisualStyleBackColor = true;
+            this.buttonLogin2.Click += new System.EventHandler(this.buttonLogin2_Click);
+            // 
+            // textBoxPassword2
+            // 
+            this.textBoxPassword2.Location = new System.Drawing.Point(69, 45);
+            this.textBoxPassword2.Name = "textBoxPassword2";
+            this.textBoxPassword2.PasswordChar = 'X';
+            this.textBoxPassword2.Size = new System.Drawing.Size(224, 20);
+            this.textBoxPassword2.TabIndex = 8;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 48);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(53, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Password";
+            // 
+            // textBoxUsername2
+            // 
+            this.textBoxUsername2.Location = new System.Drawing.Point(69, 19);
+            this.textBoxUsername2.Name = "textBoxUsername2";
+            this.textBoxUsername2.Size = new System.Drawing.Size(224, 20);
+            this.textBoxUsername2.TabIndex = 6;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(8, 22);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(55, 13);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Username";
+            // 
+            // labelTime
+            // 
+            this.labelTime.AutoSize = true;
+            this.labelTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelTime.Location = new System.Drawing.Point(16, 13);
+            this.labelTime.Name = "labelTime";
+            this.labelTime.Size = new System.Drawing.Size(94, 13);
+            this.labelTime.TabIndex = 19;
+            this.labelTime.Text = "Time: hh:mm:ss";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(690, 509);
+            this.Controls.Add(this.labelTime);
             this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";
             this.Text = "AUTO TRADER";
@@ -395,12 +648,20 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.groupBoxLogin.ResumeLayout(false);
-            this.groupBoxLogin.PerformLayout();
             this.groupBoxChangePassword.ResumeLayout(false);
             this.groupBoxChangePassword.PerformLayout();
+            this.groupBoxLogin.ResumeLayout(false);
+            this.groupBoxLogin.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -437,5 +698,27 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox textBoxUsername;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radioButtonComboTypeStop;
+        private System.Windows.Forms.RadioButton radioButtonComboTypeContidion;
+        private System.Windows.Forms.Button buttonMakeMultidirect;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox textBoxPasswordNew2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBoxPasswordOld2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonChangePassword2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button buttonLogout2;
+        private System.Windows.Forms.Button buttonLogin2;
+        private System.Windows.Forms.TextBox textBoxPassword2;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBoxUsername2;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button buttonStartMultidirectTimer;
+        private System.Windows.Forms.DateTimePicker dateTimePickerMultidirectExecute;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelTime;
     }
 }
