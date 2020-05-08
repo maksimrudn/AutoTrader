@@ -81,6 +81,13 @@
             this.textBoxUsername2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.labelTime = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.textBoxFreeMoney = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.textBoxClientId = new System.Windows.Forms.TextBox();
+            this.textBoxUnion = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -91,6 +98,7 @@
             this.tabPage3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxSL
@@ -365,6 +373,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox4);
             this.tabPage2.Controls.Add(this.groupBoxChangePassword);
             this.tabPage2.Controls.Add(this.groupBoxLogin);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -382,7 +391,7 @@
             this.groupBoxChangePassword.Controls.Add(this.textBoxPasswordOld);
             this.groupBoxChangePassword.Controls.Add(this.label12);
             this.groupBoxChangePassword.Controls.Add(this.buttonChangePassword);
-            this.groupBoxChangePassword.Location = new System.Drawing.Point(10, 112);
+            this.groupBoxChangePassword.Location = new System.Drawing.Point(10, 221);
             this.groupBoxChangePassword.Name = "groupBoxChangePassword";
             this.groupBoxChangePassword.Size = new System.Drawing.Size(645, 117);
             this.groupBoxChangePassword.TabIndex = 18;
@@ -429,7 +438,7 @@
             this.groupBoxLogin.Controls.Add(this.label13);
             this.groupBoxLogin.Controls.Add(this.textBoxUsername);
             this.groupBoxLogin.Controls.Add(this.label14);
-            this.groupBoxLogin.Location = new System.Drawing.Point(10, 7);
+            this.groupBoxLogin.Location = new System.Drawing.Point(10, 116);
             this.groupBoxLogin.Name = "groupBoxLogin";
             this.groupBoxLogin.Size = new System.Drawing.Size(645, 99);
             this.groupBoxLogin.TabIndex = 17;
@@ -634,6 +643,72 @@
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.textBoxUnion);
+            this.groupBox4.Controls.Add(this.label17);
+            this.groupBox4.Controls.Add(this.textBoxFreeMoney);
+            this.groupBox4.Controls.Add(this.label16);
+            this.groupBox4.Controls.Add(this.textBoxClientId);
+            this.groupBox4.Controls.Add(this.label15);
+            this.groupBox4.Location = new System.Drawing.Point(10, 11);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(639, 99);
+            this.groupBox4.TabIndex = 19;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Info";
+            // 
+            // textBoxFreeMoney
+            // 
+            this.textBoxFreeMoney.Location = new System.Drawing.Point(119, 67);
+            this.textBoxFreeMoney.Name = "textBoxFreeMoney";
+            this.textBoxFreeMoney.ReadOnly = true;
+            this.textBoxFreeMoney.Size = new System.Drawing.Size(230, 20);
+            this.textBoxFreeMoney.TabIndex = 3;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(10, 70);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(63, 13);
+            this.label16.TabIndex = 2;
+            this.label16.Text = "Free Money";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(10, 44);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(42, 13);
+            this.label15.TabIndex = 0;
+            this.label15.Text = "ClientId";
+            // 
+            // textBoxClientId
+            // 
+            this.textBoxClientId.Location = new System.Drawing.Point(119, 41);
+            this.textBoxClientId.Name = "textBoxClientId";
+            this.textBoxClientId.ReadOnly = true;
+            this.textBoxClientId.Size = new System.Drawing.Size(230, 20);
+            this.textBoxClientId.TabIndex = 1;
+            // 
+            // textBoxUnion
+            // 
+            this.textBoxUnion.Location = new System.Drawing.Point(119, 15);
+            this.textBoxUnion.Name = "textBoxUnion";
+            this.textBoxUnion.ReadOnly = true;
+            this.textBoxUnion.Size = new System.Drawing.Size(230, 20);
+            this.textBoxUnion.TabIndex = 5;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(10, 18);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(35, 13);
+            this.label17.TabIndex = 4;
+            this.label17.Text = "Union";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -660,6 +735,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -720,5 +797,12 @@
         private System.Windows.Forms.DateTimePicker dateTimePickerMultidirectExecute;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label labelTime;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.TextBox textBoxUnion;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox textBoxFreeMoney;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox textBoxClientId;
+        private System.Windows.Forms.Label label15;
     }
 }

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace AutoTraderSDK.Domain.InputXML
 {
     public class client
     {
+        [XmlAttribute]
         public string id { get; set; }
 
-        public string remove { get; set; }
+        [XmlAttribute]
+        public bool remove { get; set; }
 
         public string type { get; set; }
 
