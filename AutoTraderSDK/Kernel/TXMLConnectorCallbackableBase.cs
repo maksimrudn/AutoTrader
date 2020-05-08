@@ -1,4 +1,5 @@
-﻿using AutoTraderSDK.Domain.InputXML;
+﻿using AutoTraderSDK.Domain;
+using AutoTraderSDK.Domain.InputXML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,20 @@ namespace AutoTraderSDK.Kernel
 {
     public abstract class TXMLConnectorCallbackableBase: TXMLConnectorBase
     {
-        public AutoResetEvent statusConnected = new AutoResetEvent(false);
+        public AutoResetEvent serverStatusUpdated = new AutoResetEvent(false);
         public AutoResetEvent securitiesLoaded = new AutoResetEvent(false);
+        public AutoResetEvent tradesLoaded = new AutoResetEvent(false);
 
-        public bool Connected { get; protected set; }
+
+        public bool Connected
+        {
+            get {
+                bool res = false;
+                if (_serverStatus != null && _serverStatus.connected == "true") res = true;
+
+                return res;
+            }
+        }
 
         /// <summary>
         /// Результат подключения к серверу
@@ -22,7 +33,11 @@ namespace AutoTraderSDK.Kernel
         /// </summary>
         protected server_status _serverStatus = null;
 
-        protected client _client = null;
+        protected client _forts_client = null;
+
+        protected List<client> _clients = new List<client>();       // клиенты-счета различных площадок forts: market=4
+
+
         protected positions _positions = null;
         protected candle _currentCandle = null;
 
@@ -51,9 +66,7 @@ namespace AutoTraderSDK.Kernel
                 case "server_status":
                     _serverStatus = (server_status)XMLHelper.Deserialize(result, typeof(server_status));
 
-                    if (_serverStatus.connected == "true") Connected = true;
-                    else Connected = false;
-                    statusConnected.Set();
+                    serverStatusUpdated.Set();
 
                     break;
 
@@ -86,8 +99,12 @@ namespace AutoTraderSDK.Kernel
                 case "client":
                     var clientInfo = (client)XMLHelper.Deserialize(result, typeof(client));
 
+                    // todo реализовать проверку на присутствие и удаление элемента перед добавлением
+                    _clients.Add(clientInfo);
+
                     if (clientInfo.forts_acc != null)
-                        _client = clientInfo;
+                        _forts_client = clientInfo;
+
                     break;
 
                 case "positions":
@@ -138,6 +155,7 @@ namespace AutoTraderSDK.Kernel
 
             }
         }
+
 
 
         private void _securitiesHandle(List<security> security)

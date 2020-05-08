@@ -25,7 +25,22 @@ namespace AutoTraderSDK.Kernel
         }
 
         
-        public string ClientId { get { return (_client != null) ? _client.forts_acc : null; } }
+        public string FortsClientId { get { return (_forts_client != null) ? _forts_client.forts_acc : null; } }
+        public double Money
+        {
+            get
+            {
+                return _positions.money_position.saldo;
+            }
+        }
+        public string Union
+        {
+            get
+            {
+                return _forts_client.union;
+            }
+        }
+
         public List<quote> QuotesBuy
         {
             get
@@ -148,8 +163,6 @@ namespace AutoTraderSDK.Kernel
 
         public void Login(string username, string password, string server = "tr1.finam.ru", int port = 3900)
         {
-            _serverStatus = null;
-
             var com = command.CreateConnectionCommand(username, password, server, port);
 
             // отправляем команду подключения
@@ -162,7 +175,7 @@ namespace AutoTraderSDK.Kernel
             }
             else
             {
-                statusConnected.WaitOne();
+                serverStatusUpdated.WaitOne();
 
                 if (_serverStatus.connected == "error")
                 {
@@ -177,7 +190,7 @@ namespace AutoTraderSDK.Kernel
         {
             var com = command.CreateDisconnectCommand();
 
-            statusConnected.Reset();
+            serverStatusUpdated.Reset();
             var res = ConnectorSendCommand(com, com.GetType());
         }
 
@@ -200,7 +213,7 @@ namespace AutoTraderSDK.Kernel
             if (Connected)
             {
                 Logout();
-                statusConnected.WaitOne(25 * 1000);
+                serverStatusUpdated.WaitOne(25 * 1000);
             }
 
             IntPtr pResult = _unInitialize();
@@ -220,7 +233,7 @@ namespace AutoTraderSDK.Kernel
         public void Dispose()
         {
             UnInitialize();
-            statusConnected.Dispose();
+            serverStatusUpdated.Dispose();
             base.Dispose();
         }
 
@@ -319,7 +332,7 @@ namespace AutoTraderSDK.Kernel
 
             int res = 0;
 
-            command com = command.CreateNewOrder(this.ClientId, 
+            command com = command.CreateNewOrder(this.FortsClientId, 
                                                         board, 
                                                         seccode, 
                                                         buysell, 
@@ -372,7 +385,7 @@ namespace AutoTraderSDK.Kernel
             com.security.seccode = seccode;
 
             com.buysellValue = buysell;
-            com.client = ClientId;
+            com.client = FortsClientId;
             if (orderno != 0) com.linkedordernoValue = orderno;
 
             com.validforValue = validbefore.till_canceled;
@@ -406,7 +419,7 @@ namespace AutoTraderSDK.Kernel
             return res;
         }
 
-        public int NewCondOrder(boardsCode board, 
+        public int NewConditionOrder(boardsCode board, 
                                     string seccode, 
                                     Domain.OutputXML.buysell buysell, 
                                     bool bymarket, 
@@ -421,7 +434,11 @@ namespace AutoTraderSDK.Kernel
             com.security.board = board;
             com.security.seccode = seccode;
             com.buysellValue = buysell;
-            com.client = ClientId;
+            com.client = FortsClientId;
+            // параметры, которые говорят переносить заявку на следующий день
+            com.validafter = "0";
+            com.validbefore = "till_canceled";
+            /////////////////////////////////
             com.cond_typeValue = condtype;
             com.cond_valueValue = condvalue;
             com.quantityValue = volume;
@@ -495,13 +512,13 @@ namespace AutoTraderSDK.Kernel
                     double slPrice = (buysell == buysell.B) ? tr.price - slDistance : tr.price + slDistance;
                     var closeCondition = (buysell == buysell.B) ? cond_type.AskOrLast : cond_type.BidOrLast;
 
-                    NewCondOrder(board,
-                                seccode,
-                                closeOrderBysell,
-                                bymarket,
-                                closeCondition,
-                                slPrice,
-                                volume);
+                    NewConditionOrder(board,
+                                    seccode,
+                                    closeOrderBysell,
+                                    bymarket,
+                                    closeCondition,
+                                    slPrice,
+                                    volume);
                 }
 
                 // открытие tp заявки

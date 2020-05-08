@@ -11,7 +11,8 @@ namespace AutoTraderSDK.Domain.InputXML
     {
         public money_position money_position { get; set; }
 
-        public sec_position sec_position { get; set; }
+        [XmlElement("sec_position")]
+        public List<sec_position> sec_position { get; set; }
 
         [XmlElement("forts_position")]
         public List<forts_position> forts_position { get; set; }

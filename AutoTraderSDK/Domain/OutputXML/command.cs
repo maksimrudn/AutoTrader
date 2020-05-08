@@ -529,11 +529,12 @@ namespace AutoTraderSDK.Domain.OutputXML
             }
         }
 
+        // только для Stop заявок
+        //0 – до конца торговой сессии
+        //till_canceled – до отмены
+        //ДД.ММ.ГГГГ ЧЧ:ММ:СС – до указанной даты и времени
         [XmlElement(IsNullable = false)]
-        public string validfor { get; set; }
-                    //0 – до конца торговой сессии
-                    //till_canceled – до отмены
-                    //ДД.ММ.ГГГГ ЧЧ:ММ:СС – до указанной даты и времени
+        public string validfor { get; set; }                    
         [XmlIgnore]
         public validbefore? validforValue
         {
@@ -598,11 +599,16 @@ namespace AutoTraderSDK.Domain.OutputXML
             }
         }
 
+
+        // validafter и validbefore задаются в форме даты, описанном выше. 
+        // Для validafter можно передать значение "0", если заявка начинает действовать немедленно. 
+        // Для validbefore значение "0" означает, что заявка будет действительна до конца сессии. 
+        // Также validbefore может принимать текстовое значение "till_canceled", которое означает, что заявка  должна быть действительна до ее отмены
         [XmlElement(IsNullable = false)]
         public string validafter { get; set; }      //с какого момента времени действительна
 
         [XmlElement(IsNullable = false)]
-        public string validbefore { get; set; }
+        public string validbefore { get; set; }     //до какого времени действует заявка
         [XmlIgnore]
         public validbefore? validbeforeValue
         {

@@ -155,7 +155,10 @@ namespace WindowsFormsApplication1
             {
                 _cl1.Login(textBoxUsername.Text, textBoxPassword.Text);
                 _handleConnected();
-                
+
+                textBoxClientId.Text = _cl1.FortsClientId;
+                textBoxFreeMoney.Text = _cl1.Money.ToString();
+                textBoxUnion.Text = _cl1.Union;
             }
             catch (Exception ex)
             {
