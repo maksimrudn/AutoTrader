@@ -28,6 +28,7 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
 
+            comboBoxConnectionType.DataSource = new List<string> { string.Empty, "Prod", "Demo" };
 
             _handleDisconnected();
             _loadSettings();
@@ -40,7 +41,7 @@ namespace WindowsFormsApplication1
 
         private void timerClock_Elapsed(object sender, ElapsedEventArgs e)
         {
-            labelTime.Invoke(new MethodInvoker(() =>
+            labelTime.BeginInvoke(new MethodInvoker(() =>
             {
                 labelTime.Text = $"Time: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
             }));
@@ -65,6 +66,8 @@ namespace WindowsFormsApplication1
             textBoxVolume.Text = Globals.Settings.Volume.ToString();
             radioButtonComboTypeContidion.Checked = Globals.Settings.ComboOrderType == 1;
             radioButtonComboTypeStop.Checked = Globals.Settings.ComboOrderType == 2;
+            comboBoxConnectionType.SelectedItem = Globals.Settings.ConnectionType;
+            
         }
 
         private void _saveSettings()
@@ -80,6 +83,7 @@ namespace WindowsFormsApplication1
             Globals.Settings.Seccode = comboBoxSeccode.Text;
             Globals.Settings.ByMarket = checkBoxByMarket.Checked;
             Globals.Settings.ComboOrderType = radioButtonComboTypeContidion.Checked ? 1 : 2;
+            Globals.Settings.ConnectionType = comboBoxConnectionType.Text;
             Globals.Settings.Save();
         }
 
@@ -151,9 +155,15 @@ namespace WindowsFormsApplication1
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
+            
             try
             {
-                _cl1.Login(textBoxUsername.Text, textBoxPassword.Text);
+                if (comboBoxConnectionType.Text == string.Empty)
+                    throw new Exception("Не выбран режим доступа Демо/Прод");
+
+                ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), comboBoxConnectionType.Text);
+
+                _cl1.Login(textBoxUsername.Text, textBoxPassword.Text, connType);
                 _handleConnected();
 
                 textBoxClientId.Text = _cl1.FortsClientId;
@@ -170,9 +180,13 @@ namespace WindowsFormsApplication1
         {
             try
             {
-                _cl2.Login(textBoxUsername2.Text, textBoxPassword2.Text);
-                
+                if (comboBoxConnectionType.Text == string.Empty)
+                    throw new Exception("Не выбран режим доступа Демо/Прод");
 
+                ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), comboBoxConnectionType.Text);
+
+
+                _cl2.Login(textBoxUsername2.Text, textBoxPassword2.Text, connType);
             }
             catch (Exception ex)
             {

@@ -69,6 +69,8 @@ namespace WindowsFormsApplication
 
         public string Password2 { get; set; }
 
+        public string ConnectionType { get; set; }
+
         public string Seccode { get; set; }
 
         public int TP { get; set; }

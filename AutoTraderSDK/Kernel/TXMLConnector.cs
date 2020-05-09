@@ -161,8 +161,25 @@ namespace AutoTraderSDK.Kernel
 
 
 
-        public void Login(string username, string password, string server = "tr1.finam.ru", int port = 3900)
+        public void Login(string username, string password, ConnectionType connectionType)
         {
+            if (Connected)
+                throw new Exception("Клиент уже авторизовался");
+
+            
+            string server = "tr1.finam.ru";
+            int port = 3900;
+            if (connectionType == ConnectionType.Prod)
+            {
+                server = "tr1.finam.ru";
+                port = 3900;
+            }
+            else
+            {
+                server = "tr1-demo5.finam.ru";
+                port = 3939;
+            }
+
             var com = command.CreateConnectionCommand(username, password, server, port);
 
             // отправляем команду подключения

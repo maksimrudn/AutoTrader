@@ -54,6 +54,13 @@
             this.radioButtonComboTypeStop = new System.Windows.Forms.RadioButton();
             this.radioButtonComboTypeContidion = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.textBoxUnion = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.textBoxFreeMoney = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.textBoxClientId = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.groupBoxChangePassword = new System.Windows.Forms.GroupBox();
             this.textBoxPasswordNew = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -81,24 +88,19 @@
             this.textBoxUsername2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.labelTime = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.textBoxFreeMoney = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.textBoxClientId = new System.Windows.Forms.TextBox();
-            this.textBoxUnion = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
+            this.comboBoxConnectionType = new System.Windows.Forms.ComboBox();
+            this.label18 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBoxChangePassword.SuspendLayout();
             this.groupBoxLogin.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxSL
@@ -384,6 +386,72 @@
             this.tabPage2.Text = "Settings 1";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.textBoxUnion);
+            this.groupBox4.Controls.Add(this.label17);
+            this.groupBox4.Controls.Add(this.textBoxFreeMoney);
+            this.groupBox4.Controls.Add(this.label16);
+            this.groupBox4.Controls.Add(this.textBoxClientId);
+            this.groupBox4.Controls.Add(this.label15);
+            this.groupBox4.Location = new System.Drawing.Point(10, 11);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(639, 99);
+            this.groupBox4.TabIndex = 19;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Info";
+            // 
+            // textBoxUnion
+            // 
+            this.textBoxUnion.Location = new System.Drawing.Point(119, 15);
+            this.textBoxUnion.Name = "textBoxUnion";
+            this.textBoxUnion.ReadOnly = true;
+            this.textBoxUnion.Size = new System.Drawing.Size(230, 20);
+            this.textBoxUnion.TabIndex = 5;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(10, 18);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(35, 13);
+            this.label17.TabIndex = 4;
+            this.label17.Text = "Union";
+            // 
+            // textBoxFreeMoney
+            // 
+            this.textBoxFreeMoney.Location = new System.Drawing.Point(119, 67);
+            this.textBoxFreeMoney.Name = "textBoxFreeMoney";
+            this.textBoxFreeMoney.ReadOnly = true;
+            this.textBoxFreeMoney.Size = new System.Drawing.Size(230, 20);
+            this.textBoxFreeMoney.TabIndex = 3;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(10, 70);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(63, 13);
+            this.label16.TabIndex = 2;
+            this.label16.Text = "Free Money";
+            // 
+            // textBoxClientId
+            // 
+            this.textBoxClientId.Location = new System.Drawing.Point(119, 41);
+            this.textBoxClientId.Name = "textBoxClientId";
+            this.textBoxClientId.ReadOnly = true;
+            this.textBoxClientId.Size = new System.Drawing.Size(230, 20);
+            this.textBoxClientId.TabIndex = 1;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(10, 44);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(42, 13);
+            this.label15.TabIndex = 0;
+            this.label15.Text = "ClientId";
+            // 
             // groupBoxChangePassword
             // 
             this.groupBoxChangePassword.Controls.Add(this.textBoxPasswordNew);
@@ -432,6 +500,8 @@
             // 
             // groupBoxLogin
             // 
+            this.groupBoxLogin.Controls.Add(this.label18);
+            this.groupBoxLogin.Controls.Add(this.comboBoxConnectionType);
             this.groupBoxLogin.Controls.Add(this.buttonLogout);
             this.groupBoxLogin.Controls.Add(this.buttonLogin);
             this.groupBoxLogin.Controls.Add(this.textBoxPassword);
@@ -447,7 +517,7 @@
             // 
             // buttonLogout
             // 
-            this.buttonLogout.Location = new System.Drawing.Point(477, 17);
+            this.buttonLogout.Location = new System.Drawing.Point(477, 45);
             this.buttonLogout.Name = "buttonLogout";
             this.buttonLogout.Size = new System.Drawing.Size(162, 48);
             this.buttonLogout.TabIndex = 10;
@@ -457,7 +527,7 @@
             // 
             // buttonLogin
             // 
-            this.buttonLogin.Location = new System.Drawing.Point(303, 17);
+            this.buttonLogin.Location = new System.Drawing.Point(303, 45);
             this.buttonLogin.Name = "buttonLogin";
             this.buttonLogin.Size = new System.Drawing.Size(168, 48);
             this.buttonLogin.TabIndex = 9;
@@ -467,7 +537,7 @@
             // 
             // textBoxPassword
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(69, 45);
+            this.textBoxPassword.Location = new System.Drawing.Point(69, 73);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = 'X';
             this.textBoxPassword.Size = new System.Drawing.Size(224, 20);
@@ -476,7 +546,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(8, 48);
+            this.label13.Location = new System.Drawing.Point(8, 76);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(53, 13);
             this.label13.TabIndex = 7;
@@ -484,7 +554,7 @@
             // 
             // textBoxUsername
             // 
-            this.textBoxUsername.Location = new System.Drawing.Point(69, 19);
+            this.textBoxUsername.Location = new System.Drawing.Point(69, 47);
             this.textBoxUsername.Name = "textBoxUsername";
             this.textBoxUsername.Size = new System.Drawing.Size(224, 20);
             this.textBoxUsername.TabIndex = 6;
@@ -492,7 +562,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(8, 22);
+            this.label14.Location = new System.Drawing.Point(8, 50);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(55, 13);
             this.label14.TabIndex = 5;
@@ -643,71 +713,23 @@
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
             // 
-            // groupBox4
+            // comboBoxServer
             // 
-            this.groupBox4.Controls.Add(this.textBoxUnion);
-            this.groupBox4.Controls.Add(this.label17);
-            this.groupBox4.Controls.Add(this.textBoxFreeMoney);
-            this.groupBox4.Controls.Add(this.label16);
-            this.groupBox4.Controls.Add(this.textBoxClientId);
-            this.groupBox4.Controls.Add(this.label15);
-            this.groupBox4.Location = new System.Drawing.Point(10, 11);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(639, 99);
-            this.groupBox4.TabIndex = 19;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Info";
+            this.comboBoxConnectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxConnectionType.FormattingEnabled = true;
+            this.comboBoxConnectionType.Location = new System.Drawing.Point(69, 20);
+            this.comboBoxConnectionType.Name = "comboBoxServer";
+            this.comboBoxConnectionType.Size = new System.Drawing.Size(224, 21);
+            this.comboBoxConnectionType.TabIndex = 11;
             // 
-            // textBoxFreeMoney
+            // label18
             // 
-            this.textBoxFreeMoney.Location = new System.Drawing.Point(119, 67);
-            this.textBoxFreeMoney.Name = "textBoxFreeMoney";
-            this.textBoxFreeMoney.ReadOnly = true;
-            this.textBoxFreeMoney.Size = new System.Drawing.Size(230, 20);
-            this.textBoxFreeMoney.TabIndex = 3;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(10, 70);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(63, 13);
-            this.label16.TabIndex = 2;
-            this.label16.Text = "Free Money";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(10, 44);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(42, 13);
-            this.label15.TabIndex = 0;
-            this.label15.Text = "ClientId";
-            // 
-            // textBoxClientId
-            // 
-            this.textBoxClientId.Location = new System.Drawing.Point(119, 41);
-            this.textBoxClientId.Name = "textBoxClientId";
-            this.textBoxClientId.ReadOnly = true;
-            this.textBoxClientId.Size = new System.Drawing.Size(230, 20);
-            this.textBoxClientId.TabIndex = 1;
-            // 
-            // textBoxUnion
-            // 
-            this.textBoxUnion.Location = new System.Drawing.Point(119, 15);
-            this.textBoxUnion.Name = "textBoxUnion";
-            this.textBoxUnion.ReadOnly = true;
-            this.textBoxUnion.Size = new System.Drawing.Size(230, 20);
-            this.textBoxUnion.TabIndex = 5;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(10, 18);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(35, 13);
-            this.label17.TabIndex = 4;
-            this.label17.Text = "Union";
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(8, 23);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(38, 13);
+            this.label18.TabIndex = 12;
+            this.label18.Text = "Server";
             // 
             // MainForm
             // 
@@ -726,6 +748,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBoxChangePassword.ResumeLayout(false);
             this.groupBoxChangePassword.PerformLayout();
             this.groupBoxLogin.ResumeLayout(false);
@@ -735,8 +759,6 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -804,5 +826,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox textBoxClientId;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.ComboBox comboBoxConnectionType;
     }
 }
