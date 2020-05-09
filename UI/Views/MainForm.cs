@@ -257,6 +257,10 @@ namespace WindowsFormsApplication1
             groupBoxChangePassword.Enabled = false;
             buttonLogin.Enabled = true;
             buttonLogout.Enabled = false;
+
+            textBoxUnion.Text = string.Empty;
+            textBoxClientId.Text = string.Empty;
+            textBoxFreeMoney.Text = string.Empty;
         }
 
 
