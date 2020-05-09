@@ -17,16 +17,13 @@ namespace AutoTraderSDK
 
         static void Main(string[] args)
         {
-            
-
-            
             //string server = "78.41.194.72";
             //int port = 3939;
 
             //using (var cl2 = TXMLConnectorWrapper2.GetInstance())
             //{
-            using (var cl = TXMLConnectorWrapper.GetInstance())
-                {
+            using (var cl = new TXMLConnector())
+            {
 
                 //try
                 //{
@@ -34,60 +31,60 @@ namespace AutoTraderSDK
                 string demoserver = "tr1-demo5.finam.ru";
 
 
-                    //cl.NewOrder(boardsCode.FUT, "SiM0", buysell.B, bymarket.yes, 66350, 1);
+                //cl.NewOrder(boardsCode.FUT, "SiM0", buysell.B, bymarket.yes, 66350, 1);
 
-                    //cl.NewCondOrder(boardsCode.FUT, "SiM6", buysell.S, bymarket.yes, cond_type.Ask, 66400, 1);
+                //cl.NewCondOrder(boardsCode.FUT, "SiM6", buysell.S, bymarket.yes, cond_type.Ask, 66400, 1);
 
-                    //cl.CloseOrder(cl.OpenOrders.FirstOrDefault(x => x.status == status.watching).transactionid);
+                //cl.CloseOrder(cl.OpenOrders.FirstOrDefault(x => x.status == status.watching).transactionid);
 
-                    //cl.NewComboOrder(boardsCode.FUT, "SiM6", buysell.B, 1, 30, 90);
-                    //cl.NewComboOrder(boardsCode.FUT, "SiM6", buysell.S, 1, 30, 90);
+                //cl.NewComboOrder(boardsCode.FUT, "SiM6", buysell.B, 1, 30, 90);
+                //cl.NewComboOrder(boardsCode.FUT, "SiM6", buysell.S, 1, 30, 90);
 
-                    //while (true)
-                    //{
-                    //    var position = cl.Positions.forts_position.FirstOrDefault(x => x.seccode == "SiM6");
+                //while (true)
+                //{
+                //    var position = cl.Positions.forts_position.FirstOrDefault(x => x.seccode == "SiM6");
 
-                    //    if (position != null && position.totalnet == 0)
-                    //    {
-                    //        List<order> lst = cl.OpenOrders;
+                //    if (position != null && position.totalnet == 0)
+                //    {
+                //        List<order> lst = cl.OpenOrders;
 
-                    //        foreach (var order in lst)
-                    //        {
-                    //            if (order.status == status.watching)
-                    //                cl.CloseOrder(order.transactionid);
-                    //            else
-                    //                cl.CloseOrder(order.transactionid);  //cl.CloseLimitOrder(order.transactionid);
-                    //        }
-                    //    }
-                    //    Application.DoEvents();
-                    //}
-
-
+                //        foreach (var order in lst)
+                //        {
+                //            if (order.status == status.watching)
+                //                cl.CloseOrder(order.transactionid);
+                //            else
+                //                cl.CloseOrder(order.transactionid);  //cl.CloseLimitOrder(order.transactionid);
+                //        }
+                //    }
+                //    Application.DoEvents();
+                //}
 
 
 
-                    //_testQuotesPair(cl);
-                    //_testPositions(cl);
-
-                    //_testComboOrder(cl);
 
 
-                    //_testStopOrder(cl);
+                //_testQuotesPair(cl);
+                //_testPositions(cl);
 
-                    //_testCurrentCandle(cl);
+                //_testComboOrder(cl);
 
-                    //_testNewOrderWithCondOrder(cl);
 
-                    //_testPositions(cl);
+                //_testStopOrder(cl);
 
-                    //_newComboOrder(cl);
+                //_testCurrentCandle(cl);
 
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //    MessageBox.Show(e.Message);
-                    //}
-                }
+                //_testNewOrderWithCondOrder(cl);
+
+                //_testPositions(cl);
+
+                //_newComboOrder(cl);
+
+                //}
+                //catch (Exception e)
+                //{
+                //    MessageBox.Show(e.Message);
+                //}
+            }
 
             //}
 
@@ -96,35 +93,8 @@ namespace AutoTraderSDK
 
        
 
-        private static void _newComboOrder(TXMLConnectorWrapper cl)
-        {
-            using (Trader tr = cl.CreateTrader(boardsCode.FUT, "SiH6"))
-            {
 
-                //tr.NewOrder(buysell.S, bymarket.yes, 0, 1);
-                //Console.WriteLine("Open");
-
-                //while (true)
-                //{
-                //    Console.WriteLine("{0}", tr.OpenPositions);
-
-
-                //}
-                tr.NewComboOrder(buysell.B, 1, 50, 100);
-                
-                Console.WriteLine("Open");
-
-                while (true)
-                {
-                    Console.WriteLine("{0}", tr.OpenPositions);
-
-
-                }
-
-            }
-        }
-
-        private static void _testPositions(TXMLConnectorWrapper cl)
+        private static void _testPositions(TXMLConnector cl)
         {
             while (true)
             {
@@ -149,67 +119,7 @@ namespace AutoTraderSDK
         //    }
         //}
 
-        private static void _testNewOrderWithCondOrder(TXMLConnectorWrapper cl)
-        {
-            using (Trader tr = cl.CreateTrader(boardsCode.FUT, "SiH6"))
-            {
 
-                //tr.NewOrder(buysell.S, bymarket.yes, 0, 1);
-                //Console.WriteLine("Open");
-
-                //while (true)
-                //{
-                //    Console.WriteLine("{0}", tr.OpenPositions);
-
-
-                //}
-
-                tr.NewMarketOrderWithCondOrder(buysell.S,  1, 500);
-                Console.WriteLine("Open");
-
-                while (true)
-                {
-                    Console.WriteLine("{0}", tr.OpenPositions);
-
-
-                }
-
-            }
-        }
-
-        private static void _testCurrentCandle(TXMLConnectorWrapper cl)
-        {
-            for (int i = 0; i < 50; i++)
-            {
-                var c = cl.GetCurrentCandle("SiH6");
-
-                Console.WriteLine(string.Format("Open: {0}, Close: {1}, High: {2}, Low: {3}", c.open, c.close, c.high, c.low));
-
-                Thread.Sleep(1);
-            }
-        }
-
-        private static void _testStopOrder(TXMLConnectorWrapper cl)
-        {
-            cl.NewStopOrder(boardsCode.FUT, "SiH6", AutoTraderSDK.Domain.OutputXML.buysell.S, 74400, 73400, 1);
-        }
-
-        private static void _testComboOrder(TXMLConnectorWrapper cl)
-        {
-            //int tid = cl.NewOrder("FUT", "SiH6", AutoTraderSDK.Domain.OutputXML.buysell.B, Domain.OutputXML.bymarket.yes, 73400, 1);
-
-            //order ord = null;
-
-            //while (ord == null) ord = cl.GetOrderByTransactionId(tid);
-
-            //trade tr = null;
-
-            //while (tr == null) tr = cl.GetTradeByOrderNo(ord.orderno);
-
-            //cl.NewCondOrder("FUT", "SiH6", buysell.S, bymarket.yes, cond_type.BidOrLast, ord.price - 200, 1);
-
-            cl.NewMarketOrderWithCondOrder(boardsCode.FUT, "SiM6", buysell.S,   1, 5);
-        }
 
         public enum Status
         {
@@ -219,7 +129,7 @@ namespace AutoTraderSDK
             close
         }
 
-        private static void _testQuotesPair(TXMLConnectorWrapper cl)
+        private static void _testQuotesPair(TXMLConnector cl)
         {
             cl.Subscribe(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, _seccode);
 
@@ -266,12 +176,12 @@ namespace AutoTraderSDK
 
                         Task t1 = Task.Factory.StartNew(() =>
                             {
-                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Domain.OutputXML.buysell.B, Domain.OutputXML.bymarket.no, bPrice, 1);
+                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Domain.OutputXML.buysell.B, false, bPrice, 1);
                             });
 
                         Task t2 = Task.Factory.StartNew(() =>
                             {
-                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Domain.OutputXML.buysell.S, Domain.OutputXML.bymarket.no, sPrice, 1);
+                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Domain.OutputXML.buysell.S, false, sPrice, 1);
                             });
 
                         cl.PositionsIsActual = false;

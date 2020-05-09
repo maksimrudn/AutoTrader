@@ -165,10 +165,9 @@ namespace AutoTraderSDK.Kernel
         {
             if (Connected)
                 throw new Exception("Клиент уже авторизовался");
-
             
-            string server = "tr1.finam.ru";
-            int port = 3900;
+            string server;
+            int port;
             if (connectionType == ConnectionType.Prod)
             {
                 server = "tr1.finam.ru";
@@ -599,6 +598,24 @@ namespace AutoTraderSDK.Kernel
             {
                 throw new Exception(sendResult.message);
             }
+
+            return res;
+        }
+
+        public int GetOpenPositions(string seccode)
+        {
+            int res = 0;
+
+            try
+            {
+                var positions = _positions.forts_position.FirstOrDefault(x => x.seccode == seccode);
+
+                res = positions.totalnet;
+            }
+            catch
+            {
+            }
+
 
             return res;
         }
