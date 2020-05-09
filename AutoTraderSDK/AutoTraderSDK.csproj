@@ -91,6 +91,7 @@
     <Compile Include="Domain\OutputXML\takeprofit.cs" />
     <Compile Include="Domain\OutputXML\unfilled.cs" />
     <Compile Include="Domain\OutputXML\validbefore.cs" />
+    <Compile Include="Domain\ConnectionType.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Kernel\NativeMethods.cs" />
