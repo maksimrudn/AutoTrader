@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace AutoTraderUI
 {
     partial class MainForm
     {
@@ -46,6 +46,7 @@
             this.comboBoxSeccode = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkBoxShutdown = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.dateTimePickerMultidirectExecute = new System.Windows.Forms.DateTimePicker();
             this.buttonStartMultidirectTimer = new System.Windows.Forms.Button();
@@ -67,6 +68,8 @@
             this.textBoxPasswordOld = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBoxLogin = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.comboBoxConnectionType = new System.Windows.Forms.ComboBox();
             this.buttonLogout = new System.Windows.Forms.Button();
             this.buttonLogin = new System.Windows.Forms.Button();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
@@ -74,7 +77,7 @@
             this.textBoxUsername = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBoxChangePassword2 = new System.Windows.Forms.GroupBox();
             this.textBoxPasswordNew2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxPasswordOld2 = new System.Windows.Forms.TextBox();
@@ -88,8 +91,6 @@
             this.textBoxUsername2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.labelTime = new System.Windows.Forms.Label();
-            this.comboBoxConnectionType = new System.Windows.Forms.ComboBox();
-            this.label18 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -99,7 +100,7 @@
             this.groupBoxChangePassword.SuspendLayout();
             this.groupBoxLogin.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.groupBoxChangePassword2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -120,7 +121,6 @@
             this.buttonComboBuy.TabIndex = 2;
             this.buttonComboBuy.Text = "COMBO BUY";
             this.buttonComboBuy.UseVisualStyleBackColor = true;
-            this.buttonComboBuy.Click += new System.EventHandler(this.buttonComboBuy_Click);
             // 
             // label2
             // 
@@ -172,7 +172,6 @@
             this.buttonComboSell.TabIndex = 22;
             this.buttonComboSell.Text = "COMBO SELL";
             this.buttonComboSell.UseVisualStyleBackColor = true;
-            this.buttonComboSell.Click += new System.EventHandler(this.buttonComboSell_Click);
             // 
             // dataGridView1
             // 
@@ -189,9 +188,8 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(600, 54);
             this.button1.TabIndex = 20;
-            this.button1.Text = "CLOSE ALL";
+            this.button1.Text = "CLOSE ALL FUTURES POSITIONS";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label1
             // 
@@ -247,7 +245,6 @@
             this.buttonChangePassword.TabIndex = 16;
             this.buttonChangePassword.Text = "Change password";
             this.buttonChangePassword.UseVisualStyleBackColor = true;
-            this.buttonChangePassword.Click += new System.EventHandler(this.buttonChangePassword_Click);
             // 
             // comboBoxSeccode
             // 
@@ -271,6 +268,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.checkBoxShutdown);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.dateTimePickerMultidirectExecute);
             this.tabPage1.Controls.Add(this.buttonStartMultidirectTimer);
@@ -299,6 +297,16 @@
             this.tabPage1.Text = "Trading";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // checkBoxShutdown
+            // 
+            this.checkBoxShutdown.AutoSize = true;
+            this.checkBoxShutdown.Location = new System.Drawing.Point(54, 226);
+            this.checkBoxShutdown.Name = "checkBoxShutdown";
+            this.checkBoxShutdown.Size = new System.Drawing.Size(74, 17);
+            this.checkBoxShutdown.TabIndex = 30;
+            this.checkBoxShutdown.Text = "Shutdown";
+            this.checkBoxShutdown.UseVisualStyleBackColor = true;
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -326,7 +334,6 @@
             this.buttonStartMultidirectTimer.TabIndex = 27;
             this.buttonStartMultidirectTimer.Text = "MULTIDIRECT BY TIMER";
             this.buttonStartMultidirectTimer.UseVisualStyleBackColor = true;
-            this.buttonStartMultidirectTimer.Click += new System.EventHandler(this.buttonStartMultidirectTimer_Click);
             // 
             // buttonMakeMultidirect
             // 
@@ -338,7 +345,6 @@
             this.buttonMakeMultidirect.TabIndex = 26;
             this.buttonMakeMultidirect.Text = "MULTIDIRECT!";
             this.buttonMakeMultidirect.UseVisualStyleBackColor = true;
-            this.buttonMakeMultidirect.Click += new System.EventHandler(this.buttonMakeMultidirect_Click);
             // 
             // groupBox1
             // 
@@ -515,6 +521,24 @@
             this.groupBoxLogin.TabStop = false;
             this.groupBoxLogin.Text = "Connection";
             // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(8, 23);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(38, 13);
+            this.label18.TabIndex = 12;
+            this.label18.Text = "Server";
+            // 
+            // comboBoxConnectionType
+            // 
+            this.comboBoxConnectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxConnectionType.FormattingEnabled = true;
+            this.comboBoxConnectionType.Location = new System.Drawing.Point(69, 20);
+            this.comboBoxConnectionType.Name = "comboBoxConnectionType";
+            this.comboBoxConnectionType.Size = new System.Drawing.Size(224, 21);
+            this.comboBoxConnectionType.TabIndex = 11;
+            // 
             // buttonLogout
             // 
             this.buttonLogout.Location = new System.Drawing.Point(477, 45);
@@ -523,7 +547,6 @@
             this.buttonLogout.TabIndex = 10;
             this.buttonLogout.Text = "Logout";
             this.buttonLogout.UseVisualStyleBackColor = true;
-            this.buttonLogout.Click += new System.EventHandler(this.buttonLogout_Click);
             // 
             // buttonLogin
             // 
@@ -533,7 +556,6 @@
             this.buttonLogin.TabIndex = 9;
             this.buttonLogin.Text = "Login";
             this.buttonLogin.UseVisualStyleBackColor = true;
-            this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
             // 
             // textBoxPassword
             // 
@@ -570,7 +592,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.groupBox2);
+            this.tabPage3.Controls.Add(this.groupBoxChangePassword2);
             this.tabPage3.Controls.Add(this.groupBox3);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -580,19 +602,19 @@
             this.tabPage3.Text = "Settings 2";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // groupBoxChangePassword2
             // 
-            this.groupBox2.Controls.Add(this.textBoxPasswordNew2);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.textBoxPasswordOld2);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.buttonChangePassword2);
-            this.groupBox2.Location = new System.Drawing.Point(6, 111);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(645, 117);
-            this.groupBox2.TabIndex = 20;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Change Password";
+            this.groupBoxChangePassword2.Controls.Add(this.textBoxPasswordNew2);
+            this.groupBoxChangePassword2.Controls.Add(this.label3);
+            this.groupBoxChangePassword2.Controls.Add(this.textBoxPasswordOld2);
+            this.groupBoxChangePassword2.Controls.Add(this.label4);
+            this.groupBoxChangePassword2.Controls.Add(this.buttonChangePassword2);
+            this.groupBoxChangePassword2.Location = new System.Drawing.Point(6, 111);
+            this.groupBoxChangePassword2.Name = "groupBoxChangePassword2";
+            this.groupBoxChangePassword2.Size = new System.Drawing.Size(645, 117);
+            this.groupBoxChangePassword2.TabIndex = 20;
+            this.groupBoxChangePassword2.TabStop = false;
+            this.groupBoxChangePassword2.Text = "Change Password";
             // 
             // textBoxPasswordNew2
             // 
@@ -634,7 +656,6 @@
             this.buttonChangePassword2.TabIndex = 16;
             this.buttonChangePassword2.Text = "Change password";
             this.buttonChangePassword2.UseVisualStyleBackColor = true;
-            this.buttonChangePassword2.Click += new System.EventHandler(this.buttonChangePassword2_Click);
             // 
             // groupBox3
             // 
@@ -668,7 +689,6 @@
             this.buttonLogin2.TabIndex = 9;
             this.buttonLogin2.Text = "Login";
             this.buttonLogin2.UseVisualStyleBackColor = true;
-            this.buttonLogin2.Click += new System.EventHandler(this.buttonLogin2_Click);
             // 
             // textBoxPassword2
             // 
@@ -713,24 +733,6 @@
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
             // 
-            // comboBoxServer
-            // 
-            this.comboBoxConnectionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxConnectionType.FormattingEnabled = true;
-            this.comboBoxConnectionType.Location = new System.Drawing.Point(69, 20);
-            this.comboBoxConnectionType.Name = "comboBoxServer";
-            this.comboBoxConnectionType.Size = new System.Drawing.Size(224, 21);
-            this.comboBoxConnectionType.TabIndex = 11;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(8, 23);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(38, 13);
-            this.label18.TabIndex = 12;
-            this.label18.Text = "Server";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -740,7 +742,6 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";
             this.Text = "AUTO TRADER";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -755,8 +756,8 @@
             this.groupBoxLogin.ResumeLayout(false);
             this.groupBoxLogin.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.groupBoxChangePassword2.ResumeLayout(false);
+            this.groupBoxChangePassword2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -802,7 +803,7 @@
         private System.Windows.Forms.RadioButton radioButtonComboTypeContidion;
         private System.Windows.Forms.Button buttonMakeMultidirect;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBoxChangePassword2;
         private System.Windows.Forms.TextBox textBoxPasswordNew2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxPasswordOld2;
@@ -828,5 +829,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.ComboBox comboBoxConnectionType;
+        private System.Windows.Forms.CheckBox checkBoxShutdown;
     }
 }

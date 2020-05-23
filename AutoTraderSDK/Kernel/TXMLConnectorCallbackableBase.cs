@@ -38,7 +38,7 @@ namespace AutoTraderSDK.Kernel
         protected List<client> _clients = new List<client>();       // клиенты-счета различных площадок forts: market=4
 
 
-        protected positions _positions = null;
+        protected positions _positions = new positions();
         protected candle _currentCandle = null;
 
         protected bool _positionsIsActual = false;
@@ -108,7 +108,15 @@ namespace AutoTraderSDK.Kernel
                     break;
 
                 case "positions":
-                    _positions = (positions)XMLHelper.Deserialize(result, typeof(positions));
+                    var positions = (positions)XMLHelper.Deserialize(result, typeof(positions));
+
+                    if (positions.forts_collaterals != null) _positions.forts_collaterals = positions.forts_collaterals;
+                    if (positions.forts_money != null) _positions.forts_money = positions.forts_money;
+                    if (positions.forts_position != null) _positions.forts_position = positions.forts_position;
+                    if (positions.money_position != null) _positions.money_position = positions.money_position;
+                    if (positions.sec_position != null) _positions.sec_position = positions.sec_position;
+                    if (positions.spot_limit != null) _positions.spot_limit = positions.spot_limit;
+
 
                     _positionsIsActual = true;
                     break;

@@ -526,7 +526,7 @@ namespace AutoTraderSDK.Kernel
                 if (slDistance > 0)
                 {
                     double slPrice = (buysell == buysell.B) ? tr.price - slDistance : tr.price + slDistance;
-                    var closeCondition = (buysell == buysell.B) ? cond_type.AskOrLast : cond_type.BidOrLast;
+                    var closeCondition = (buysell == buysell.B) ? cond_type.LastDown : cond_type.LastUp;
 
                     NewConditionOrder(board,
                                     seccode,
