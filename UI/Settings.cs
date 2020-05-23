@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace WindowsFormsApplication
+namespace AutoTraderUI
 {
     public class Settings
     {
@@ -86,6 +86,8 @@ namespace WindowsFormsApplication
         // 1 - condition
         // 2 - stop
         public int ComboOrderType { get; set; } = 1;
+        public DateTime MultidirectExecuteTime { get; set; } = DateTime.Now;
+        public bool Shutdown { get; set; }
 
         #endregion
 
