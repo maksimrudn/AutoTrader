@@ -15,6 +15,7 @@ namespace AutoTraderSDK.Kernel
         public AutoResetEvent serverStatusUpdated = new AutoResetEvent(false);
         public AutoResetEvent securitiesLoaded = new AutoResetEvent(false);
         public AutoResetEvent tradesLoaded = new AutoResetEvent(false);
+        protected AutoResetEvent united_portfolioLoaded = new AutoResetEvent(false);
 
 
         public bool Connected
@@ -39,6 +40,7 @@ namespace AutoTraderSDK.Kernel
 
 
         protected positions _positions = new positions();
+        protected united_portfolio _united_portfolio = new united_portfolio();
         protected candle _currentCandle = null;
 
         protected bool _positionsIsActual = false;
@@ -119,6 +121,11 @@ namespace AutoTraderSDK.Kernel
 
 
                     _positionsIsActual = true;
+                    break;
+
+                case "united_portfolio":
+                    _united_portfolio = (united_portfolio)XMLHelper.Deserialize(result, typeof(united_portfolio));
+                    united_portfolioLoaded.Set();
                     break;
 
                 case "overnight":

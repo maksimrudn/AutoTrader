@@ -17,6 +17,7 @@ using System.Timers;
 using System.Windows.Forms;
 using AutoTraderUI;
 using AutoTraderUI.Common;
+using System.Globalization;
 
 namespace AutoTraderUI
 {
@@ -40,9 +41,14 @@ namespace AutoTraderUI
             buttonComboBuy.Click += (sender, args) => Invoke(ComboBuy);
             buttonComboSell.Click += (sender, args) => Invoke(ComboSell);
             buttonMakeMultidirect.Click += (sender, args) => Invoke(MakeMultidirect);
-            buttonStartMultidirectTimer.Click += (sender, args) => Invoke(StartMakeMultidirectByTimer);
+            buttonStartMultidirectTimer.Click += (sender, args) => Invoke(GetUnion);
+            button2.Click += (sender, args) => Invoke(GetUnion);
 
-            this.FormClosing += (sender, args) => Invoke(OnClose);
+            this.FormClosing += (sender, args) =>
+            {
+                _timerClock.Stop();
+                Invoke(OnClose);
+            };
 
             comboBoxConnectionType.DataSource = new List<string> { string.Empty, "Prod", "Demo" };
 
@@ -64,6 +70,7 @@ namespace AutoTraderUI
         public event Action ComboSell;
         public event Action MakeMultidirect;
         public event Action StartMakeMultidirectByTimer;
+        public event Action GetUnion;
 
         public event Action OnClose;
 
@@ -147,8 +154,26 @@ namespace AutoTraderUI
         public string Username1 { get { return textBoxUsername.Text; } }
         public string Password1 { get { return textBoxPassword.Text; } }
         public string ClientId1 { set { textBoxClientId.Text = value; } }
-        public string FreeMoney1 { set { textBoxFreeMoney.Text = value; } }
+        public string FreeMoney1 { set { textBoxFreeMoney1.Text = value; } }
+        public string FreeMoney2 { set { textBoxFreeMoney2.Text = value; } }
+
         public string Union1 { set { textBoxUnion.Text = value; } }
+
+        public void LoadPositions(List<asset> positions)
+        {
+            foreach (var pos in positions)
+            {
+                dataGridViewPositions.Rows.Add(new object[]
+                {
+                    pos.code,
+                    pos.name,
+                    pos.securityElement.balance_prc,
+                    pos.securityElement.price,
+                    pos.securityElement.balance,
+                    pos.securityElement.unrealized_pnl
+                });
+            }
+        }
 
         public void ShowMessage(string msg)
         {

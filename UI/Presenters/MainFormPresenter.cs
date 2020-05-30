@@ -5,6 +5,7 @@ using AutoTraderUI.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,6 +48,7 @@ namespace AutoTraderUI.Presenters
             _view.StartMakeMultidirectByTimer += StartMakeMultidirectByTimer;
         }
 
+
         private void StartMakeMultidirectByTimer()
         {
             _view.UpdateSettings(_settings);
@@ -64,11 +66,11 @@ namespace AutoTraderUI.Presenters
                 return;
             }
 
-            if (_settings.MultidirectExecuteTime < DateTime.Now)
-            {
-                _view.ShowMessage("Дата выполнения операции не может быть меньше чем текущая дата/время");
-                return;
-            }
+            //if (_settings.MultidirectExecuteTime < DateTime.Now)
+            //{
+            //    _view.ShowMessage("Время выполнения операции не может быть меньше чем текущая дата/время");
+            //    return;
+            //}
 
             _timerMultidirect = new System.Timers.Timer();
             _timerMultidirect.Interval = 100;
@@ -270,8 +272,11 @@ namespace AutoTraderUI.Presenters
                 _view.HandleConnected(connectorNumber);
 
                 _view.ClientId1 = _connectors[connectorNumber].FortsClientId;
-                _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString();
                 _view.Union1 = _connectors[connectorNumber].Union;
+
+
+                _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString("N");
+                _view.LoadPositions(_connectors[connectorNumber].UnitedPositions);
             }
             catch (Exception ex)
             {
@@ -322,7 +327,7 @@ namespace AutoTraderUI.Presenters
 
                 _connectors[connectorNumber].Login(_settings.GetUsername2(), _settings.GetPassword2(), connType);
                 _view.HandleConnected(connectorNumber);
-
+                _view.FreeMoney2 = _connectors[connectorNumber].Money.ToString("N");
             }
             catch (Exception ex)
             {

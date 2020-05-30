@@ -48,6 +48,10 @@
     <Compile Include="Domain\InputXML\boards.cs" />
     <Compile Include="Domain\InputXML\candle.cs" />
     <Compile Include="Domain\InputXML\candlekinds.cs" />
+    <Compile Include="Domain\InputXML\asset.cs" />
+    <Compile Include="Domain\InputXML\money.cs" />
+    <Compile Include="Domain\InputXML\value_part.cs" />
+    <Compile Include="Domain\InputXML\united_portfolio.cs" />
     <Compile Include="Domain\InputXML\candles.cs" />
     <Compile Include="Domain\InputXML\client.cs" />
     <Compile Include="Domain\InputXML\error.cs" />

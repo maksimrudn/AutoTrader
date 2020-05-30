@@ -30,7 +30,15 @@ namespace AutoTraderSDK.Kernel
         {
             get
             {
-                return _positions.money_position.saldo;
+                double res = 0;
+
+                try
+                {
+                    res = _united_portfolio.money.balance;
+                }
+                catch { }
+
+                return res;
             }
         }
         public string Union
@@ -70,6 +78,8 @@ namespace AutoTraderSDK.Kernel
                 //}
             }
         }
+
+        
 
         public List<quote> QuotesSell
         {
@@ -138,6 +148,8 @@ namespace AutoTraderSDK.Kernel
 
         public positions Positions { get { return _positions; } }
 
+        public List<asset> UnitedPositions { get { return _united_portfolio.assets; } }
+
         public List<order> OpenOrders
         {
             get
@@ -197,6 +209,9 @@ namespace AutoTraderSDK.Kernel
                 {
                     throw new Exception(_serverStatus.InnerText);
                 }
+
+                _getUnionPositions();
+                united_portfolioLoaded.WaitOne();
             }
         }
 
@@ -222,7 +237,17 @@ namespace AutoTraderSDK.Kernel
             }
         }
 
-        
+        protected void _getUnionPositions()
+        {
+            var com = command.CreateGetUnitedCommand(_positions.money_position.client);
+
+            var res = ConnectorSendCommand(com, com.GetType());
+
+            if (!res.success)
+            {
+                throw new Exception(res.message);
+            }
+        }
 
         public void UnInitialize()
         {
