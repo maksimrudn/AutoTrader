@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoTraderSDK.Domain.InputXML;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +20,14 @@ namespace AutoTraderUI.Common
         event Action MakeMultidirect;
         event Action StartMakeMultidirectByTimer;
         event Action OnClose;
+        event Action GetUnion;
 
         string ComboBoxConnectionType { get; }
         string Username1 { get; }
         string Password1 { get; }
         string ClientId1 { set; }
         string FreeMoney1 { set; }
+        string FreeMoney2 { set; }
         string Union1 { set; }
         //string ComboBoxConnectionType2 { get; }
 
@@ -36,5 +39,6 @@ namespace AutoTraderUI.Common
         void HandleConnected(int conectorNumber);
         void HandleDisconnected(int connNumber);
         void UpdateSettings(Settings settings);
+        void LoadPositions(List<asset> positions);
     }
 }

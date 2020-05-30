@@ -38,9 +38,17 @@ namespace AutoTraderSDK.Domain.OutputXML
         {
             command res = new command();
 
-
             res.id = command_id.disconnect;
             
+            return res;
+        }
+
+        public static command CreateGetUnitedCommand(string client)
+        {
+            command res = new command();
+            res.clientAttribute = client;
+            res.id = command_id.get_united_portfolio;
+
             return res;
         }
 
@@ -214,12 +222,15 @@ namespace AutoTraderSDK.Domain.OutputXML
                 autopos = value.ToString().ToLower();
             }
         }
-                    //Параметр autopos указывает на необходимость
-                    //автоматического запроса клиентских позиций на срочном
-                    //рынке после каждой клиентской сделки. Если autopos не
-                    //указан, по умолчанию он принимается равным true.
-                    //Использование <autopos>false</autopos> при активной
-                    //торговле ускоряет взаимодействие с сервером.
+
+        
+
+        //Параметр autopos указывает на необходимость
+        //автоматического запроса клиентских позиций на срочном
+        //рынке после каждой клиентской сделки. Если autopos не
+        //указан, по умолчанию он принимается равным true.
+        //Использование <autopos>false</autopos> при активной
+        //торговле ускоряет взаимодействие с сервером.
 
 
 
@@ -446,6 +457,9 @@ namespace AutoTraderSDK.Domain.OutputXML
                 buysell = value.ToString().ToUpper();
             }
         }
+
+        [XmlAttribute(attributeName:"client")]
+        public string clientAttribute { get; set; }
 
         [XmlElement(IsNullable = false)]
         public string client { get; set; }
