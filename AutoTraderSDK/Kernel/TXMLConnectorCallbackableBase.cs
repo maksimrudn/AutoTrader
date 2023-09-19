@@ -41,7 +41,7 @@ namespace AutoTraderSDK.Kernel
 
 
         protected positions _positions = new positions();
-        protected united_portfolio _united_portfolio = new united_portfolio();
+        protected mc_portfolio _mc_portfolio = new mc_portfolio();
         protected candle _currentCandle = null;
 
         protected bool _positionsIsActual = false;
@@ -126,8 +126,8 @@ namespace AutoTraderSDK.Kernel
                     positionsLoaded.Set();
                     break;
 
-                case "united_portfolio":
-                    _united_portfolio = (united_portfolio)XMLHelper.Deserialize(result, typeof(united_portfolio));
+                case "mc_portfolio":
+                    _mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
                     united_portfolioLoaded.Set();
                     break;
 

@@ -31,6 +31,6 @@ namespace AutoTraderSDK.Domain.OutputXML
         moveorder,
         get_portfolio,
         get_max_buy_sell_tplus,
-        get_united_portfolio
+        get_mc_portfolio
     }
 }

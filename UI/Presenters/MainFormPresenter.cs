@@ -253,6 +253,9 @@ namespace AutoTraderUI.Presenters
             _connectors[1].Dispose();
         }
 
+        /// <summary>
+        /// Only this method (from Login1, Login2) gets securities infor
+        /// </summary>
         private void Login1()
         {
             try
@@ -273,10 +276,33 @@ namespace AutoTraderUI.Presenters
 
                 _view.ClientId1 = _connectors[connectorNumber].FortsClientId;
                 _view.Union1 = _connectors[connectorNumber].Union;
-
+                _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString();
 
                 _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString("N");
                 _view.LoadPositions(_connectors[connectorNumber].UnitedPositions);
+            }
+            catch (Exception ex)
+            {
+                _view.ShowMessage(ex.Message);
+            }
+        }
+
+        private void Login2()
+        {
+            try
+            {
+                if (_view.ComboBoxConnectionType == string.Empty)
+                    throw new Exception("Не выбран режим доступа Демо/Прод");
+
+                int connectorNumber = 1;
+                _view.UpdateSettings(_settings);
+                _settings.Save();
+
+                ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
+
+                _connectors[connectorNumber].Login(_settings.GetUsername2(), _settings.GetPassword2(), connType);
+                _view.HandleConnected(connectorNumber);
+                _view.FreeMoney2 = _connectors[connectorNumber].Money.ToString("N");
             }
             catch (Exception ex)
             {
@@ -312,28 +338,7 @@ namespace AutoTraderUI.Presenters
             }
         }
 
-        private void Login2()
-        {
-            try
-            {
-                if (_view.ComboBoxConnectionType == string.Empty)
-                    throw new Exception("Не выбран режим доступа Демо/Прод");
-
-                int connectorNumber = 1;
-                _view.UpdateSettings(_settings);
-                _settings.Save();
-
-                ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
-
-                _connectors[connectorNumber].Login(_settings.GetUsername2(), _settings.GetPassword2(), connType);
-                _view.HandleConnected(connectorNumber);
-                _view.FreeMoney2 = _connectors[connectorNumber].Money.ToString("N");
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
-        }
+        
 
         public void Run()
         {

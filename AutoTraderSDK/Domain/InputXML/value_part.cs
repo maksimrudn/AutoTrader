@@ -24,6 +24,13 @@ namespace AutoTraderSDK.Domain.InputXML
         public double balance { get; set; }
 
         [XmlElement]
+        public double blocked { get; set; }
+
+        [XmlElement]
+        public double estimated { get; set; }
+
+        [Obsolete]
+        [XmlElement]
         public double settled { get; set; }
     }
 }
