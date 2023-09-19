@@ -1,0 +1,329 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Drawing;
+using TradeMatic;
+using TradeMatic.Indicators;
+
+
+namespace ScriptNamespace
+{
+	
+	class MyScript : Script
+	{
+		//ВТБ		
+		private StrategyParameter parameterVTB_TakeProfitPercent;
+		private StrategyParameter parameterVTB_StopLosePercent;
+		private StrategyParameter parameterVTB_AdxValue;
+		private StrategyParameter parameterVTB_DIPlusValue;
+		private StrategyParameter parameterVTB_DIMinusValue;
+		
+		//Роснефть
+		private StrategyParameter parameterROSNEFT_TakeProfitPercent;
+		private StrategyParameter parameterROSNEFT_StopLosePercent;
+		private StrategyParameter parameterROSNEFT_AdxValue;
+		private StrategyParameter parameterROSNEFT_DIPlusValue;
+		private StrategyParameter parameterROSNEFT_DIMinusValue;
+		
+		
+		SymbolConfiguration _vtbConfig = null;
+		SymbolData _vtbData = null;
+		
+		
+		public MyScript()
+		{
+			// ВТБ
+			parameterVTB_TakeProfitPercent;
+			parameterVTB_StopLosePercent;
+			parameterVTB_AdxValue;
+			parameterVTB_DIPlusValue;
+			parameterVTB_DIMinusValue;
+			
+			
+			
+			// Роснефть
+			parameterROSNEFT_TakeProfitPercent;
+			parameterROSNEFT_StopLosePercent;
+			parameterROSNEFT_AdxValue;
+			parameterROSNEFT_DIPlusValue;
+			parameterROSNEFT_DIMinusValue;
+						
+					
+			_vtbConfig = new SymbolConfiguration()
+				{				
+					TakeProfitPercent = 
+					StopLosePercent = 1.7,
+					Adx1Value = 27,
+					DIPlusValue = 29,
+					DIMinusValue = 13,
+					Ema1Period = 3,
+					Ema2Period = 9,
+					Ema3Period = 42,
+					Ema4Period = 200,
+					Adx1Period = 17,
+					Adx2Period = 19,
+					DIPlusPeriod = 19,
+					DIMinusPeriod = 13
+					};
+			_vtbData = new SymbolData();
+			
+		}
+		
+		private void _executeStrategyIterator(SymbolConfiguration symConfig, SymbolData symData)
+		{
+			for (int bar = 0; bar < Symbol.Count; bar++)	//for (int bar = i+1; bar +1< Symbol.Count; bar++)
+			{
+				//добавить дневную свечу (добавляется только в 18.50)
+				symData.AddDailyClose(Close, Data, bar);
+				
+				
+				int barDaily = symData.BarDaily;
+				
+				//подсчет количества дневных баров, количество должно быть = 200 + 1 (т.к. для одного из индикаторов 200 периода нужен предыдущий бар)
+				//первый бар имеет значение 0
+				//если баров нет, то barDaily = -1
+				if (barDaily <= 200) continue;
+			
+				if (MarketPosition == 0)
+				{
+					
+					//проверка дневных условий
+					//рассчет дневных индикаторов проводится только в 10.00, все остальные бары игнорируются
+					if (Date[bar].Hour == 10 && Date[bar].Minute == 00) 
+						dailyFlag = (EMA.Value(barDaily, symData.CloseDaily, symConfig.Ema1Period) > EMA.Value(barDaily, symData.CloseDaily, symConfig.Ema2Period)) && 
+							(EMA.Value(barDaily, symData.CloseDaily, symConfig.Ema2Period) > EMA.Value(barDaily, symData.CloseDaily, symConfig.Ema3Period)) && 
+							(EMA.Value(barDaily, symData.CloseDaily, symConfig.Ema3Period) > EMA.Value(barDaily, symData.CloseDaily, symConfig.Ema4Period)) && 
+									
+							(ADX.Value(barDaily, symData.HighDaily, symData.LowDaily, symData.CloseDaily, symConfig.Adx1Period) > symConfig.AdxValue) && 
+							(ADX.Value(barDaily, symData.HighDaily, symData.LowDaily, symData.CloseDaily, symConfig.Adx2Period) > ADX.Value(barDaily - 1, symData.HighDaily, symData.LowDaily, symData.CloseDaily, symConfig.Adx2Period)) && 
+									
+							(DIPlus.Series(symData.HighDaily, symData.LowDaily, symData.CloseDaily, symConfig.DIPlusPeriod)[barDaily] > symConfig.DIPlusValue) && 
+							(DIMinus.Series(symData.HighDaily, symData.LowDaily, symData.CloseDaily, symConfig.DIMinusPeriod)[barDaily] < symConfig.DIMinusValue);
+					
+					//проверка минутных условии только при положительном сигнале дневных индикаторов
+					//рассчеты корридора					
+					if (dailyFlag == true)
+					{
+						if (Date[bar].Hour>=symConfig.BgnCorridorHour &&
+							Date[bar].Minute>=symConfig.BgnCorridorMinute &&
+							Date[bar].Hour<symConfig.EndCorridorHour &&
+							Date[bar].Minute<symConfig.EndCorridorMinute)
+							symData.ComputeCorridorData(Volume, Close, bar);
+						
+						//рассчет минутных индикаторов
+						//в разрешенной для торговле зоне
+						if (	Date[bar].Hour >= symConfig.EndCorridorHour &&
+							Date[bar].Minute >= symConfig.EndCorridorMinute &&
+							Date[bar].Hour < symConfig.CancelTradeHour &&
+							Date[bar].Minute < symConfig.CancelTradeMinute)
+						{
+							 longSignalFlag = Close[bar] > symData.CorridorMaxPrice && 
+								Volume[bar] > (symData.CorridorAvVolume * symConfig.VolumeRate);
+											 
+							 shortSignalFlag = Close[bar] < symData.CorridorMinPrice && 
+								Volume[bar] > (symData.CorridorAvVolume * symConfig.VolumeRate);
+											 
+											 
+							//////////////////////////////////////////////////
+							////ВХОД В ЛОНГ///////////////////////////////////
+							if (shortSignalFlag)
+							{
+								//запись в сигнала в лог
+								
+								//продажа
+							}
+								////ВХОД В ШОРТ///////////////////////////////////
+							else if (longSignalFlag)
+							{
+								//запись в сигнала в лог
+							}
+						}
+							//обнулить рассчеты корридора текущего дня
+						else if (Date[bar].Hour >= symConfig.CancelTradeHour &&
+							Date[bar].Minute >= symConfig.CancelTradeMinute) 
+							symData.ResetCorridorInfo();
+						
+						
+						
+					}
+					
+				}
+				else if (MarketPosition == 1)
+				{
+				}
+				else if (MarketPosition == -1)
+				{
+				}
+			}
+		}
+		
+
+		public override void Execute()
+		{
+		
+			switch (Symbol.SymbolName)
+			{
+				case "name1":
+					_executeStrategyIterator(_vtbConfig, _vtbData);
+					break;
+					
+				case "name2":
+					//_executeStrategyIterator(_vtbConfig, _vtbData);
+					break;
+			}
+		}
+	}
+	
+	class SymbolConfiguration
+	{
+		public SymbolConfiguration()
+		{
+			VolumeRate = 2;
+			
+			BgnCorridorHour = 10;
+			BgnCorridorMinute = 0;
+			EndCorridorHour = 12;
+			EndCorridorMinute = 0;
+			CancelTradeHour = 18;
+			CancelTradeMinute = 20;
+			
+			
+		}
+	
+		//public int TradeLimitOnDayShort {get;set;}
+		
+		//public int TradeLimitOnDayLong {get;set;}
+		
+		public double TakeProfitPercent {get;set;}
+		
+		public double StopLosePercent {get;set;}
+		
+		
+		//Daily
+		public int AdxValue {get;set;}
+		
+		public int DIPlusValue {get;set;}
+		
+		public int DIMinusValue {get;set;}
+		
+		public int Ema1Period {get;set;}
+		
+		public int Ema2Period {get;set;}
+		
+		public int Ema3Period {get;set;}
+		
+		public int Ema4Period {get;set;}
+		
+		public int Adx1Period {get;set;}
+		
+		public int Adx2Period {get;set;}
+		
+		public int DIPlusPeriod {get;set;}
+		
+		public int DIMinusPeriod {get;set;}
+		
+		
+		//Minute		
+		public int BgnCorridorHour {get;set;}		//10
+		
+		public int BgnCorridorMinute {get;set;}		//00
+		
+		public int EndCorridorHour {get;set;}		//12
+		
+		public int EndCorridorMinute {get;set;}		//00
+		
+		public int CancelTradeHour {get;set;}		//18
+		
+		public int CancelTradeMinute {get;set;}		//20
+		
+		public double VolumeRate {get;set;}			//=2 , коэффициент требования к объему
+	}
+
+	class SymbolData 
+	{
+		public SymbolData()
+		{
+			ResetCorridorInfo();
+			
+			DateDaily = new DataSeries();
+			CloseDaily = new DataSeries();
+			OpenDaily = new DataSeries();
+			HighDaily = new DataSeries();
+			LowDaily = new DataSeries();
+		}
+		
+		public void AddDailyClose(DataSeries minuteCloseArray, DataSeries minuteDateArray, int minuteBar)
+		{
+			if (minuteDateArray[i].Hour == 18 && minuteDateArray[i].Minute == 50 )
+			{
+				DateDaily.Add(minuteDateArray[i]);
+				CloseDaily.Add(minuteCloseArray[i]);
+			}
+		
+		}
+		//рассчет среднего объема макс и мин цены по корридору
+		public void ComputeCorridorData(DataSeries<double> close, DataSeries<int>  volume, int bar)
+		{
+			//рассчет среднего объема
+			CorridorSumVolume+=volume;
+			CorridorCountVolume++;
+			
+			if 		(CorridorMaxPrice < close[bar]) CorridorMaxPrice = close[bar];
+			else if (CorridorMinPrice > close[bar]) CorridorMinPrice = close[bar];
+			
+			
+		}
+	
+		public void ResetCorridorInfo()
+		{
+			CorridorMaxPrice = 0;
+			CorridorMinPrice = 0;
+			CorridorSumVolume = 0;
+			CorridorCountVolume = 0;
+		}
+		
+		public int BarDaily
+		{
+			get { return DateDaily.Count - 1;}
+		}
+		
+		public DataSeries<DateTime> DateDaily {get; set;}
+	
+		public DataSeries<Double> CloseDaily {get; set;}
+		
+		public DataSeries<Double> OpenDaily {get; set;}
+		
+		public DataSeries<Double> HighDaily {get; set;}
+		
+		public DataSeries<Double> LowDaily {get; set;}
+		
+		public Double CorridorMaxPrice {get;set;}	//0
+		
+		public Double CorridorMinPrice {get;set;}	//0
+		
+		public Double CorridorSumVolume {get;set;}	//0
+		
+		public int CorridorCountVolume {get;set;}	//0		
+		
+		public Double CorridorAvVolume 
+		{
+			get
+			{
+				double res = 0;
+				
+				try
+				{
+					res = CorridorSumVolume / CorridorCountVolume;
+				}
+				catch{}
+				
+				return res;
+			}
+		}
+		
+		//public int DailyShortsCount {get;set;}
+		
+		//public int DailyLongsCount {get;set;}		
+	}
+
+}
