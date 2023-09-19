@@ -13,6 +13,7 @@ namespace AutoTraderSDK.Kernel
     public abstract class TXMLConnectorCallbackableBase: TXMLConnectorBase
     {
         public AutoResetEvent serverStatusUpdated = new AutoResetEvent(false);
+        public AutoResetEvent positionsLoaded = new AutoResetEvent(false);
         public AutoResetEvent securitiesLoaded = new AutoResetEvent(false);
         public AutoResetEvent tradesLoaded = new AutoResetEvent(false);
         protected AutoResetEvent united_portfolioLoaded = new AutoResetEvent(false);
@@ -121,6 +122,8 @@ namespace AutoTraderSDK.Kernel
 
 
                     _positionsIsActual = true;
+
+                    positionsLoaded.Set();
                     break;
 
                 case "united_portfolio":

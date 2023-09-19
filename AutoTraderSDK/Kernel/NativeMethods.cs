@@ -9,8 +9,7 @@ namespace AutoTraderSDK.Kernel
 {
     public static class NativeMethods
     {
-        //[DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", EntryPoint = "LoadLibraryA", CharSet = CharSet.Ansi, SetLastError = true)]
         public static extern IntPtr LoadLibrary(string dllToLoad);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
