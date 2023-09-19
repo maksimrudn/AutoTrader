@@ -31,6 +31,11 @@ namespace AutoTraderSDK.Kernel
             IntPtr unInitializePtr = NativeMethods.GetProcAddress(_tConnectorDll, "UnInitialize");
             IntPtr setLogLevelPtr = NativeMethods.GetProcAddress(_tConnectorDll, "SetLogLevel");
 
+            if (initializePtr == IntPtr.Zero)
+            {
+                throw new Exception("Can't load library " + Marshal.GetLastWin32Error());
+            }
+
             _initialize = (Initialize)Marshal.GetDelegateForFunctionPointer(initializePtr, typeof(Initialize));
             _freeMemory = (FreeMemory)Marshal.GetDelegateForFunctionPointer(freeMemoryPtr, typeof(FreeMemory));
             _setCallback = (SetCallback)Marshal.GetDelegateForFunctionPointer(setCallbackPtr, typeof(SetCallback));

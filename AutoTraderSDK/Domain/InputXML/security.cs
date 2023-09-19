@@ -21,7 +21,7 @@ namespace AutoTraderSDK.Domain.InputXML
         public string currency { get; set; }
 
         [XmlElement(IsNullable = false)]
-        public boardsCode board { get; set; }
+        public string board { get; set; }
 
         [XmlElement(IsNullable = false)]
         public int market { get; set; }

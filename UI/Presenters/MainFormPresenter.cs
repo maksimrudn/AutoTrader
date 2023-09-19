@@ -267,7 +267,7 @@ namespace AutoTraderUI.Presenters
                 ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
 
                 _connectors[connectorNumber].Login(_settings.GetUsername(), _settings.GetPassword(), connType);
-                _view.LoadSeccodeList(_connectors[connectorNumber].GetSecurities().Where(x => x.board == boardsCode.FUT).Select(x => x.seccode).OrderBy(x => x).ToList());
+                _view.LoadSeccodeList(_connectors[connectorNumber].GetSecurities().Where(x => x.board == boardsCode.FUT.ToString()).Select(x => x.seccode).OrderBy(x => x).ToList());
                 _view.SetSelectedSeccode(_settings.Seccode);
                 _view.HandleConnected(connectorNumber);
 
