@@ -210,6 +210,8 @@ namespace AutoTraderSDK.Kernel
                     throw new Exception(_serverStatus.InnerText);
                 }
 
+                //positionsLoaded.WaitOne();
+
                 _getUnionPositions();
                 united_portfolioLoaded.WaitOne();
             }
