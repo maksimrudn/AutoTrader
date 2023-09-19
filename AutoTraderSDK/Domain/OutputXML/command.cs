@@ -92,7 +92,7 @@ namespace AutoTraderSDK.Domain.OutputXML
 
             res.id = command_id.subscribe;
             res.quotes = new quotes();
-            res.quotes.security.board = board;
+            res.quotes.security.board = board.ToString();
             res.quotes.security.seccode = seccode;
 
             return res;
@@ -104,7 +104,7 @@ namespace AutoTraderSDK.Domain.OutputXML
 
             res.id = command_id.gethistorydata;
             res.security = new security();
-            res.security.board = board;
+            res.security.board = board.ToString();
             res.security.seccode = seccode;
             res.periodValue = period;
             res.countValue = count;
@@ -133,7 +133,7 @@ namespace AutoTraderSDK.Domain.OutputXML
             res.security = new security();
 
             res.id = command_id.neworder;
-            res.security.board = board;
+            res.security.board = board.ToString();
             res.security.seccode = seccode;
             res.priceValue = price;
             res.quantityValue = volume;

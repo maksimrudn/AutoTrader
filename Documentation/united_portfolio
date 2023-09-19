@@ -1,0 +1,96 @@
+<united_portfolio union="344193R5Y4R" client="08L2T/08L2T">
+
+	<open_equity>279076.90</open_equity>
+	<equity>278907.99</equity>
+	<chrgoff_ir>0.00</chrgoff_ir>
+	<init_req>64315.83</init_req>
+	<chrgoff_mr>0.00</chrgoff_mr>
+	<maint_req>32165.13</maint_req>
+	<reg_equity>278907.99</reg_equity>
+	<reg_ir>64315.83</reg_ir>
+	<reg_mr>32165.13</reg_mr>
+	<vm>0.00</vm>
+	<finres>0.00</finres>
+	<go>0.00</go>
+	<vm_mma>0.00</vm_mma>
+
+	<money name="Рубли РФ КЦБ">
+		<open_balance>269666.30</open_balance>
+		<bought>139122.20</bought>
+		<sold>0.00</sold>
+		<balance>130544.10</balance>
+		<settled>0.00</settled>
+		<tax>13.91</tax>
+		<value_part register="T0">
+			<open_balance>269666.30</open_balance>
+			<bought>0.00</bought>
+			<sold>0.00</sold>
+			<balance>269666.30</balance>
+			<settled>0.00</settled>
+		</value_part>
+		<value_part register="Y2">
+			<open_balance>0.00</open_balance>
+			<bought>139122.20</bought>
+			<sold>0.00</sold>
+			<balance>-139122.20</balance>
+			<settled>0.00</settled>
+		</value_part>
+	</money>
+
+
+	<asset code="LKOH" name="Лукойл">
+		<seccode>LKOH</seccode>
+		<balance>1</balance>
+		<balance_prc>4887.5</balance_prc>
+		<price>5242.5</price>
+
+		<setoff_rate>1.0000</setoff_rate>
+		<init_req>2134.22</init_req>
+		<maint_req>1067.37</maint_req>
+
+		<security secid="536">
+		<market>1</market>
+		
+		<open_balance>1</open_balance>
+		<bought>0</bought>
+		<sold>0</sold>
+		<unrealized_pnl>355.00</unrealized_pnl>
+		<buying>0</buying>
+		<selling>0</selling>
+		<equity>5242.50</equity>
+		<reg_equity>5242.50</reg_equity>
+		<riskrate_long>40.71</riskrate_long><riskrate_short>51.29</riskrate_short><reserate_long>0.00</reserate_long><reserate_short>0.00</reserate_short><pl>-149.50</pl><pnl_income>-149.50</pnl_income><pnl_intraday>0.00</pnl_intraday><maxbuy>100</maxbuy><maxsell>81</maxsell>
+
+		<value_part register="T0">
+			<open_balance>1</open_balance>
+			<bought>0</bought>
+			<sold>0</sold>
+			<settled>0</settled>
+			<balance>1</balance>
+			<buying>0</buying>
+			<selling>0</selling>
+		</value_part></security>
+	</asset>
+
+	<asset code="GAZP" name="Газпром"><setoff_rate>1.0000</setoff_rate><init_req>655.04</init_req><maint_req>327.52</maint_req><security secid="1540"><market>1</market><seccode>GAZP</seccode><price>199.95</price><open_balance>10</open_balance><bought>0</bought><sold>0</sold><balance>10</balance><balance_prc>186.07</balance_prc><unrealized_pnl>138.80</unrealized_pnl><buying>0</buying><selling>0</selling><equity>1999.50</equity><reg_equity>1999.50</reg_equity><riskrate_long>32.76</riskrate_long><riskrate_short>39.24</riskrate_short><reserate_long>0.00</reserate_long><reserate_short>0.00</reserate_short><pl>30.90</pl><pnl_income>30.90</pnl_income><pnl_intraday>0.00</pnl_intraday><maxbuy>327</maxbuy><maxsell>275</maxsell><value_part register="T0"><open_balance>10</open_balance><bought>0</bought><sold>0</sold><settled>0</settled><balance>10</balance><buying>0</buying><selling>0</selling></value_part></security></asset>
+
+	<asset code="SBER" name="Сбербанк ао"><setoff_rate>1.0000</setoff_rate><init_req>656.84</init_req><maint_req>328.42</maint_req><security secid="2422"><market>1</market><seccode>SBER</seccode><price>200.5</price><open_balance>10</open_balance><bought>0</bought><sold>0</sold><balance>10</balance><balance_prc>187.87</balance_prc><unrealized_pnl>126.30</unrealized_pnl><buying>0</buying><selling>0</selling><equity>2005.00</equity><reg_equity>2005.00</reg_equity><riskrate_long>32.76</riskrate_long><riskrate_short>39.24</riskrate_short><reserate_long>0.00</reserate_long><reserate_short>0.00</reserate_short><pl>-45.00</pl><pnl_income>-45.00</pnl_income><pnl_intraday>0.00</pnl_intraday><maxbuy>326</maxbuy><maxsell>274</maxsell><value_part register="T0"><open_balance>10</open_balance><bought>0</bought><sold>0</sold><settled>0</settled><balance>10</balance><buying>0</buying><selling>0</selling></value_part></security></asset>
+
+	<asset code="FXMM" name="FXMM ETF">
+		<setoff_rate>1.0000</setoff_rate>
+		<init_req>60869.73</init_req>
+		<maint_req>30441.82</maint_req>
+		<security secid="8611">
+			<market>1</market>
+			<seccode>FXMM</seccode>
+			<price>1617.8</price>
+			<open_balance>0</open_balance>
+			<bought>86</bought>
+			<sold>0</sold>
+			<balance>86</balance>
+			<balance_prc>1617.7</balance_prc>
+			<unrealized_pnl>8.60</unrealized_pnl>
+			<buying>0</buying><selling>0</selling><equity>139130.80</equity><reg_equity>139130.80</reg_equity><riskrate_long>43.75</riskrate_long><riskrate_short>56.25</riskrate_short><reserate_long>0.00</reserate_long><reserate_short>0.00</reserate_short><pl>8.60</pl><pnl_income>0.00</pnl_income><pnl_intraday>8.60</pnl_intraday><maxbuy>303</maxbuy><maxsell>86</maxsell><value_part register="Y2"><open_balance>0</open_balance><bought>86</bought><sold>0</sold><settled>0</settled><balance>86</balance><buying>0</buying><selling>0</selling></value_part>
+		</security>
+	</asset>
+</united_portfolio>

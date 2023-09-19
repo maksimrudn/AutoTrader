@@ -293,7 +293,7 @@ namespace AutoTraderSDK.Kernel
 
             command com = new command();
             com.id = command_id.gethistorydata;
-            com.security.board = board;
+            com.security.board = board.ToString();
             com.security.seccode = seccode;
             com.periodValue = 1;
             com.countValue = 1;
@@ -422,7 +422,7 @@ namespace AutoTraderSDK.Kernel
             command com = new command();
             com.id = command_id.newstoporder;
             com.security = new security();
-            com.security.board = board;
+            com.security.board = board.ToString();
             com.security.seccode = seccode;
 
             com.buysellValue = buysell;
@@ -472,7 +472,7 @@ namespace AutoTraderSDK.Kernel
 
             command com = command.CreateNewCondOrderCommand(); ;
             com.id = command_id.newcondorder;
-            com.security.board = board;
+            com.security.board = board.ToString();
             com.security.seccode = seccode;
             com.buysellValue = buysell;
             com.client = FortsClientId;
