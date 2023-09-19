@@ -34,7 +34,7 @@ namespace AutoTraderSDK.Kernel
 
                 try
                 {
-                    res = _united_portfolio.money.balance;
+                    res = _mc_portfolio.money.First(x=>x.currency == "RUB").balance;
                 }
                 catch { }
 
@@ -148,7 +148,7 @@ namespace AutoTraderSDK.Kernel
 
         public positions Positions { get { return _positions; } }
 
-        public List<asset> UnitedPositions { get { return _united_portfolio.assets; } }
+        public List<asset> UnitedPositions { get { return _mc_portfolio.assets; } }
 
         public List<order> OpenOrders
         {
@@ -210,9 +210,9 @@ namespace AutoTraderSDK.Kernel
                     throw new Exception(_serverStatus.InnerText);
                 }
 
-                //positionsLoaded.WaitOne();
+                positionsLoaded.WaitOne();
 
-                _getUnionPositions();
+                _getUnitedPortfolioPositions();
                 united_portfolioLoaded.WaitOne();
             }
         }
@@ -239,9 +239,9 @@ namespace AutoTraderSDK.Kernel
             }
         }
 
-        protected void _getUnionPositions()
+        protected void _getUnitedPortfolioPositions()
         {
-            var com = command.CreateGetUnitedCommand(_positions.money_position.client);
+            var com = command.CreateGetMCPortfolioCommand(_positions.money_position.client);
 
             var res = ConnectorSendCommand(com, com.GetType());
 

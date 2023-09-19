@@ -43,11 +43,11 @@ namespace AutoTraderSDK.Domain.OutputXML
             return res;
         }
 
-        public static command CreateGetUnitedCommand(string client)
+        public static command CreateGetMCPortfolioCommand(string client)
         {
             command res = new command();
             res.clientAttribute = client;
-            res.id = command_id.get_united_portfolio;
+            res.id = command_id.get_mc_portfolio;
 
             return res;
         }

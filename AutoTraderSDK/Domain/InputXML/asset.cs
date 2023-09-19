@@ -72,5 +72,10 @@ namespace AutoTraderSDK.Domain.InputXML
 
         [XmlElement("security")]
         public security securityElement { get; set; }
+
+
+        public string currency { get; set; }
+
+        public double open_balance { get; set; }
     }
 }

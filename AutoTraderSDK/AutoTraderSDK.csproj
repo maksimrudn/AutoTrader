@@ -52,7 +52,7 @@
     <Compile Include="Domain\InputXML\asset.cs" />
     <Compile Include="Domain\InputXML\money.cs" />
     <Compile Include="Domain\InputXML\value_part.cs" />
-    <Compile Include="Domain\InputXML\united_portfolio.cs" />
+    <Compile Include="Domain\InputXML\mc_portfolio.cs" />
     <Compile Include="Domain\InputXML\candles.cs" />
     <Compile Include="Domain\InputXML\client.cs" />
     <Compile Include="Domain\InputXML\error.cs" />
@@ -97,6 +97,7 @@
     <Compile Include="Domain\OutputXML\unfilled.cs" />
     <Compile Include="Domain\OutputXML\validbefore.cs" />
     <Compile Include="Domain\ConnectionType.cs" />
+    <Compile Include="Domain\portfolio_currency.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Kernel\NativeMethods.cs" />
