@@ -194,15 +194,16 @@ namespace AutoTraderSDK.Kernel
             var com = command.CreateConnectionCommand(username, password, server, port);
 
             // отправляем команду подключения
-            var res = ConnectorSendCommand(com, com.GetType());
+            var sendCommandResult = ConnectorSendCommand(com, com.GetType());
 
-            // ждём ассинхронный ответ о результате подключения
-            if (res.success == false)
+            
+            if (sendCommandResult.success == false)
             {
-                throw new Exception(res.message);
+                throw new Exception(sendCommandResult.message);
             }
             else
             {
+                // ждём ассинхронный ответ о результате подключения
                 serverStatusUpdated.WaitOne();
 
                 if (_serverStatus.connected == "error")
@@ -212,8 +213,8 @@ namespace AutoTraderSDK.Kernel
 
                 positionsLoaded.WaitOne();
 
-                _getUnitedPortfolioPositions();
-                united_portfolioLoaded.WaitOne();
+                _getMCPortfolioPositions();
+                mc_portfolioLoaded.WaitOne();
             }
         }
 
@@ -239,7 +240,7 @@ namespace AutoTraderSDK.Kernel
             }
         }
 
-        protected void _getUnitedPortfolioPositions()
+        protected void _getMCPortfolioPositions()
         {
             var com = command.CreateGetMCPortfolioCommand(_positions.money_position.client);
 
