@@ -279,6 +279,8 @@ namespace AutoTraderUI.Presenters
                 _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString();
 
                 _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString("N");
+                _view.FreeMoney = _connectors[connectorNumber].Money.ToString("N");
+
                 _view.LoadPositions(_connectors[connectorNumber].UnitedPositions);
             }
             catch (Exception ex)

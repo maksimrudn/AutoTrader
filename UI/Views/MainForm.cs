@@ -154,6 +154,8 @@ namespace AutoTraderUI
         public string Username1 { get { return textBoxUsername.Text; } }
         public string Password1 { get { return textBoxPassword.Text; } }
         public string ClientId1 { set { textBoxClientId.Text = value; } }
+
+        public string FreeMoney { set { textBoxFreeMoney.Text = value; } }
         public string FreeMoney1 { set { textBoxFreeMoney1.Text = value; } }
         public string FreeMoney2 { set { textBoxFreeMoney2.Text = value; } }
 
@@ -247,5 +249,9 @@ namespace AutoTraderUI
             Application.Run(_context);
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

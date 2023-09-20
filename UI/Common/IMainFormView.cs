@@ -26,6 +26,9 @@ namespace AutoTraderUI.Common
         string Username1 { get; }
         string Password1 { get; }
         string ClientId1 { set; }
+
+        string FreeMoney { set; }
+
         string FreeMoney1 { set; }
         string FreeMoney2 { set; }
         string Union1 { set; }

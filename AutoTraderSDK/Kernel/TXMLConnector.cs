@@ -45,7 +45,7 @@ namespace AutoTraderSDK.Kernel
         {
             get
             {
-                return _forts_client.union;
+                return _forts_client?.union;
             }
         }
 
