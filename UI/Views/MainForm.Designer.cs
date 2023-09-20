@@ -94,18 +94,18 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.dataGridViewPositions = new System.Windows.Forms.DataGridView();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBoxFreeMoney2 = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.textBoxFreeMoney1 = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.labelTime = new System.Windows.Forms.Label();
             this.Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BalancePrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Vol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PNL = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBoxFreeMoney2 = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.textBoxFreeMoney1 = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.labelTime = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -436,6 +436,7 @@
             this.button2.TabIndex = 6;
             this.button2.Text = "united_portfolio";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // textBoxUnion
             // 
@@ -792,6 +793,42 @@
             this.dataGridViewPositions.Size = new System.Drawing.Size(637, 317);
             this.dataGridViewPositions.TabIndex = 0;
             // 
+            // Code
+            // 
+            this.Code.HeaderText = "Code";
+            this.Code.Name = "Code";
+            this.Code.ReadOnly = true;
+            // 
+            // NameColumn
+            // 
+            this.NameColumn.HeaderText = "Name";
+            this.NameColumn.Name = "NameColumn";
+            this.NameColumn.ReadOnly = true;
+            // 
+            // BalancePrice
+            // 
+            this.BalancePrice.HeaderText = "Balance Price";
+            this.BalancePrice.Name = "BalancePrice";
+            this.BalancePrice.ReadOnly = true;
+            // 
+            // Price
+            // 
+            this.Price.HeaderText = "Price";
+            this.Price.Name = "Price";
+            this.Price.ReadOnly = true;
+            // 
+            // Vol
+            // 
+            this.Vol.HeaderText = "Vol";
+            this.Vol.Name = "Vol";
+            this.Vol.ReadOnly = true;
+            // 
+            // PNL
+            // 
+            this.PNL.HeaderText = "PNL";
+            this.PNL.Name = "PNL";
+            this.PNL.ReadOnly = true;
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.textBoxFreeMoney2);
@@ -848,42 +885,6 @@
             this.labelTime.Size = new System.Drawing.Size(94, 13);
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
-            // 
-            // Code
-            // 
-            this.Code.HeaderText = "Code";
-            this.Code.Name = "Code";
-            this.Code.ReadOnly = true;
-            // 
-            // NameColumn
-            // 
-            this.NameColumn.HeaderText = "Name";
-            this.NameColumn.Name = "NameColumn";
-            this.NameColumn.ReadOnly = true;
-            // 
-            // BalancePrice
-            // 
-            this.BalancePrice.HeaderText = "Balance Price";
-            this.BalancePrice.Name = "BalancePrice";
-            this.BalancePrice.ReadOnly = true;
-            // 
-            // Price
-            // 
-            this.Price.HeaderText = "Price";
-            this.Price.Name = "Price";
-            this.Price.ReadOnly = true;
-            // 
-            // Vol
-            // 
-            this.Vol.HeaderText = "Vol";
-            this.Vol.Name = "Vol";
-            this.Vol.ReadOnly = true;
-            // 
-            // PNL
-            // 
-            this.PNL.HeaderText = "PNL";
-            this.PNL.Name = "PNL";
-            this.PNL.ReadOnly = true;
             // 
             // MainForm
             // 
