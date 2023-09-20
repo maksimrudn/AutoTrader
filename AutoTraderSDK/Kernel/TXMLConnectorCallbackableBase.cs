@@ -16,7 +16,7 @@ namespace AutoTraderSDK.Kernel
         public AutoResetEvent positionsLoaded = new AutoResetEvent(false);
         public AutoResetEvent securitiesLoaded = new AutoResetEvent(false);
         public AutoResetEvent tradesLoaded = new AutoResetEvent(false);
-        protected AutoResetEvent united_portfolioLoaded = new AutoResetEvent(false);
+        protected AutoResetEvent mc_portfolioLoaded = new AutoResetEvent(false);
 
 
         public bool Connected
@@ -128,7 +128,7 @@ namespace AutoTraderSDK.Kernel
 
                 case "mc_portfolio":
                     _mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
-                    united_portfolioLoaded.Set();
+                    mc_portfolioLoaded.Set();
                     break;
 
                 case "overnight":
