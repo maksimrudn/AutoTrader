@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace AutoTraderSDK.Domain.InputXML
+namespace AutoTraderSDK.Domain.InputXML.orders_ns
 {
     public class order
     {

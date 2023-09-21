@@ -150,11 +150,11 @@ namespace AutoTraderSDK.Kernel
 
         public mc_portfolio MCPortfolio { get { return _mc_portfolio; } }
 
-        public List<order> OpenOrders
+        public List<Domain.InputXML.orders_ns.order> OpenOrders
         {
             get
             {
-                List<order> res = null;
+                List<Domain.InputXML.orders_ns.order> res = null;
 
                 lock (_orders)
                 {
@@ -539,10 +539,10 @@ namespace AutoTraderSDK.Kernel
                                 volume);
 
             // todo перейти на AutoResetEvent
-            order ord = null;
+            Domain.InputXML.orders_ns.order ord = null;
             while (ord == null) { Application.DoEvents(); ord = GetOrderByTransactionId(tid); }
 
-            // получение номера выполненного порузчение
+            // получение номера выполненного поручения
             Domain.InputXML.trades_ns.trade tr = null;
             while (tr == null) { Application.DoEvents(); tr = GetTradeByOrderNo(ord.orderno); }
 
@@ -575,7 +575,7 @@ namespace AutoTraderSDK.Kernel
             }
             else
             {
-                // todo доаписать
+                // todo дописать
                 //NewStopOrder(board, seccode, buysell, )
             }
               
@@ -584,9 +584,9 @@ namespace AutoTraderSDK.Kernel
 
         
 
-        public order GetOrderByTransactionId(int transactionid)
+        public Domain.InputXML.orders_ns.order GetOrderByTransactionId(int transactionid)
         {
-            order res = null;
+            Domain.InputXML.orders_ns.order res = null;
 
             lock (_orders)
             {

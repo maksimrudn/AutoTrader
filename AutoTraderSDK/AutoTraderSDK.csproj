@@ -67,7 +67,7 @@
     <Compile Include="Domain\InputXML\money_position.cs" />
     <Compile Include="Domain\InputXML\quotations_ns\quotation.cs" />
     <Compile Include="Domain\InputXML\securities_ns\opmask.cs" />
-    <Compile Include="Domain\InputXML\order.cs" />
+    <Compile Include="Domain\InputXML\orders_ns\order.cs" />
     <Compile Include="Domain\InputXML\orders.cs" />
     <Compile Include="Domain\InputXML\overnight.cs" />
     <Compile Include="Domain\InputXML\pit.cs" />

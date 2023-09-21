@@ -9,6 +9,6 @@ namespace AutoTraderSDK.Domain.InputXML
     public class orders
     {
         [XmlElement("order")]
-        public List<order> order { get; set; }
+        public List<orders_ns.order> order { get; set; }
     }
 }

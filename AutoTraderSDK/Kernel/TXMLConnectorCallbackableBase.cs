@@ -47,7 +47,7 @@ namespace AutoTraderSDK.Kernel
         protected bool _positionsIsActual = false;
 
         protected HashSet<Domain.InputXML.quotes_ns.quote> _quotes { get; set; }
-        protected HashSet<order> _orders { get; set; }
+        protected HashSet<Domain.InputXML.orders_ns.order> _orders { get; set; }
         protected HashSet<Domain.InputXML.trades_ns.trade> _trades { get; set; }
 
         protected HashSet<Domain.InputXML.securities_ns.security> _securities { get; set; }
@@ -55,7 +55,7 @@ namespace AutoTraderSDK.Kernel
         public TXMLConnectorCallbackableBase(string tConnFile) : base(tConnFile)
         {
             _quotes = new HashSet<Domain.InputXML.quotes_ns.quote>();
-            _orders = new HashSet<order>();
+            _orders = new HashSet<Domain.InputXML.orders_ns.order>();
             _trades = new HashSet<Domain.InputXML.trades_ns.trade>();
             _securities = new HashSet<Domain.InputXML.securities_ns.security>();
         }
