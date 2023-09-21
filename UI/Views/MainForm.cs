@@ -163,18 +163,26 @@ namespace AutoTraderUI
 
         public void LoadPositions(mc_portfolio portfolio)
         {
-            //foreach (var pos in portfolio.assets)
-            //{
-            //    dataGridViewPositions.Rows.Add(new object[]
-            //    {
-            //        pos.code,
-            //        pos.name,
-            //        pos.securityElement.balance_prc,
-            //        pos.securityElement.price,
-            //        pos.securityElement.balance,
-            //        pos.securityElement.unrealized_pnl
-            //    });
-            //}
+            dataGridViewPositions.BeginInvoke(new MethodInvoker(() =>
+            {
+                dataGridViewPositions.Rows.Clear();
+
+                foreach (var pos in portfolio.securities)
+                {
+                    dataGridViewPositions.Rows.Add(new object[]
+                    {
+                    pos.seccode,
+                    //pos.name,
+                    pos.balance_prc,
+                    pos.price,
+                    pos.balance,
+                        //pos.securityElement.unrealized_pnl
+                    });
+                }
+            }));
+
+
+            
         }
 
         public void ShowMessage(string msg)

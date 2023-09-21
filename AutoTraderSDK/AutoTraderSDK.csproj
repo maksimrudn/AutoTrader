@@ -95,7 +95,7 @@
     <Compile Include="Domain\OutputXML\command_ns\security.cs" />
     <Compile Include="Domain\OutputXML\cond_type.cs" />
     <Compile Include="Domain\OutputXML\proxy.cs" />
-    <Compile Include="Domain\OutputXML\quotations.cs" />
+    <Compile Include="Domain\OutputXML\command_ns\quotations.cs" />
     <Compile Include="Domain\OutputXML\command_ns\quotes.cs" />
     <Compile Include="Domain\OutputXML\stoploss.cs" />
     <Compile Include="Domain\OutputXML\takeprofit.cs" />
@@ -106,6 +106,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Kernel\NativeMethods.cs" />
+    <Compile Include="Kernel\OnMCPositionsUpdatedEventArgs.cs" />
     <Compile Include="Kernel\TXMLConnector.cs" />
     <Compile Include="Kernel\TXMLConnectorBase.cs" />
     <Compile Include="Kernel\TXMLConnectorCallbackableBase.cs" />
