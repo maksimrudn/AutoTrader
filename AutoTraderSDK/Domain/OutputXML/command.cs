@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using AutoTraderSDK.Domain.InputXML;
-
 
 
 namespace AutoTraderSDK.Domain.OutputXML
@@ -86,14 +84,23 @@ namespace AutoTraderSDK.Domain.OutputXML
             return res;
         }
 
+        /// <summary>
+        /// подписка на изменения показателей торгов
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="seccode"></param>
+        /// <returns></returns>
         public static command CreateSubscribeCommand(boardsCode board, string seccode)
         {
             command res = new command();
 
             res.id = command_id.subscribe;
-            res.quotes = new quotes();
-            res.quotes.security.board = board.ToString();
-            res.quotes.security.seccode = seccode;
+            res.quotes = new command_ns.quotes();            
+            res.quotes.security.Add(new command_ns.security()
+            {
+                board = board.ToString(),
+                seccode = seccode
+            });            
 
             return res;
         }
@@ -103,7 +110,7 @@ namespace AutoTraderSDK.Domain.OutputXML
             command res = new command();
 
             res.id = command_id.gethistorydata;
-            res.security = new security();
+            res.security = new command_ns.security();
             res.security.board = board.ToString();
             res.security.seccode = seccode;
             res.periodValue = period;
@@ -119,7 +126,7 @@ namespace AutoTraderSDK.Domain.OutputXML
             command res = new command();
 
             res.id = command_id.newcondorder;
-            res.security = new security();
+            res.security = new command_ns.security();
             res.bymarketValue = AutoTraderSDK.Domain.OutputXML.bymarket.yes;
             res.validafter = "0";
             res.validbeforeValue = AutoTraderSDK.Domain.OutputXML.validbefore.till_canceled;
@@ -130,7 +137,7 @@ namespace AutoTraderSDK.Domain.OutputXML
         public static command CreateNewOrder(string clientId, boardsCode board, string seccode, buysell buysell, bymarket bymarket, double price, int volume)
         {
             command res = new command();
-            res.security = new security();
+            res.security = new command_ns.security();
 
             res.id = command_id.neworder;
             res.security.board = board.ToString();
@@ -374,7 +381,7 @@ namespace AutoTraderSDK.Domain.OutputXML
         #region ORDER
         // todo проверить будут ли проблемы, если этот параметр заполнять в конструкторе
         [XmlElement(IsNullable=false)]
-        public security security { get; set; }
+        public command_ns.security security { get; set; }
 
 
         //0: не менять количество;
@@ -730,8 +737,11 @@ namespace AutoTraderSDK.Domain.OutputXML
         [XmlElement(IsNullable = false)]
         public quotations quotations { get; set; }
 
+        /// <summary>
+        /// подписка на изменения «стакана»
+        /// </summary>
         [XmlElement(IsNullable = false)]
-        public quotes quotes { get; set; }
+        public command_ns.quotes quotes { get; set; }
 
 
         #endregion

@@ -10,9 +10,9 @@ namespace AutoTraderSDK.Kernel
 
         AutoTraderSDK.Domain.InputXML.positions Positions { get; }
 
-        System.Collections.Generic.List<AutoTraderSDK.Domain.InputXML.quote> QuotesBuy { get; }
+        System.Collections.Generic.List<Domain.InputXML.quotes_ns.quote> QuotesBuy { get; }
 
-        System.Collections.Generic.List<AutoTraderSDK.Domain.InputXML.quote> QuotesSell { get; }
+        System.Collections.Generic.List<Domain.InputXML.quotes_ns.quote> QuotesSell { get; }
 
         //AutoTraderSDK.Domain.InputXML.candle GetCurrentCandle(string seccode);
         //void GetFortsPositions(string board, string seccode);

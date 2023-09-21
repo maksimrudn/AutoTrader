@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace AutoTraderSDK.Domain.OutputXML
 {
@@ -10,9 +11,10 @@ namespace AutoTraderSDK.Domain.OutputXML
     {
         public quotations()
         {
-            security = new security();
+            quotation = new List<InputXML.quotations_ns.quotation>();
         }
 
-        public security security;
+        [XmlElement("quotation")]
+        public List<InputXML.quotations_ns.quotation> quotation;
     }
 }

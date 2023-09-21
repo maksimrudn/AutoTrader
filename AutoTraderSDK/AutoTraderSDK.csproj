@@ -49,9 +49,11 @@
     <Compile Include="Domain\InputXML\boards.cs" />
     <Compile Include="Domain\InputXML\candle.cs" />
     <Compile Include="Domain\InputXML\candlekinds.cs" />
-    <Compile Include="Domain\InputXML\asset.cs" />
-    <Compile Include="Domain\InputXML\money.cs" />
-    <Compile Include="Domain\InputXML\value_part.cs" />
+    <Compile Include="Domain\InputXML\mc_portfolio_ns\asset.cs" />
+    <Compile Include="Domain\InputXML\mc_portfolio_ns\money_ns\value_part.cs" />
+    <Compile Include="Domain\InputXML\mc_portfolio_ns\security.cs" />
+    <Compile Include="Domain\InputXML\mc_portfolio_ns\money.cs" />
+    <Compile Include="Domain\InputXML\mc_portfolio_ns\security_ns\value_part.cs" />
     <Compile Include="Domain\InputXML\mc_portfolio.cs" />
     <Compile Include="Domain\InputXML\candles.cs" />
     <Compile Include="Domain\InputXML\client.cs" />
@@ -63,41 +65,44 @@
     <Compile Include="Domain\InputXML\market.cs" />
     <Compile Include="Domain\InputXML\markets.cs" />
     <Compile Include="Domain\InputXML\money_position.cs" />
-    <Compile Include="Domain\InputXML\opmask.cs" />
+    <Compile Include="Domain\InputXML\quotations_ns\quotation.cs" />
+    <Compile Include="Domain\InputXML\securities_ns\opmask.cs" />
     <Compile Include="Domain\InputXML\order.cs" />
     <Compile Include="Domain\InputXML\orders.cs" />
     <Compile Include="Domain\InputXML\overnight.cs" />
     <Compile Include="Domain\InputXML\pit.cs" />
     <Compile Include="Domain\InputXML\pits.cs" />
     <Compile Include="Domain\InputXML\positions.cs" />
-    <Compile Include="Domain\InputXML\quote.cs" />
+    <Compile Include="Domain\InputXML\quotes_ns\quote.cs" />
     <Compile Include="Domain\InputXML\quotes.cs" />
     <Compile Include="Domain\InputXML\result.cs" />
     <Compile Include="Domain\InputXML\securities.cs" />
-    <Compile Include="Domain\InputXML\security.cs" />
+    <Compile Include="Domain\InputXML\securities_ns\security.cs" />
     <Compile Include="Domain\InputXML\sec_info_upd.cs" />
     <Compile Include="Domain\InputXML\sec_position.cs" />
     <Compile Include="Domain\InputXML\server_status.cs" />
     <Compile Include="Domain\InputXML\spot_limit.cs" />
     <Compile Include="Domain\InputXML\status.cs" />
-    <Compile Include="Domain\InputXML\trade.cs" />
+    <Compile Include="Domain\InputXML\alltrades_ns\trade.cs" />
     <Compile Include="Domain\InputXML\trades.cs" />
+    <Compile Include="Domain\InputXML\trades_ns\trade.cs" />
     <Compile Include="Domain\OutputXML\alltrades.cs" />
     <Compile Include="Domain\OutputXML\boardsCode.cs" />
     <Compile Include="Domain\OutputXML\buysell.cs" />
     <Compile Include="Domain\OutputXML\bymarket.cs" />
     <Compile Include="Domain\OutputXML\command.cs" />
     <Compile Include="Domain\OutputXML\command_id.cs" />
+    <Compile Include="Domain\OutputXML\command_ns\security.cs" />
     <Compile Include="Domain\OutputXML\cond_type.cs" />
     <Compile Include="Domain\OutputXML\proxy.cs" />
     <Compile Include="Domain\OutputXML\quotations.cs" />
-    <Compile Include="Domain\OutputXML\quotes.cs" />
+    <Compile Include="Domain\OutputXML\command_ns\quotes.cs" />
     <Compile Include="Domain\OutputXML\stoploss.cs" />
     <Compile Include="Domain\OutputXML\takeprofit.cs" />
     <Compile Include="Domain\OutputXML\unfilled.cs" />
     <Compile Include="Domain\OutputXML\validbefore.cs" />
     <Compile Include="Domain\ConnectionType.cs" />
-    <Compile Include="Domain\portfolio_currency.cs" />
+    <Compile Include="Domain\InputXML\mc_portfolio_ns\portfolio_currency.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Kernel\NativeMethods.cs" />
@@ -125,6 +130,7 @@
     </Content>
     <Content Include="Kernel\ПорядокЗагрузкиБиблиотекиКоннектора.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

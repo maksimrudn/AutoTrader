@@ -9,6 +9,6 @@ namespace AutoTraderSDK.Domain.InputXML
     public class securities
     {
         [XmlElement("security")]
-        public List<security> security { get; set; }
+        public List<securities_ns.security> security { get; set; }
     }
 }

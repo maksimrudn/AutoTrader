@@ -42,6 +42,6 @@ namespace AutoTraderUI.Common
         void HandleConnected(int conectorNumber);
         void HandleDisconnected(int connNumber);
         void UpdateSettings(Settings settings);
-        void LoadPositions(List<asset> positions);
+        void LoadPositions(mc_portfolio portfolio);
     }
 }
