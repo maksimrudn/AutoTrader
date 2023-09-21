@@ -281,9 +281,17 @@ namespace AutoTraderSDK.Kernel
             base.Dispose();
         }
 
-        public void Subscribe(AutoTraderSDK.Domain.OutputXML.boardsCode board, string seccode)
+        public void SubscribeQuotations(AutoTraderSDK.Domain.OutputXML.boardsCode board, string seccode)
         {
-            var com = command.CreateSubscribeCommand(board, seccode);
+            var com = command.CreateSubscribeQuotationsCommand(board, seccode);
+
+            var res = ConnectorSendCommand(com, com.GetType());
+
+
+        }
+        public void SubscribeQuotes(AutoTraderSDK.Domain.OutputXML.boardsCode board, string seccode)
+        {
+            var com = command.CreateSubscribeQuotesCommand(board, seccode);
 
             var res = ConnectorSendCommand(com, com.GetType());
 

@@ -1,27 +1,23 @@
-﻿using AutoTraderSDK.Domain.InputXML;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace AutoTraderSDK.Domain.OutputXML.command_ns
 {
     /// <summary>
-    /// подписка на изменения «стакана»
+    ///  подписка на изменения показателей торгов
     /// </summary>
-    public class quotes
+    public class quotations
     {
-        public quotes()
+        public quotations()
         {
             security = new List<security>();
-
         }
 
-
-        //to subscribe command
         [XmlElement("security")]
-        public List<security> security { get; set; }
+        public List<security> security;
     }
 }

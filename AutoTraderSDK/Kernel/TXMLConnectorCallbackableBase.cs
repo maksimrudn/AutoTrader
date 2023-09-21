@@ -29,6 +29,9 @@ namespace AutoTraderSDK.Kernel
             }
         }
 
+        public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
+
+
         /// <summary>
         /// Результат подключения к серверу
         /// Заполняется с помощью обработчика _handleData
@@ -127,9 +130,13 @@ namespace AutoTraderSDK.Kernel
                     break;
 
                 case "mc_portfolio":
-                    _mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));                    
+                    _mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
 
+                   
                     mc_portfolioLoaded.Set();
+                    OnMCPositionsUpdated.Invoke(this, new OnMCPositionsUpdatedEventArgs(_mc_portfolio));
+
+
                     break;
 
                 case "overnight":

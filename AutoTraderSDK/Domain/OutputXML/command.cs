@@ -85,12 +85,33 @@ namespace AutoTraderSDK.Domain.OutputXML
         }
 
         /// <summary>
-        /// подписка на изменения показателей торгов
+        /// подписка на изменения «стакана»
         /// </summary>
         /// <param name="board"></param>
         /// <param name="seccode"></param>
         /// <returns></returns>
-        public static command CreateSubscribeCommand(boardsCode board, string seccode)
+        public static command CreateSubscribeQuotationsCommand(boardsCode board, string seccode)
+        {
+            command res = new command();
+
+            res.id = command_id.subscribe;
+            res.quotations = new command_ns.quotations();
+            res.quotations.security.Add(new command_ns.security()
+            {
+                board = board.ToString(),
+                seccode = seccode
+            });
+
+            return res;
+        }
+
+        /// <summary>
+        /// подписка на изменения «стакана»
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="seccode"></param>
+        /// <returns></returns>
+        public static command CreateSubscribeQuotesCommand(boardsCode board, string seccode)
         {
             command res = new command();
 
@@ -735,7 +756,7 @@ namespace AutoTraderSDK.Domain.OutputXML
         public alltrades alltrades { get; set; }
 
         [XmlElement(IsNullable = false)]
-        public quotations quotations { get; set; }
+        public command_ns.quotations quotations { get; set; }
 
         /// <summary>
         /// подписка на изменения «стакана»

@@ -46,6 +46,12 @@ namespace AutoTraderUI.Presenters
             _view.ComboSell += ComboSell;
             _view.MakeMultidirect += MakeMultidirect;
             _view.StartMakeMultidirectByTimer += StartMakeMultidirectByTimer;
+
+
+            _connectors[0].OnMCPositionsUpdated += (target, args) =>
+            {
+                _view.LoadPositions(args.data);
+            };
         }
 
 
@@ -281,7 +287,9 @@ namespace AutoTraderUI.Presenters
                 _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString("N");
                 _view.FreeMoney = _connectors[connectorNumber].Money.ToString("N");
 
-                _view.LoadPositions(_connectors[connectorNumber].MCPortfolio);
+
+
+                _connectors[connectorNumber].SubscribeQuotes(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, "SiZ3");
             }
             catch (Exception ex)
             {

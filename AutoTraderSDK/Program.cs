@@ -131,7 +131,7 @@ namespace AutoTraderSDK
 
         private static void _testQuotesPair(TXMLConnector cl)
         {
-            cl.Subscribe(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, _seccode);
+            cl.SubscribeQuotes(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, _seccode);
 
             double last = 0;
             int pos = 0;
