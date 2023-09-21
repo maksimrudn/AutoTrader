@@ -10,7 +10,7 @@ namespace AutoTraderSDK.Domain.InputXML
     public class quotes
     {
         [XmlElement("quote")]
-        public List<quote> quote { get; set; }
+        public List<quotes_ns.quote> quote { get; set; }
         
     }
 

@@ -46,18 +46,18 @@ namespace AutoTraderSDK.Kernel
 
         protected bool _positionsIsActual = false;
 
-        protected HashSet<quote> _quotes { get; set; }
+        protected HashSet<Domain.InputXML.quotes_ns.quote> _quotes { get; set; }
         protected HashSet<order> _orders { get; set; }
-        protected HashSet<trade> _trades { get; set; }
+        protected HashSet<Domain.InputXML.trades_ns.trade> _trades { get; set; }
 
-        protected HashSet<security> _securities { get; set; }
+        protected HashSet<Domain.InputXML.securities_ns.security> _securities { get; set; }
 
         public TXMLConnectorCallbackableBase(string tConnFile) : base(tConnFile)
         {
-            _quotes = new HashSet<quote>();
+            _quotes = new HashSet<Domain.InputXML.quotes_ns.quote>();
             _orders = new HashSet<order>();
-            _trades = new HashSet<trade>();
-            _securities = new HashSet<security>();
+            _trades = new HashSet<Domain.InputXML.trades_ns.trade>();
+            _securities = new HashSet<Domain.InputXML.securities_ns.security>();
         }
 
         protected override void _handleData(String result)
@@ -127,7 +127,8 @@ namespace AutoTraderSDK.Kernel
                     break;
 
                 case "mc_portfolio":
-                    _mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
+                    _mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));                    
+
                     mc_portfolioLoaded.Set();
                     break;
 
@@ -176,7 +177,7 @@ namespace AutoTraderSDK.Kernel
 
 
 
-        private void _securitiesHandle(List<security> security)
+        private void _securitiesHandle(List<Domain.InputXML.securities_ns.security> security)
         {
             lock(_securities)
             {

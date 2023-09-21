@@ -10,6 +10,10 @@ namespace AutoTraderSDK.Domain.InputXML
     {
         [XmlAttribute]
         public int id { get; set; }
+
+        /// <summary>
+        /// Внутренний код рынка
+        /// </summary>
         [XmlText]
         public string InnerText { get; set; }
     }

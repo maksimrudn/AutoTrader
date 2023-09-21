@@ -161,20 +161,20 @@ namespace AutoTraderUI
 
         public string Union1 { set { textBoxUnion.Text = value; } }
 
-        public void LoadPositions(List<asset> positions)
+        public void LoadPositions(mc_portfolio portfolio)
         {
-            foreach (var pos in positions)
-            {
-                dataGridViewPositions.Rows.Add(new object[]
-                {
-                    pos.code,
-                    pos.name,
-                    pos.securityElement.balance_prc,
-                    pos.securityElement.price,
-                    pos.securityElement.balance,
-                    pos.securityElement.unrealized_pnl
-                });
-            }
+            //foreach (var pos in portfolio.assets)
+            //{
+            //    dataGridViewPositions.Rows.Add(new object[]
+            //    {
+            //        pos.code,
+            //        pos.name,
+            //        pos.securityElement.balance_prc,
+            //        pos.securityElement.price,
+            //        pos.securityElement.balance,
+            //        pos.securityElement.unrealized_pnl
+            //    });
+            //}
         }
 
         public void ShowMessage(string msg)

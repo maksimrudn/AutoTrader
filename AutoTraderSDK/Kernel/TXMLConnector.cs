@@ -34,7 +34,7 @@ namespace AutoTraderSDK.Kernel
 
                 try
                 {
-                    res = _mc_portfolio.money.First(x=>x.currency == "RUB").balance;
+                    res = _mc_portfolio.moneys.First(x=>x.currency == "RUB").balance;
                 }
                 catch { }
 
@@ -49,16 +49,16 @@ namespace AutoTraderSDK.Kernel
             }
         }
 
-        public List<quote> QuotesBuy
+        public List<Domain.InputXML.quotes_ns.quote> QuotesBuy
         {
             get
             {
 
-                List<quote> quotes1;
+                List<Domain.InputXML.quotes_ns.quote> quotes1;
 
                 lock (_quotes)
                 {
-                    quotes1 = new List<quote>(_quotes);
+                    quotes1 = new List<Domain.InputXML.quotes_ns.quote>(_quotes);
                 }
 
 
@@ -81,15 +81,15 @@ namespace AutoTraderSDK.Kernel
 
         
 
-        public List<quote> QuotesSell
+        public List<Domain.InputXML.quotes_ns.quote> QuotesSell
         {
             get
             {
-                List<quote> quotes1;
+                List<Domain.InputXML.quotes_ns.quote> quotes1;
 
                 lock (_quotes)
                 {
-                    quotes1 = new List<quote>(_quotes);
+                    quotes1 = new List<Domain.InputXML.quotes_ns.quote>(_quotes);
                 }
 
                 var q = quotes1.Where(x => x.sell > 0 && x.buy == 0).OrderBy(x => x.price).ToList();
@@ -148,7 +148,7 @@ namespace AutoTraderSDK.Kernel
 
         public positions Positions { get { return _positions; } }
 
-        public List<asset> UnitedPositions { get { return _mc_portfolio.assets; } }
+        public mc_portfolio MCPortfolio { get { return _mc_portfolio; } }
 
         public List<order> OpenOrders
         {
@@ -424,7 +424,7 @@ namespace AutoTraderSDK.Kernel
 
             command com = new command();
             com.id = command_id.newstoporder;
-            com.security = new security();
+            com.security = new Domain.OutputXML.command_ns.security();
             com.security.board = board.ToString();
             com.security.seccode = seccode;
 
@@ -543,7 +543,7 @@ namespace AutoTraderSDK.Kernel
             while (ord == null) { Application.DoEvents(); ord = GetOrderByTransactionId(tid); }
 
             // получение номера выполненного порузчение
-            trade tr = null;
+            Domain.InputXML.trades_ns.trade tr = null;
             while (tr == null) { Application.DoEvents(); tr = GetTradeByOrderNo(ord.orderno); }
 
             var closeOrderBysell = (buysell == buysell.B) ? buysell.S : buysell.B;
@@ -596,9 +596,9 @@ namespace AutoTraderSDK.Kernel
             return res;
         }
 
-        public trade GetTradeByOrderNo(Int64 orderno)
+        public Domain.InputXML.trades_ns.trade GetTradeByOrderNo(Int64 orderno)
         {
-            trade res = null;
+            Domain.InputXML.trades_ns.trade res = null;
 
             lock (_trades)
             {
@@ -608,9 +608,9 @@ namespace AutoTraderSDK.Kernel
             return res;
         }
 
-        public List<security> GetSecurities()
+        public List<Domain.InputXML.securities_ns.security> GetSecurities()
         {
-            List<security> res = new List<security>();
+            List<Domain.InputXML.securities_ns.security> res = new List<Domain.InputXML.securities_ns.security>();
             command com = command.CreateGetSecurities();
 
             securitiesLoaded.Reset();
