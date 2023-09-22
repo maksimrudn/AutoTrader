@@ -106,6 +106,9 @@
             this.textBoxFreeMoney1 = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.labelTime = new System.Windows.Forms.Label();
+            this.quotationsSubscribebutton = new System.Windows.Forms.Button();
+            this.quotationsUnSubscribebutton = new System.Windows.Forms.Button();
+            this.observeButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -283,11 +286,14 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 40);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(669, 457);
+            this.tabControl1.Size = new System.Drawing.Size(669, 560);
             this.tabControl1.TabIndex = 18;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.observeButton);
+            this.tabPage1.Controls.Add(this.quotationsUnSubscribebutton);
+            this.tabPage1.Controls.Add(this.quotationsSubscribebutton);
             this.tabPage1.Controls.Add(this.checkBoxShutdown);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.dateTimePickerMultidirectExecute);
@@ -312,7 +318,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(661, 431);
+            this.tabPage1.Size = new System.Drawing.Size(661, 534);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Trading";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -407,7 +413,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(661, 431);
+            this.tabPage2.Size = new System.Drawing.Size(661, 534);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Settings 1";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -886,11 +892,38 @@
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
             // 
+            // quotationsSubscribebutton
+            // 
+            this.quotationsSubscribebutton.Location = new System.Drawing.Point(12, 505);
+            this.quotationsSubscribebutton.Name = "quotationsSubscribebutton";
+            this.quotationsSubscribebutton.Size = new System.Drawing.Size(160, 23);
+            this.quotationsSubscribebutton.TabIndex = 33;
+            this.quotationsSubscribebutton.Text = "Subscribe on Quotations ";
+            this.quotationsSubscribebutton.UseVisualStyleBackColor = true;
+            // 
+            // quotationsUnSubscribebutton
+            // 
+            this.quotationsUnSubscribebutton.Location = new System.Drawing.Point(178, 505);
+            this.quotationsUnSubscribebutton.Name = "quotationsUnSubscribebutton";
+            this.quotationsUnSubscribebutton.Size = new System.Drawing.Size(160, 23);
+            this.quotationsUnSubscribebutton.TabIndex = 33;
+            this.quotationsUnSubscribebutton.Text = "UnSubscribe on Quotations ";
+            this.quotationsUnSubscribebutton.UseVisualStyleBackColor = true;
+            // 
+            // observeButton
+            // 
+            this.observeButton.Location = new System.Drawing.Point(424, 505);
+            this.observeButton.Name = "observeButton";
+            this.observeButton.Size = new System.Drawing.Size(186, 23);
+            this.observeButton.TabIndex = 34;
+            this.observeButton.Text = "Observe";
+            this.observeButton.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(690, 509);
+            this.ClientSize = new System.Drawing.Size(690, 612);
             this.Controls.Add(this.labelTime);
             this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";
@@ -1003,5 +1036,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Price;
         private System.Windows.Forms.DataGridViewTextBoxColumn Vol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PNL;
+        private System.Windows.Forms.Button quotationsSubscribebutton;
+        private System.Windows.Forms.Button quotationsUnSubscribebutton;
+        private System.Windows.Forms.Button observeButton;
     }
 }

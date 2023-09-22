@@ -1,4 +1,4 @@
-﻿using AutoTraderSDK.Kernel;
+﻿using AutoTraderSDK.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;

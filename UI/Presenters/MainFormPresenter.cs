@@ -1,6 +1,6 @@
-﻿using AutoTraderSDK.Domain;
-using AutoTraderSDK.Domain.OutputXML;
-using AutoTraderSDK.Kernel;
+﻿using AutoTraderSDK.Model;
+using AutoTraderSDK.Model.Outgoing;
+using AutoTraderSDK.Core;
 using AutoTraderUI.Common;
 using System;
 using System.Collections.Generic;
@@ -48,12 +48,46 @@ namespace AutoTraderUI.Presenters
             _view.StartMakeMultidirectByTimer += StartMakeMultidirectByTimer;
 
 
+            _view.SubscribeOnQuotations += SubscribeOnQuotations;
+            _view.UnSubscribeOnQuotations += UnSubscribeOnQuotations;
+
+            _view.Observe += Observe; ;
+
+
             _connectors[0].OnMCPositionsUpdated += (target, args) =>
             {
                 _view.LoadPositions(args.data);
             };
         }
 
+        private void Observe()
+        {
+            try
+            {
+                _connectors[0].SubscribeQuotations(boardsCode.FUT, _view.ComboBoxSeccode);
+            }
+            catch (Exception e)
+            {
+                _view.ShowMessage(e.Message);
+            }
+        }
+
+        private void UnSubscribeOnQuotations()
+        {
+            
+        }
+
+        private void SubscribeOnQuotations()
+        {
+            try
+            {
+                _connectors[0].SubscribeQuotations(boardsCode.FUT, _view.ComboBoxSeccode);
+            }
+            catch (Exception e)
+            {
+                _view.ShowMessage(e.Message);
+            }
+        }
 
         private void StartMakeMultidirectByTimer()
         {
@@ -286,10 +320,6 @@ namespace AutoTraderUI.Presenters
 
                 _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString("N");
                 _view.FreeMoney = _connectors[connectorNumber].Money.ToString("N");
-
-
-
-                _connectors[connectorNumber].SubscribeQuotes(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, "SiZ3");
             }
             catch (Exception ex)
             {

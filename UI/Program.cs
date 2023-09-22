@@ -1,4 +1,4 @@
-﻿using AutoTraderSDK.Kernel;
+﻿using AutoTraderSDK.Core;
 using AutoTraderUI;
 using AutoTraderUI.Common;
 using AutoTraderUI.Presenters;

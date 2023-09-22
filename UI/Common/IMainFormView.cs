@@ -1,4 +1,4 @@
-﻿using AutoTraderSDK.Domain.InputXML;
+﻿using AutoTraderSDK.Model.Ingoing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +21,13 @@ namespace AutoTraderUI.Common
         event Action StartMakeMultidirectByTimer;
         event Action OnClose;
         event Action GetUnion;
+        event Action SubscribeOnQuotations;
+        event Action UnSubscribeOnQuotations;
+        event Action Observe;
 
         string ComboBoxConnectionType { get; }
+
+        string ComboBoxSeccode { get; }
         string Username1 { get; }
         string Password1 { get; }
         string ClientId1 { set; }
