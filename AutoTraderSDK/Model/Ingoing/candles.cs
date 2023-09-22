@@ -20,6 +20,6 @@ namespace AutoTraderSDK.Model.Ingoing
         public string seccode { get; set; }
 
         [XmlElement("candle")]
-        public List<candle> candle { get; set; }
+        public List<candle> candlesValue { get; set; }
     }
 }

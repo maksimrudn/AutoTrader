@@ -24,6 +24,7 @@ namespace AutoTraderUI.Common
         event Action SubscribeOnQuotations;
         event Action UnSubscribeOnQuotations;
         event Action Observe;
+        event Action Test;
 
         string ComboBoxConnectionType { get; }
 
@@ -36,6 +37,8 @@ namespace AutoTraderUI.Common
 
         string FreeMoney1 { set; }
         string FreeMoney2 { set; }
+
+        double ObserveDifference { get;  }
         string Union1 { set; }
         //string ComboBoxConnectionType2 { get; }
 

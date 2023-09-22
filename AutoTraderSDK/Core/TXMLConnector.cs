@@ -49,6 +49,14 @@ namespace AutoTraderSDK.Core
             }
         }
 
+        public candlekinds Candlekinds
+        {
+            get
+            {
+                return _candlekinds;
+            }
+        }
+
         public List<Model.Ingoing.quotes_ns.quote> QuotesBuy
         {
             get
@@ -204,17 +212,17 @@ namespace AutoTraderSDK.Core
             else
             {
                 // ждём ассинхронный ответ о результате подключения
-                serverStatusUpdated.WaitOne();
+                _serverStatusUpdated.WaitOne();
 
                 if (_serverStatus.connected == "error")
                 {
                     throw new Exception(_serverStatus.InnerText);
                 }
 
-                positionsLoaded.WaitOne();
+                _positionsLoaded.WaitOne();
 
                 _getMCPortfolioPositions();
-                mc_portfolioLoaded.WaitOne();
+                _mc_portfolioLoaded.WaitOne();
             }
         }
 
@@ -224,7 +232,7 @@ namespace AutoTraderSDK.Core
         {
             var com = command.CreateDisconnectCommand();
 
-            serverStatusUpdated.Reset();
+            _serverStatusUpdated.Reset();
             var res = ConnectorSendCommand(com, com.GetType());
         }
 
@@ -257,7 +265,7 @@ namespace AutoTraderSDK.Core
             if (Connected)
             {
                 Logout();
-                serverStatusUpdated.WaitOne(25 * 1000);
+                _serverStatusUpdated.WaitOne(25 * 1000);
             }
 
             IntPtr pResult = _unInitialize();
@@ -277,7 +285,7 @@ namespace AutoTraderSDK.Core
         public void Dispose()
         {
             UnInitialize();
-            serverStatusUpdated.Dispose();
+            _serverStatusUpdated.Dispose();
             base.Dispose();
         }
 
@@ -308,6 +316,28 @@ namespace AutoTraderSDK.Core
 
         }
 
+        public List<candle> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, int periodId = 1, int candlesCount = 1)
+        {
+            candle res = null;
+
+            command com = command.CreateGetHistoryDataCommand(board, seccode, periodId, candlesCount);
+
+            
+            result sendResult = ConnectorSendCommand(com, typeof(command));
+
+            if (sendResult.success == true)
+            {
+                _candlesLoaded.WaitOne();
+            }
+            else
+            {
+                throw new Exception(sendResult.message);
+            }
+
+
+
+            return _candles.candlesValue;
+        }
         public candle GetCurrentCandle(string seccode, boardsCode board = boardsCode.FUT)
         {
             candle res = null;
@@ -631,12 +661,12 @@ namespace AutoTraderSDK.Core
             List<Model.Ingoing.securities_ns.security> res = new List<Model.Ingoing.securities_ns.security>();
             command com = command.CreateGetSecurities();
 
-            securitiesLoaded.Reset();
+            _securitiesLoaded.Reset();
             result sendResult = ConnectorSendCommand(com, typeof(command));
 
             if (sendResult.success == true)
             {
-                securitiesLoaded.WaitOne();
+                _securitiesLoaded.WaitOne();
 
                 res = _securities.ToList();
             }

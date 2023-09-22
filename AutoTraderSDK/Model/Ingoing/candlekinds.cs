@@ -6,6 +6,9 @@ using System.Xml.Serialization;
 
 namespace AutoTraderSDK.Model.Ingoing
 {
+    /// <summary>
+    /// Информация о доступных периодах свечей
+    /// </summary>
     public class candlekinds
     {
         [XmlElement("kind")]
