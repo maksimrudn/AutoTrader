@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Threading;
+using System.IO;
 
 namespace AutoTraderUI.Presenters
 {
@@ -52,7 +54,7 @@ namespace AutoTraderUI.Presenters
             _view.UnSubscribeOnQuotations += UnSubscribeOnQuotations;
 
             _view.Observe += Observe; ;
-
+            _view.Test += Test;
 
             _connectors[0].OnMCPositionsUpdated += (target, args) =>
             {
@@ -60,17 +62,60 @@ namespace AutoTraderUI.Presenters
             };
         }
 
-        private void Observe()
+        private void Test()
         {
             try
             {
-                _connectors[0].SubscribeQuotations(boardsCode.FUT, _view.ComboBoxSeccode);
+                var res = _connectors[0].GetHistoryData( _view.ComboBoxSeccode  ,boardsCode.FUT, 1, 2);
             }
             catch (Exception e)
             {
                 _view.ShowMessage(e.Message);
             }
         }
+
+        CancellationTokenSource _cts;
+        Task _observer;
+        private void Observe()
+        {
+            if (_observer != null && _observer.Status == TaskStatus.Running) _cts.Cancel();
+
+            try
+            {
+                if (string.IsNullOrEmpty(_view.ComboBoxSeccode)) throw new Exception("seccode...");
+
+                _cts = new CancellationTokenSource();
+
+                _observer = Task.Run(_observerFunction, _cts.Token);
+
+                //_connectors[0].SubscribeQuotations(boardsCode.FUT, _view.ComboBoxSeccode);
+            }
+            catch (Exception e)
+            {
+                _view.ShowMessage(e.Message);
+            }
+        }
+
+        private async void _observerFunction () 
+        {
+            while (true)
+            {
+                var res = _connectors[0].GetHistoryData(_view.ComboBoxSeccode, boardsCode.FUT, 1, 2);
+
+                double diff = res[0].close - res[1].close;
+
+                if (diff < 0) diff = diff * -1;
+
+                if (diff> _view.ObserveDifference)
+                {
+                    File.AppendAllText("signals.txt", $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
+                }
+
+                if (_cts.Token.IsCancellationRequested) return;
+
+                await Task.Delay(1000);
+            }
+         }
 
         private void UnSubscribeOnQuotations()
         {

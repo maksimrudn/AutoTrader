@@ -44,10 +44,11 @@ namespace AutoTraderUI
             buttonStartMultidirectTimer.Click += (sender, args) => Invoke(GetUnion);
             button2.Click += (sender, args) => Invoke(GetUnion);
 
+            testButton.Click += (sender, args) => Invoke(Test);
 
             quotationsSubscribebutton.Click += (sender, args) => Invoke(SubscribeOnQuotations);
             quotationsUnSubscribebutton.Click += (sender, args) => Invoke(UnSubscribeOnQuotations);
-            observeButton.Click += (sender, args) => Invoke(UnSubscribeOnQuotations);
+            observeButton.Click += (sender, args) => Invoke(Observe);
 
             this.FormClosing += (sender, args) =>
             {
@@ -79,6 +80,8 @@ namespace AutoTraderUI
         public event Action SubscribeOnQuotations;
         public event Action UnSubscribeOnQuotations;
         public event Action Observe;
+
+        public event Action Test;
 
         public event Action OnClose;
 
@@ -160,7 +163,15 @@ namespace AutoTraderUI
 
         public string ComboBoxConnectionType { get { return comboBoxConnectionType.Text; } }
 
-        public string ComboBoxSeccode { get { return comboBoxSeccode.Text; } }
+        public string ComboBoxSeccode { get {
+
+                string res = "";
+
+                comboBoxSeccode.Invoke(new MethodInvoker(delegate { res = comboBoxSeccode.Text; }));
+
+                return res; 
+            } 
+        }
         public string Username1 { get { return textBoxUsername.Text; } }
         public string Password1 { get { return textBoxPassword.Text; } }
         public string ClientId1 { set { textBoxClientId.Text = value; } }
@@ -168,6 +179,17 @@ namespace AutoTraderUI
         public string FreeMoney { set { textBoxFreeMoney.Text = value; } }
         public string FreeMoney1 { set { textBoxFreeMoney1.Text = value; } }
         public string FreeMoney2 { set { textBoxFreeMoney2.Text = value; } }
+
+        public double ObserveDifference { 
+            get
+            {
+                double res = 0;
+
+                textBoxDifference.Invoke(new MethodInvoker(delegate { res = string.IsNullOrEmpty(textBoxDifference.Text) ? 0 : double.Parse(textBoxDifference.Text); }));
+
+                return res;
+            } 
+        }
 
         public string Union1 { set { textBoxUnion.Text = value; } }
 

@@ -12,11 +12,12 @@ namespace AutoTraderSDK.Core
 {
     public abstract class TXMLConnectorCallbackableBase: TXMLConnectorBase
     {
-        public AutoResetEvent serverStatusUpdated = new AutoResetEvent(false);
-        public AutoResetEvent positionsLoaded = new AutoResetEvent(false);
-        public AutoResetEvent securitiesLoaded = new AutoResetEvent(false);
-        public AutoResetEvent tradesLoaded = new AutoResetEvent(false);
-        protected AutoResetEvent mc_portfolioLoaded = new AutoResetEvent(false);
+        public AutoResetEvent _serverStatusUpdated = new AutoResetEvent(false);
+        public AutoResetEvent _positionsLoaded = new AutoResetEvent(false);
+        public AutoResetEvent _securitiesLoaded = new AutoResetEvent(false);
+        public AutoResetEvent _tradesLoaded = new AutoResetEvent(false);
+        public AutoResetEvent _candlesLoaded = new AutoResetEvent(false);
+        protected AutoResetEvent _mc_portfolioLoaded = new AutoResetEvent(false);
 
 
         public bool Connected
@@ -53,6 +54,16 @@ namespace AutoTraderSDK.Core
         protected HashSet<Model.Ingoing.orders_ns.order> _orders { get; set; }
         protected HashSet<Model.Ingoing.trades_ns.trade> _trades { get; set; }
 
+        /// <summary>
+        /// for history data
+        /// </summary>
+        protected Model.Ingoing.candles _candles { get; set; }
+
+        protected Model.Ingoing.candlekinds _candlekinds { get; set; }
+
+
+
+
         protected HashSet<Model.Ingoing.securities_ns.security> _securities { get; set; }
 
         public TXMLConnectorCallbackableBase(string tConnFile) : base(tConnFile)
@@ -72,7 +83,7 @@ namespace AutoTraderSDK.Core
                 case "server_status":
                     _serverStatus = (server_status)XMLHelper.Deserialize(result, typeof(server_status));
 
-                    serverStatusUpdated.Set();
+                    _serverStatusUpdated.Set();
 
                     break;
 
@@ -83,13 +94,15 @@ namespace AutoTraderSDK.Core
                     break;
 
                 case "candlekinds":
+                    _candlekinds = (candlekinds)XMLHelper.Deserialize(result, typeof(candlekinds));
+
                     break;
 
                 case "securities":
                     var securities = (securities)XMLHelper.Deserialize(result, typeof(securities));
 
                     _securitiesHandle(securities.security);
-                    securitiesLoaded.Set();
+                    _securitiesLoaded.Set();
                     break;
 
                 case "pits":
@@ -126,14 +139,14 @@ namespace AutoTraderSDK.Core
 
                     _positionsIsActual = true;
 
-                    positionsLoaded.Set();
+                    _positionsLoaded.Set();
                     break;
 
                 case "mc_portfolio":
                     _mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
 
                    
-                    mc_portfolioLoaded.Set();
+                    _mc_portfolioLoaded.Set();
                     OnMCPositionsUpdated.Invoke(this, new OnMCPositionsUpdatedEventArgs(_mc_portfolio));
 
 
@@ -159,7 +172,9 @@ namespace AutoTraderSDK.Core
 
                 case "candles":
                     var candles = (candles)XMLHelper.Deserialize(result, typeof(candles));
-                    _currentCandle = candles.candle[0];
+                    _currentCandle = candles.candlesValue[0];
+                    _candles = candles;
+                    _candlesLoaded.Set();                    
                     break;
 
                 case "ticks":
@@ -190,6 +205,7 @@ namespace AutoTraderSDK.Core
             {
                 foreach (var sec in security)
                 {    
+                    // filter only unique values
                     if (_securities.Where(x=>x.seccode==sec.seccode).FirstOrDefault() == null)
                         _securities.Add(sec);
                 }

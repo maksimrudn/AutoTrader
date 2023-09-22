@@ -126,7 +126,7 @@ namespace AutoTraderSDK.Model.Outgoing
             return res;
         }
 
-        public static command CreateGetHistoryDataCommand(boardsCode board, string seccode, int period = 1, int count = 1, bool reset=true)
+        public static command CreateGetHistoryDataCommand(boardsCode board, string seccode, int periodId = 1, int count = 1, bool reset=true)
         {
             command res = new command();
 
@@ -134,7 +134,7 @@ namespace AutoTraderSDK.Model.Outgoing
             res.security = new command_ns.security();
             res.security.board = board.ToString();
             res.security.seccode = seccode;
-            res.periodValue = period;
+            res.periodValue = periodId;
             res.countValue = count;
             res.resetValue = reset;
 
@@ -694,6 +694,14 @@ namespace AutoTraderSDK.Model.Outgoing
         #region GET HISTORY DATA
         [XmlElement(IsNullable = false)]
         public string period { get; set; }
+
+
+        /// <summary>
+        /// Возможные значения для period присылаются при установке соединения с 
+        ///         сервером в полях candlekinds(поле id).
+        /// В period необходимо указать нужное значение поля<id> из структуры
+        /// <candlekinds>.
+        /// </summary>
         [XmlIgnore]
         public int? periodValue
         {
