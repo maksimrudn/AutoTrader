@@ -1,4 +1,4 @@
-﻿using AutoTraderSDK.Domain.OutputXML;
+﻿using AutoTraderSDK.Model.Outgoing;
 using System;
 using System.Collections.Generic;
 using System.Linq;

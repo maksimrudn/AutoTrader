@@ -1,7 +1,7 @@
-﻿using AutoTraderSDK.Domain;
-using AutoTraderSDK.Domain.InputXML;
-using AutoTraderSDK.Domain.OutputXML;
-using AutoTraderSDK.Kernel;
+﻿using AutoTraderSDK.Model;
+using AutoTraderSDK.Model.Ingoing;
+using AutoTraderSDK.Model.Outgoing;
+using AutoTraderSDK.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,6 +44,11 @@ namespace AutoTraderUI
             buttonStartMultidirectTimer.Click += (sender, args) => Invoke(GetUnion);
             button2.Click += (sender, args) => Invoke(GetUnion);
 
+
+            quotationsSubscribebutton.Click += (sender, args) => Invoke(SubscribeOnQuotations);
+            quotationsUnSubscribebutton.Click += (sender, args) => Invoke(UnSubscribeOnQuotations);
+            observeButton.Click += (sender, args) => Invoke(UnSubscribeOnQuotations);
+
             this.FormClosing += (sender, args) =>
             {
                 _timerClock.Stop();
@@ -71,6 +76,9 @@ namespace AutoTraderUI
         public event Action MakeMultidirect;
         public event Action StartMakeMultidirectByTimer;
         public event Action GetUnion;
+        public event Action SubscribeOnQuotations;
+        public event Action UnSubscribeOnQuotations;
+        public event Action Observe;
 
         public event Action OnClose;
 
@@ -151,6 +159,8 @@ namespace AutoTraderUI
         }
 
         public string ComboBoxConnectionType { get { return comboBoxConnectionType.Text; } }
+
+        public string ComboBoxSeccode { get { return comboBoxSeccode.Text; } }
         public string Username1 { get { return textBoxUsername.Text; } }
         public string Password1 { get { return textBoxPassword.Text; } }
         public string ClientId1 { set { textBoxClientId.Text = value; } }

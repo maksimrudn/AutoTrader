@@ -1,6 +1,6 @@
-﻿using AutoTraderSDK.Domain.InputXML;
-using AutoTraderSDK.Domain.OutputXML;
-using AutoTraderSDK.Kernel;
+﻿using AutoTraderSDK.Model.Ingoing;
+using AutoTraderSDK.Model.Outgoing;
+using AutoTraderSDK.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,7 +131,7 @@ namespace AutoTraderSDK
 
         private static void _testQuotesPair(TXMLConnector cl)
         {
-            cl.SubscribeQuotes(AutoTraderSDK.Domain.OutputXML.boardsCode.FUT, _seccode);
+            cl.SubscribeQuotes(AutoTraderSDK.Model.Outgoing.boardsCode.FUT, _seccode);
 
             double last = 0;
             int pos = 0;
@@ -176,12 +176,12 @@ namespace AutoTraderSDK
 
                         Task t1 = Task.Factory.StartNew(() =>
                             {
-                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Domain.OutputXML.buysell.B, false, bPrice, 1);
+                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Model.Outgoing.buysell.B, false, bPrice, 1);
                             });
 
                         Task t2 = Task.Factory.StartNew(() =>
                             {
-                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Domain.OutputXML.buysell.S, false, sPrice, 1);
+                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Model.Outgoing.buysell.S, false, sPrice, 1);
                             });
 
                         cl.PositionsIsActual = false;
