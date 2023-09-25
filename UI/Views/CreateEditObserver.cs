@@ -34,11 +34,11 @@ namespace AutoTraderUI.Views
 
         public string Seccode { get { return comboBoxSeccode.Text;  } }
 
-        public string Difference { get { return textBoxDifference.Text; } }
+        public int Difference { get { return int.Parse( textBoxDifference.Text); } }
 
-        public string Period { get { return textBoxPeriod.Text; } }
+        public int Period { get { return int.Parse(textBoxPeriod.Text); } }
 
-        public string Delay { get { return textBoxDelay.Text; } }
+        public int Delay { get { return int.Parse(textBoxDelay.Text); } }
 
         public NotificationTypes NotificationType { 
             get { 

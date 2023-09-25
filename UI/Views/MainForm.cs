@@ -47,6 +47,10 @@ namespace AutoTraderUI
 
             buttonAddObserver.Click += (sender, args) => Invoke(AddObserver);
 
+            buttonRunAll.Click += (sender, args) => Invoke(RunAllStrategies);
+            buttonStopAll.Click += (sender, args) => Invoke(StopAllStrategies);
+
+
 
             testButton.Click += (sender, args) => Invoke(Test);
 
@@ -89,6 +93,11 @@ namespace AutoTraderUI
         public event Action GetUnion;
         public event Action SubscribeOnQuotations;
         public event Action UnSubscribeOnQuotations;
+
+        public event Action RunAllStrategies;
+        public event Action StopAllStrategies;
+
+
         public event Action Observe;
 
 

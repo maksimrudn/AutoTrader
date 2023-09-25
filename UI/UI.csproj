@@ -76,12 +76,14 @@
     <Compile Include="Controls\IObserversDataGridView.cs" />
     <Compile Include="Core\NotificationTypes.cs" />
     <Compile Include="Core\StrategiesActions.cs" />
-    <Compile Include="Core\StrategiesCollection.cs" />
+    <Compile Include="Core\StrategiesCollectionSettings.cs" />
+    <Compile Include="Core\StrategyManager.cs" />
     <Compile Include="Core\StrategySettings.cs" />
-    <Compile Include="Crypter.cs" />
+    <Compile Include="Core\Crypter.cs" />
+    <Compile Include="Core\StrategyWorker.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Presenters\MainFormPresenter.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="Core\Settings.cs" />
     <Compile Include="Views\CreateEditObserver.cs">
       <SubType>Form</SubType>
     </Compile>

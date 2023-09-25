@@ -41,7 +41,34 @@ namespace AutoTraderSDK.Core
 
         public List<candle> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, int periodId = 1, int candlesCount = 1)
         {
-            throw new NotImplementedException();
+            var signal = new List<candle>()
+            {
+                new candle()
+                {
+                    close = 96001
+                },
+                new candle()
+                {
+                    close = 96005
+                }
+            };
+
+            var nonsignal =
+                new List<candle>()
+            {
+                new candle()
+                {
+                    close = 96001
+                },
+                new candle()
+                {
+                    close = 96030
+                }
+            };
+
+
+
+            return new Random().Next(0,10) == 0? signal:nonsignal;
         }
 
         public List<security> GetSecurities()

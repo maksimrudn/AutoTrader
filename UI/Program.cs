@@ -37,10 +37,12 @@ namespace AutoTraderUI
             container.RegisterInstance<List<ITXMLConnector>>(connectors);
             container.RegisterInstance<Settings>(Globals.Settings);
             container.RegisterInstance<ApplicationContext>(Context);
+            container.Register<StrategyManager>();
+
             container.Register<MainForm>();
             container.Register<MainFormPresenter>();
             container.Register<CreateEditObserver>();
-            container.Register<StrategiesCollection>();
+            
 
             ApplicationController controller = new ApplicationController(container);
             controller.Run<MainFormPresenter>();
