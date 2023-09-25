@@ -64,10 +64,30 @@
     <Compile Include="Common\IMainFormView.cs" />
     <Compile Include="Common\IPresenter.cs" />
     <Compile Include="Common\IView.cs" />
+    <Compile Include="Controls\ObserversDataGridAddException.cs" />
+    <Compile Include="Controls\ObserversDataGridViewEventArgs.cs" />
+    <Compile Include="Controls\ObserversDataGridView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ObserversDataGridView.Designer.cs">
+      <DependentUpon>ObserversDataGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataGridViewManageButtonCell.cs" />
+    <Compile Include="Controls\IObserversDataGridView.cs" />
+    <Compile Include="Core\NotificationTypes.cs" />
+    <Compile Include="Core\StrategiesActions.cs" />
+    <Compile Include="Core\StrategiesCollection.cs" />
+    <Compile Include="Core\StrategySettings.cs" />
     <Compile Include="Crypter.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Presenters\MainFormPresenter.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Views\CreateEditObserver.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\CreateEditObserver.Designer.cs">
+      <DependentUpon>CreateEditObserver.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +96,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\ObserversDataGridView.resx">
+      <DependentUpon>ObserversDataGridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\CreateEditObserver.resx">
+      <DependentUpon>CreateEditObserver.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

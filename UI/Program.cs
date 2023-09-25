@@ -1,7 +1,9 @@
 ﻿using AutoTraderSDK.Core;
 using AutoTraderUI;
 using AutoTraderUI.Common;
+using AutoTraderUI.Core;
 using AutoTraderUI.Presenters;
+using AutoTraderUI.Views;
 using LightInject;
 using System;
 using System.Collections.Generic;
@@ -24,16 +26,21 @@ namespace AutoTraderUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            List<TXMLConnector> connectors = new List<TXMLConnector>();
-            connectors.Add(new TXMLConnector("txmlconnector1.dll"));
-            connectors.Add(new TXMLConnector("txmlconnector2.dll"));
+            List<ITXMLConnector> connectors = new List<ITXMLConnector>();
+            //connectors.Add(new TXMLConnector("txmlconnector1.dll"));
+            //connectors.Add(new TXMLConnector("txmlconnector2.dll"));
+
+            connectors.Add(new TXMLDummyConnector());
+            connectors.Add(new TXMLDummyConnector());
 
             ServiceContainer container = new ServiceContainer();
-            container.RegisterInstance<List<TXMLConnector>>(connectors);
+            container.RegisterInstance<List<ITXMLConnector>>(connectors);
             container.RegisterInstance<Settings>(Globals.Settings);
             container.RegisterInstance<ApplicationContext>(Context);
-            container.Register<IMainFormView, MainForm>();
+            container.Register<MainForm>();
             container.Register<MainFormPresenter>();
+            container.Register<CreateEditObserver>();
+            container.Register<StrategiesCollection>();
 
             ApplicationController controller = new ApplicationController(container);
             controller.Run<MainFormPresenter>();

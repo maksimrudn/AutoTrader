@@ -15,7 +15,7 @@ using System.Xml.Serialization;
 
 namespace AutoTraderSDK.Core
 {
-    public class TXMLConnector: TXMLConnectorCallbackableBase //, ITXMLConnector
+    public class TXMLConnector: TXMLConnectorCallbackableBase, ITXMLConnector
     {
         
         public bool PositionsIsActual
