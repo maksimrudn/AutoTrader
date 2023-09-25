@@ -12,18 +12,25 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Threading;
 using System.IO;
+using AutoTraderUI.Views;
+using AutoTraderUI.Core;
 
 namespace AutoTraderUI.Presenters
 {
     public class MainFormPresenter: IPresenter
     {
         ApplicationController _applicationController;
-        IMainFormView _view;
+        MainForm _view;
         Settings _settings;
-        List<TXMLConnector> _connectors;
+        List<ITXMLConnector> _connectors;
         System.Timers.Timer _timerMultidirect;
 
-        public MainFormPresenter(ApplicationController applicationController, IMainFormView view, Settings settings, List<TXMLConnector> connectors)
+        List<string> _seccodeList = new List<string>();
+
+
+        StrategiesCollection _observersCollection;
+
+        public MainFormPresenter(ApplicationController applicationController, MainForm view, Settings settings, List<ITXMLConnector> connectors, StrategiesCollection observersCollection)
         {
             if (connectors.Count != 2) throw new Exception("Загружено недопустимое колличество коннекторов");
 
@@ -31,6 +38,7 @@ namespace AutoTraderUI.Presenters
             _view = view;
             _settings = settings;
             _connectors = connectors;
+            _observersCollection = observersCollection;
 
             _timerMultidirect = new System.Timers.Timer();
             _timerMultidirect.Interval = 100;
@@ -53,13 +61,41 @@ namespace AutoTraderUI.Presenters
             _view.SubscribeOnQuotations += SubscribeOnQuotations;
             _view.UnSubscribeOnQuotations += UnSubscribeOnQuotations;
 
-            _view.Observe += Observe; ;
+
+            _view.AddObserver += _view_AddObserver; ;
+
+
+            _view.Observe += Observe;
             _view.Test += Test;
 
             _connectors[0].OnMCPositionsUpdated += (target, args) =>
             {
                 _view.LoadPositions(args.data);
             };
+
+            _observersCollection.ObserverListChanged += _observersCollection_ObserverListChanged;
+        }
+
+        private void _observersCollection_ObserverListChanged(object sender, List<StrategySettings> e)
+        {
+            _view.UpdateObserversListInformation(e);
+        }
+
+        private void _view_AddObserver()
+        {
+            var addForm = new CreateEditObserver(_seccodeList);
+
+            if (addForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _observersCollection.Add(new StrategySettings()
+                {
+                    Seccode = addForm.Seccode,
+                    Difference = addForm.Difference,
+                    Period = addForm.Period,
+                    Delay = addForm.Delay,
+                    NotificationType = addForm.NotificationType
+                }) ;
+            }
         }
 
         private void Test()
@@ -289,7 +325,7 @@ namespace AutoTraderUI.Presenters
             }
         }
 
-        private void _handleComboOperation(TXMLConnector cl, ComboOrder co)
+        private void _handleComboOperation(ITXMLConnector cl, ComboOrder co)
         {
 
             if (string.IsNullOrEmpty(co.Seccode))
@@ -355,7 +391,11 @@ namespace AutoTraderUI.Presenters
                 ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
 
                 _connectors[connectorNumber].Login(_settings.GetUsername(), _settings.GetPassword(), connType);
-                _view.LoadSeccodeList(_connectors[connectorNumber].GetSecurities().Where(x => x.board == boardsCode.FUT.ToString()).Select(x => x.seccode).OrderBy(x => x).ToList());
+
+
+                _seccodeList = _connectors[connectorNumber].GetSecurities().Where(x => x.board == boardsCode.FUT.ToString()).Select(x => x.seccode).OrderBy(x => x).ToList();
+
+                _view.LoadSeccodeList(_seccodeList);
                 _view.SetSelectedSeccode(_settings.Seccode);
                 _view.HandleConnected(connectorNumber);
 

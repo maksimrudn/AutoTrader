@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using AutoTraderUI;
 using AutoTraderUI.Common;
 using System.Globalization;
+using AutoTraderUI.Core;
 
 namespace AutoTraderUI
 {
@@ -44,6 +45,9 @@ namespace AutoTraderUI
             buttonStartMultidirectTimer.Click += (sender, args) => Invoke(GetUnion);
             button2.Click += (sender, args) => Invoke(GetUnion);
 
+            buttonAddObserver.Click += (sender, args) => Invoke(AddObserver);
+
+
             testButton.Click += (sender, args) => Invoke(Test);
 
             quotationsSubscribebutton.Click += (sender, args) => Invoke(SubscribeOnQuotations);
@@ -69,6 +73,12 @@ namespace AutoTraderUI
         public event Action Login1;
         public event Action Logout1;
         public event Action ChangePassword1;
+
+        public void UpdateObserversListInformation(List<StrategySettings> e)
+        {
+            observersDataGridView.LoadObservers(e);
+        }
+
         public event Action Login2;
         public event Action Logout2;
         public event Action ChangePassword2;
@@ -80,6 +90,9 @@ namespace AutoTraderUI
         public event Action SubscribeOnQuotations;
         public event Action UnSubscribeOnQuotations;
         public event Action Observe;
+
+
+        public event Action AddObserver;
 
         public event Action Test;
 
@@ -235,12 +248,17 @@ namespace AutoTraderUI
                 groupBoxChangePassword.Enabled = true;
                 buttonLogin.Enabled = false;
                 buttonLogout.Enabled = true;
+                textBoxPassword.Enabled = false;
+                textBoxUsername.Enabled = false;
             }
             else
             {
                 groupBoxChangePassword2.Enabled = true;
                 buttonLogin2.Enabled = false;
                 buttonLogout2.Enabled = true;
+
+                textBoxPassword2.Enabled = false;
+                textBoxUsername2.Enabled = false;
             }
         }
 
@@ -258,12 +276,18 @@ namespace AutoTraderUI
                 textBoxUnion.Text = string.Empty;
                 textBoxClientId.Text = string.Empty;
                 textBoxFreeMoney.Text = string.Empty;
+
+                textBoxPassword.Enabled = true;
+                textBoxUsername.Enabled = true;
             }
             else if (connNumber == 1)
             {
                 groupBoxChangePassword2.Enabled = false;
                 buttonLogin2.Enabled = true;
                 buttonLogout2.Enabled = false;
+
+                textBoxPassword2.Enabled = true;
+                textBoxUsername2.Enabled = true;
             }
             else
             {
@@ -271,6 +295,11 @@ namespace AutoTraderUI
                 groupBoxChangePassword.Enabled = false;
                 buttonLogin.Enabled = true;
                 buttonLogout.Enabled = false;
+                textBoxPassword.Enabled = true;
+                textBoxUsername.Enabled = true;
+
+
+
 
                 textBoxUnion.Text = string.Empty;
                 textBoxClientId.Text = string.Empty;
@@ -279,6 +308,8 @@ namespace AutoTraderUI
                 groupBoxChangePassword2.Enabled = false;
                 buttonLogin2.Enabled = true;
                 buttonLogout2.Enabled = false;
+                textBoxPassword2.Enabled = true;
+                textBoxUsername2.Enabled = true;
             }
         }
 
@@ -293,5 +324,6 @@ namespace AutoTraderUI
         {
 
         }
+
     }
 }

@@ -58,6 +58,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButtonComboTypeStop = new System.Windows.Forms.RadioButton();
             this.radioButtonComboTypeContidion = new System.Windows.Forms.RadioButton();
+            this.textBoxDifference = new System.Windows.Forms.TextBox();
+            this.labelDifference = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -110,9 +112,10 @@
             this.textBoxFreeMoney1 = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.groupBoxObservers = new System.Windows.Forms.GroupBox();
+            this.buttonAddObserver = new System.Windows.Forms.Button();
+            this.observersDataGridView = new AutoTraderUI.Controls.ObserversDataGridView();
             this.labelTime = new System.Windows.Forms.Label();
-            this.labelDifference = new System.Windows.Forms.Label();
-            this.textBoxDifference = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -128,6 +131,8 @@
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPositions)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            this.groupBoxObservers.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxSL
@@ -448,6 +453,24 @@
             this.radioButtonComboTypeContidion.TabStop = true;
             this.radioButtonComboTypeContidion.Text = "With Condition Order";
             this.radioButtonComboTypeContidion.UseVisualStyleBackColor = true;
+            // 
+            // textBoxDifference
+            // 
+            this.textBoxDifference.Location = new System.Drawing.Point(429, 442);
+            this.textBoxDifference.Name = "textBoxDifference";
+            this.textBoxDifference.Size = new System.Drawing.Size(100, 20);
+            this.textBoxDifference.TabIndex = 14;
+            this.textBoxDifference.Text = "462";
+            // 
+            // labelDifference
+            // 
+            this.labelDifference.AutoSize = true;
+            this.labelDifference.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelDifference.Location = new System.Drawing.Point(426, 426);
+            this.labelDifference.Name = "labelDifference";
+            this.labelDifference.Size = new System.Drawing.Size(223, 13);
+            this.labelDifference.TabIndex = 15;
+            this.labelDifference.Text = "Difference between 2 candles (points)";
             // 
             // tabPage2
             // 
@@ -928,13 +951,41 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.groupBoxObservers);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(661, 534);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "tabPage5";
+            this.tabPage5.Text = "Observation";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxObservers
+            // 
+            this.groupBoxObservers.Controls.Add(this.buttonAddObserver);
+            this.groupBoxObservers.Controls.Add(this.observersDataGridView);
+            this.groupBoxObservers.Location = new System.Drawing.Point(6, 6);
+            this.groupBoxObservers.Name = "groupBoxObservers";
+            this.groupBoxObservers.Size = new System.Drawing.Size(649, 264);
+            this.groupBoxObservers.TabIndex = 0;
+            this.groupBoxObservers.TabStop = false;
+            this.groupBoxObservers.Text = "Observers";
+            // 
+            // buttonAddObserver
+            // 
+            this.buttonAddObserver.Location = new System.Drawing.Point(7, 228);
+            this.buttonAddObserver.Name = "buttonAddObserver";
+            this.buttonAddObserver.Size = new System.Drawing.Size(167, 23);
+            this.buttonAddObserver.TabIndex = 1;
+            this.buttonAddObserver.Text = "Add";
+            this.buttonAddObserver.UseVisualStyleBackColor = true;
+            // 
+            // observersDataGridView
+            // 
+            this.observersDataGridView.Location = new System.Drawing.Point(6, 19);
+            this.observersDataGridView.Name = "observersDataGridView";
+            this.observersDataGridView.Size = new System.Drawing.Size(637, 191);
+            this.observersDataGridView.TabIndex = 0;
             // 
             // labelTime
             // 
@@ -945,24 +996,6 @@
             this.labelTime.Size = new System.Drawing.Size(94, 13);
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
-            // 
-            // labelDifference
-            // 
-            this.labelDifference.AutoSize = true;
-            this.labelDifference.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelDifference.Location = new System.Drawing.Point(426, 426);
-            this.labelDifference.Name = "labelDifference";
-            this.labelDifference.Size = new System.Drawing.Size(223, 13);
-            this.labelDifference.TabIndex = 15;
-            this.labelDifference.Text = "Difference between 2 candles (points)";
-            // 
-            // textBoxDifference
-            // 
-            this.textBoxDifference.Location = new System.Drawing.Point(429, 442);
-            this.textBoxDifference.Name = "textBoxDifference";
-            this.textBoxDifference.Size = new System.Drawing.Size(100, 20);
-            this.textBoxDifference.TabIndex = 14;
-            this.textBoxDifference.Text = "462";
             // 
             // MainForm
             // 
@@ -996,6 +1029,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPositions)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.groupBoxObservers.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1088,5 +1123,8 @@
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TextBox textBoxDifference;
         private System.Windows.Forms.Label labelDifference;
+        private System.Windows.Forms.GroupBox groupBoxObservers;
+        private Controls.ObserversDataGridView observersDataGridView;
+        private System.Windows.Forms.Button buttonAddObserver;
     }
 }

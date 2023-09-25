@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\TXMLDummyConnector.cs" />
     <Compile Include="Core\InputStreamEventArgs.cs" />
     <Compile Include="Core\ITXMLConnector.cs" />
     <Compile Include="Core\log.cs" />
@@ -124,7 +125,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Core\ПорядокЗагрузкиБиблиотекиКоннектора.txt" />
     <Content Include="txmlconnector1.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
