@@ -28,9 +28,9 @@ namespace AutoTraderUI.Presenters
         List<string> _seccodeList = new List<string>();
 
 
-        StrategiesCollection _observersCollection;
+        StrategyManager _strategyManager;
 
-        public MainFormPresenter(ApplicationController applicationController, MainForm view, Settings settings, List<ITXMLConnector> connectors, StrategiesCollection observersCollection)
+        public MainFormPresenter(ApplicationController applicationController, MainForm view, Settings settings, List<ITXMLConnector> connectors, StrategyManager strategyManager)
         {
             if (connectors.Count != 2) throw new Exception("Загружено недопустимое колличество коннекторов");
 
@@ -38,7 +38,7 @@ namespace AutoTraderUI.Presenters
             _view = view;
             _settings = settings;
             _connectors = connectors;
-            _observersCollection = observersCollection;
+            _strategyManager = strategyManager;
 
             _timerMultidirect = new System.Timers.Timer();
             _timerMultidirect.Interval = 100;
@@ -65,7 +65,7 @@ namespace AutoTraderUI.Presenters
             _view.AddObserver += _view_AddObserver; ;
 
 
-            _view.Observe += Observe;
+
             _view.Test += Test;
 
             _connectors[0].OnMCPositionsUpdated += (target, args) =>
@@ -73,7 +73,41 @@ namespace AutoTraderUI.Presenters
                 _view.LoadPositions(args.data);
             };
 
-            _observersCollection.ObserverListChanged += _observersCollection_ObserverListChanged;
+            _strategyManager.ObserverListChanged += _observersCollection_ObserverListChanged;
+
+
+            _view.RunAllStrategies += _view_RunAllStrategies;
+            _view.StopAllStrategies += _view_StopAllStrategies;
+        }
+
+        private void _view_StopAllStrategies()
+        {
+            foreach (var strategy in _strategyManager.StrategyWorkers)
+            {
+                try
+                {
+                    strategy.Stop();
+                }
+                catch (Exception ex)
+                {
+                    _view.ShowMessage(ex.Message);
+                }
+            }
+        }
+
+        private void _view_RunAllStrategies()
+        {
+            foreach (var strategy in _strategyManager.StrategyWorkers)
+            {
+                try
+                {
+                    strategy.Start();
+                }
+                catch (Exception ex)
+                {
+                    _view.ShowMessage(ex.Message);
+                }
+            }
         }
 
         private void _observersCollection_ObserverListChanged(object sender, List<StrategySettings> e)
@@ -87,7 +121,7 @@ namespace AutoTraderUI.Presenters
 
             if (addForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                _observersCollection.Add(new StrategySettings()
+                _strategyManager.Add(new StrategySettings()
                 {
                     Seccode = addForm.Seccode,
                     Difference = addForm.Difference,
@@ -110,48 +144,7 @@ namespace AutoTraderUI.Presenters
             }
         }
 
-        CancellationTokenSource _cts;
-        Task _observer;
-        private void Observe()
-        {
-            if (_observer != null && _observer.Status == TaskStatus.Running) _cts.Cancel();
-
-            try
-            {
-                if (string.IsNullOrEmpty(_view.ComboBoxSeccode)) throw new Exception("seccode...");
-
-                _cts = new CancellationTokenSource();
-
-                _observer = Task.Run(_observerFunction, _cts.Token);
-
-                //_connectors[0].SubscribeQuotations(boardsCode.FUT, _view.ComboBoxSeccode);
-            }
-            catch (Exception e)
-            {
-                _view.ShowMessage(e.Message);
-            }
-        }
-
-        private async void _observerFunction () 
-        {
-            while (true)
-            {
-                var res = _connectors[0].GetHistoryData(_view.ComboBoxSeccode, boardsCode.FUT, 1, 2);
-
-                double diff = res[0].close - res[1].close;
-
-                if (diff < 0) diff = diff * -1;
-
-                if (diff> _view.ObserveDifference)
-                {
-                    File.AppendAllText("signals.txt", $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
-                }
-
-                if (_cts.Token.IsCancellationRequested) return;
-
-                await Task.Delay(1000);
-            }
-         }
+        
 
         private void UnSubscribeOnQuotations()
         {

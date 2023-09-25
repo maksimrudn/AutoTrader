@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoTraderUI.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace AutoTraderUI
+namespace AutoTraderUI.Core
 {
     public class Settings
     {
@@ -172,5 +173,7 @@ namespace AutoTraderUI
         {
             Password2 = Crypter.Encrypt(text);
         }
+
+        public StrategiesCollectionSettings StrategiesCollection { get; set; } = new StrategiesCollectionSettings();
     }
 }

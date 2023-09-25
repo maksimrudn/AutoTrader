@@ -116,6 +116,8 @@
             this.buttonAddObserver = new System.Windows.Forms.Button();
             this.observersDataGridView = new AutoTraderUI.Controls.ObserversDataGridView();
             this.labelTime = new System.Windows.Forms.Label();
+            this.buttonRunAll = new System.Windows.Forms.Button();
+            this.buttonStopAll = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -951,13 +953,15 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.buttonStopAll);
+            this.tabPage5.Controls.Add(this.buttonRunAll);
             this.tabPage5.Controls.Add(this.groupBoxObservers);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(661, 534);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Observation";
+            this.tabPage5.Text = "Strategies";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // groupBoxObservers
@@ -996,6 +1000,24 @@
             this.labelTime.Size = new System.Drawing.Size(94, 13);
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
+            // 
+            // buttonRunAll
+            // 
+            this.buttonRunAll.Location = new System.Drawing.Point(6, 314);
+            this.buttonRunAll.Name = "buttonRunAll";
+            this.buttonRunAll.Size = new System.Drawing.Size(174, 23);
+            this.buttonRunAll.TabIndex = 1;
+            this.buttonRunAll.Text = "RunAll";
+            this.buttonRunAll.UseVisualStyleBackColor = true;
+            // 
+            // buttonStopAll
+            // 
+            this.buttonStopAll.Location = new System.Drawing.Point(6, 352);
+            this.buttonStopAll.Name = "buttonStopAll";
+            this.buttonStopAll.Size = new System.Drawing.Size(174, 23);
+            this.buttonStopAll.TabIndex = 1;
+            this.buttonStopAll.Text = "StopAll";
+            this.buttonStopAll.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -1126,5 +1148,7 @@
         private System.Windows.Forms.GroupBox groupBoxObservers;
         private Controls.ObserversDataGridView observersDataGridView;
         private System.Windows.Forms.Button buttonAddObserver;
+        private System.Windows.Forms.Button buttonStopAll;
+        private System.Windows.Forms.Button buttonRunAll;
     }
 }

@@ -130,7 +130,7 @@ namespace AutoTraderUI.Controls
                     StartEvent.Invoke(this, new ObserversDataGridViewEventArgs()
                     {
                         Action = StrategiesActions.Start,
-                        Security = GetUsernameByIndex(e.RowIndex)
+                        Security = GetSeccodeByIndex(e.RowIndex)
                     });
             }
             //ОСТАНОВИТЬ
@@ -140,7 +140,7 @@ namespace AutoTraderUI.Controls
                     StopEvent.Invoke(this, new ObserversDataGridViewEventArgs()
                     {
                         Action = StrategiesActions.Stop,
-                        Security = GetUsernameByIndex(e.RowIndex)
+                        Security = GetSeccodeByIndex(e.RowIndex)
                     });
             }
             //ИЗМЕНИТЬ НАСТРОЙКИ АККАУНТА
@@ -150,7 +150,7 @@ namespace AutoTraderUI.Controls
                     ConfigEvent.Invoke(this, new ObserversDataGridViewEventArgs()
                     {
                         Action = StrategiesActions.Config,
-                        Security = GetUsernameByIndex(e.RowIndex)
+                        Security = GetSeccodeByIndex(e.RowIndex)
                     });
             }
             //УДАЛИТЬ АККАУНТ
@@ -161,7 +161,7 @@ namespace AutoTraderUI.Controls
                     DeleteEvent.Invoke(this, new ObserversDataGridViewEventArgs()
                     {
                         Action = StrategiesActions.Delete,
-                        Security = GetUsernameByIndex(e.RowIndex)
+                        Security = GetSeccodeByIndex(e.RowIndex)
                     });
 
                 if (e.RowIndex != -1)
@@ -174,7 +174,7 @@ namespace AutoTraderUI.Controls
                     LogEvent.Invoke(this, new ObserversDataGridViewEventArgs()
                     {
                         Action = StrategiesActions.Log,
-                        Security = GetUsernameByIndex(e.RowIndex)
+                        Security = GetSeccodeByIndex(e.RowIndex)
                     });
             }
         }
@@ -191,10 +191,10 @@ namespace AutoTraderUI.Controls
 
         private string GetSelectedUsername()
         {
-            return GetUsernameByIndex(GetSelectedIndex());
+            return GetSeccodeByIndex(GetSelectedIndex());
         }
 
-        private string GetUsernameByIndex(int i)
+        private string GetSeccodeByIndex(int i)
         {
             return dataGridView1.Rows[i].Cells[0].Value.ToString();
         }
