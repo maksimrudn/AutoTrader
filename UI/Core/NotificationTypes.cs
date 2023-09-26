@@ -9,6 +9,7 @@ namespace AutoTraderUI.Core
     public enum NotificationTypes
     {
         Email,
-        File
+        File,
+        Both
     }
 }

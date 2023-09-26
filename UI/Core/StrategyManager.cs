@@ -19,7 +19,7 @@ namespace AutoTraderUI.Core
             StrategyWorkers = settings.StrategiesCollection
                                         .StrategyList
                                         .Select(x => { 
-                                            return new StrategyWorker(x, _connectors, _settings.StrategiesCollection.NotificationFilename); 
+                                            return new StrategyWorker(x, _connectors, _settings.StrategiesCollection.NotificationFilename, _settings.StrategiesCollection.NotificationEmail); 
                                         }).ToList();
         }
 

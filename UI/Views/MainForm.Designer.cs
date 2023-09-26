@@ -112,12 +112,12 @@
             this.textBoxFreeMoney1 = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.buttonStopAll = new System.Windows.Forms.Button();
+            this.buttonRunAll = new System.Windows.Forms.Button();
             this.groupBoxObservers = new System.Windows.Forms.GroupBox();
             this.buttonAddObserver = new System.Windows.Forms.Button();
             this.observersDataGridView = new AutoTraderUI.Controls.ObserversDataGridView();
             this.labelTime = new System.Windows.Forms.Label();
-            this.buttonRunAll = new System.Windows.Forms.Button();
-            this.buttonStopAll = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -303,7 +303,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.testButton);
             this.tabPage1.Controls.Add(this.observeButton);
             this.tabPage1.Controls.Add(this.quotationsUnSubscribebutton);
             this.tabPage1.Controls.Add(this.quotationsSubscribebutton);
@@ -340,12 +339,13 @@
             // 
             // testButton
             // 
-            this.testButton.Location = new System.Drawing.Point(12, 426);
+            this.testButton.Location = new System.Drawing.Point(376, 11);
             this.testButton.Name = "testButton";
             this.testButton.Size = new System.Drawing.Size(188, 23);
             this.testButton.TabIndex = 35;
             this.testButton.Text = "Test";
             this.testButton.UseVisualStyleBackColor = true;
+            this.testButton.Click += new System.EventHandler(this.testButton_Click);
             // 
             // observeButton
             // 
@@ -964,6 +964,24 @@
             this.tabPage5.Text = "Strategies";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // buttonStopAll
+            // 
+            this.buttonStopAll.Location = new System.Drawing.Point(6, 352);
+            this.buttonStopAll.Name = "buttonStopAll";
+            this.buttonStopAll.Size = new System.Drawing.Size(174, 23);
+            this.buttonStopAll.TabIndex = 1;
+            this.buttonStopAll.Text = "StopAll";
+            this.buttonStopAll.UseVisualStyleBackColor = true;
+            // 
+            // buttonRunAll
+            // 
+            this.buttonRunAll.Location = new System.Drawing.Point(6, 314);
+            this.buttonRunAll.Name = "buttonRunAll";
+            this.buttonRunAll.Size = new System.Drawing.Size(174, 23);
+            this.buttonRunAll.TabIndex = 1;
+            this.buttonRunAll.Text = "RunAll";
+            this.buttonRunAll.UseVisualStyleBackColor = true;
+            // 
             // groupBoxObservers
             // 
             this.groupBoxObservers.Controls.Add(this.buttonAddObserver);
@@ -1001,29 +1019,12 @@
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
             // 
-            // buttonRunAll
-            // 
-            this.buttonRunAll.Location = new System.Drawing.Point(6, 314);
-            this.buttonRunAll.Name = "buttonRunAll";
-            this.buttonRunAll.Size = new System.Drawing.Size(174, 23);
-            this.buttonRunAll.TabIndex = 1;
-            this.buttonRunAll.Text = "RunAll";
-            this.buttonRunAll.UseVisualStyleBackColor = true;
-            // 
-            // buttonStopAll
-            // 
-            this.buttonStopAll.Location = new System.Drawing.Point(6, 352);
-            this.buttonStopAll.Name = "buttonStopAll";
-            this.buttonStopAll.Size = new System.Drawing.Size(174, 23);
-            this.buttonStopAll.TabIndex = 1;
-            this.buttonStopAll.Text = "StopAll";
-            this.buttonStopAll.UseVisualStyleBackColor = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(690, 612);
+            this.Controls.Add(this.testButton);
             this.Controls.Add(this.labelTime);
             this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";

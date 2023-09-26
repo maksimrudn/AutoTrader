@@ -90,6 +90,7 @@ namespace AutoTraderUI.Core
         public DateTime MultidirectExecuteTime { get; set; } = DateTime.Now;
         public bool Shutdown { get; set; }
 
+
         #endregion
 
         public void SetUsername(string text)
