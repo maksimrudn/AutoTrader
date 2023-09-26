@@ -1,4 +1,5 @@
-﻿using AutoTraderSDK.Model;
+﻿using AutoTraderSDK.Common;
+using AutoTraderSDK.Model;
 using AutoTraderSDK.Model.Outgoing;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,6 @@ namespace AutoTraderSDK.Core
 
 
 
-        List<Model.Ingoing.candle> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, int periodId = 1, int candlesCount = 1);
+        List<Model.Ingoing.candle> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, SecurityPeriods periodId = SecurityPeriods.M1, int candlesCount = 1);
     }
 }

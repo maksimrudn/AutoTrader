@@ -1,4 +1,5 @@
-﻿using AutoTraderSDK.Model;
+﻿using AutoTraderSDK.Common;
+using AutoTraderSDK.Model;
 using AutoTraderSDK.Model.Ingoing;
 using AutoTraderSDK.Model.Ingoing.quotes_ns;
 using AutoTraderSDK.Model.Ingoing.securities_ns;
@@ -39,7 +40,7 @@ namespace AutoTraderSDK.Core
             
         }
 
-        public List<candle> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, int periodId = 1, int candlesCount = 1)
+        public List<candle> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, SecurityPeriods periodId = SecurityPeriods.M1 , int candlesCount = 1)
         {
             var signal = new List<candle>()
             {

@@ -43,17 +43,49 @@ namespace AutoTraderUI.Core
             {
                 var res = _connectors[0].GetHistoryData(_settings.Seccode, boardsCode.FUT, _settings.Period, 2);
 
-                double diff = res[0].close - res[1].close;
+                double prevPrice = res[0].close;
+                double curPrice = res[1].close;
 
-                if (diff < 0) diff = diff * -1;
+                double diff = prevPrice - curPrice;
 
-                if (diff > _settings.Difference)
+                if (_settings.DifferenceType == DifferenceTypes.Oversold)
                 {
-                    if (_settings.NotificationType == NotificationTypes.File)
+                    if (diff < 0) diff = diff * -1;
+
+                    if (diff > _settings.Difference && prevPrice > curPrice)
                     {
-                        File.AppendAllText( _notificationFile, $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
+                        if (_settings.NotificationType == NotificationTypes.File)
+                        {
+                            File.AppendAllText(_notificationFile, $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
+                        }
                     }
                 }
+                if (_settings.DifferenceType == DifferenceTypes.Overbought)
+                {
+                    if (diff < 0) diff = diff * -1;
+
+                    if (diff > _settings.Difference && prevPrice > curPrice)
+                    {
+                        if (_settings.NotificationType == NotificationTypes.File)
+                        {
+                            File.AppendAllText(_notificationFile, $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
+                        }
+                    }
+                }
+                else
+                {
+                    if (diff < 0) diff = diff * -1;
+
+                    if (diff > _settings.Difference)
+                    {
+                        if (_settings.NotificationType == NotificationTypes.File)
+                        {
+                            File.AppendAllText(_notificationFile, $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
+                        }
+                    }
+                }
+
+                
 
                 if (_cts.Token.IsCancellationRequested) return;
 

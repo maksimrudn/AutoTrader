@@ -136,7 +136,7 @@ namespace AutoTraderUI.Presenters
         {
             try
             {
-                var res = _connectors[0].GetHistoryData( _view.ComboBoxSeccode  ,boardsCode.FUT, 1, 2);
+                var res = _connectors[0].GetHistoryData( _view.ComboBoxSeccode  ,boardsCode.FUT, AutoTraderSDK.Common.SecurityPeriods.M1, 2);
             }
             catch (Exception e)
             {
