@@ -1,4 +1,5 @@
-﻿using AutoTraderUI.Core;
+﻿using AutoTraderSDK.Common;
+using AutoTraderUI.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -36,7 +37,7 @@ namespace AutoTraderUI.Views
 
         public int Difference { get { return int.Parse( textBoxDifference.Text); } }
 
-        public int Period { get { return int.Parse(textBoxPeriod.Text); } }
+        public SecurityPeriods Period { get { return (SecurityPeriods)int.Parse(textBoxPeriod.Text); } }
 
         public int Delay { get { return int.Parse(textBoxDelay.Text); } }
 

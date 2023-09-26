@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\SecurityPeriods.cs" />
     <Compile Include="Core\TXMLDummyConnector.cs" />
     <Compile Include="Core\InputStreamEventArgs.cs" />
     <Compile Include="Core\ITXMLConnector.cs" />

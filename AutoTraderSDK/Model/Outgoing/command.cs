@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoTraderSDK.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -126,7 +127,7 @@ namespace AutoTraderSDK.Model.Outgoing
             return res;
         }
 
-        public static command CreateGetHistoryDataCommand(boardsCode board, string seccode, int periodId = 1, int count = 1, bool reset=true)
+        public static command CreateGetHistoryDataCommand(boardsCode board, string seccode, SecurityPeriods periodId = SecurityPeriods.M1, int count = 1, bool reset=true)
         {
             command res = new command();
 
@@ -134,7 +135,7 @@ namespace AutoTraderSDK.Model.Outgoing
             res.security = new command_ns.security();
             res.security.board = board.ToString();
             res.security.seccode = seccode;
-            res.periodValue = periodId;
+            res.periodValue = (int)periodId;
             res.countValue = count;
             res.resetValue = reset;
 

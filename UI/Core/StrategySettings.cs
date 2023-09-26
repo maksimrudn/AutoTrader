@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoTraderSDK.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,9 +12,11 @@ namespace AutoTraderUI.Core
     {
         public string Seccode { get; set; }
 
-        public int Difference { get; set; } 
+        public int Difference { get; set; }
 
-        public int Period { get; set; }
+        public DifferenceTypes DifferenceType { get; set; }
+
+        public SecurityPeriods Period { get; set; }
 
         public int Delay { get; set; }
 
