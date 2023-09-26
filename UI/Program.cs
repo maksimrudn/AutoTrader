@@ -7,6 +7,7 @@ using AutoTraderUI.Views;
 using LightInject;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,11 +28,12 @@ namespace AutoTraderUI
             Application.SetCompatibleTextRenderingDefault(false);
 
             List<ITXMLConnector> connectors = new List<ITXMLConnector>();
-            //connectors.Add(new TXMLConnector("txmlconnector1.dll"));
-            //connectors.Add(new TXMLConnector("txmlconnector2.dll"));
+            connectors.Add(new TXMLConnector("txmlconnector1.dll"));
+            connectors.Add(new TXMLConnector("txmlconnector2.dll"));
 
-            connectors.Add(new TXMLDummyConnector());
-            connectors.Add(new TXMLDummyConnector());
+
+            //connectors.Add(new TXMLDummyConnector());
+            //connectors.Add(new TXMLDummyConnector());
 
             ServiceContainer container = new ServiceContainer();
             container.RegisterInstance<List<ITXMLConnector>>(connectors);

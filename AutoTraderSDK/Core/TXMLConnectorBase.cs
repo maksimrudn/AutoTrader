@@ -53,7 +53,7 @@ namespace AutoTraderSDK.Core
                 _freeMemory(pResult);
                 log.WriteLog(result);
 
-                throw new Exception();
+                throw new Exception(result);
             }
             else
             {
