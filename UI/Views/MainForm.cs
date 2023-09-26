@@ -29,6 +29,8 @@ namespace AutoTraderUI
 
         public MainForm(ApplicationContext context)
         {
+            Trace.TraceInformation("MainForm: begin creation");
+
             _context = context;
             InitializeComponent();
 
@@ -71,7 +73,9 @@ namespace AutoTraderUI
             _timerClock = new System.Timers.Timer();
             _timerClock.Interval = 100;
             _timerClock.Elapsed += new ElapsedEventHandler(timerClock_Elapsed);
-            _timerClock.Start();
+            
+
+            
         }
 
         public event Action Login1;
@@ -114,11 +118,20 @@ namespace AutoTraderUI
 
         private void timerClock_Elapsed(object sender, ElapsedEventArgs e)
         {
-            labelTime.BeginInvoke(new MethodInvoker(() =>
+            labelTime.Invoke(new MethodInvoker(() =>
             {
                 labelTime.Text = $"Time: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
             }));
 
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            _timerClock.Start();
+
+            Trace.TraceInformation("MainForm: created");
         }
 
         public void LoadSeccodeList(List<string> lst)

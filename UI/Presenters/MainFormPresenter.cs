@@ -82,6 +82,8 @@ namespace AutoTraderUI.Presenters
 
         private void _view_StopAllStrategies()
         {
+            Trace.TraceInformation("_view_StopAllStrategies: begin");
+
             foreach (var strategy in _strategyManager.StrategyWorkers)
             {
                 try
@@ -93,10 +95,14 @@ namespace AutoTraderUI.Presenters
                     _view.ShowMessage(ex.Message);
                 }
             }
+
+            Trace.TraceInformation("_view_StopAllStrategies: completed");
         }
 
         private void _view_RunAllStrategies()
         {
+            Trace.TraceInformation("_view_RunAllStrategies: begin");
+
             foreach (var strategy in _strategyManager.StrategyWorkers)
             {
                 try
@@ -108,6 +114,8 @@ namespace AutoTraderUI.Presenters
                     _view.ShowMessage(ex.Message);
                 }
             }
+
+            Trace.TraceInformation("_view_RunAllStrategies: completed");
         }
 
         private void _observersCollection_ObserverListChanged(object sender, List<StrategySettings> e)
@@ -372,6 +380,8 @@ namespace AutoTraderUI.Presenters
         /// </summary>
         private void Login1()
         {
+            Trace.TraceInformation("Login1: begin");
+
             try
             {
                 if (_view.ComboBoxConnectionType == string.Empty)
@@ -398,6 +408,8 @@ namespace AutoTraderUI.Presenters
 
                 _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString("N");
                 _view.FreeMoney = _connectors[connectorNumber].Money.ToString("N");
+
+                Trace.TraceInformation("Login1: completed");
             }
             catch (Exception ex)
             {

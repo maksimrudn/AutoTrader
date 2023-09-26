@@ -2,6 +2,7 @@
 using AutoTraderSDK.Model.Outgoing;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,9 @@ namespace AutoTraderUI.Core
         Task _strategyTask;
         public void Start()
         {
+            Trace.TraceInformation($"Strategy start {_settings.Seccode}: begin");
+
+
             if (_strategyTask != null && _strategyTask.Status == TaskStatus.Running) _cts.Cancel();
 
 
@@ -35,6 +39,7 @@ namespace AutoTraderUI.Core
 
             _strategyTask = Task.Run(_strategyFunction, _cts.Token);
 
+            Trace.TraceInformation($"Strategy start {_settings.Seccode}: completed");
         }
 
         private async void _strategyFunction()
@@ -85,9 +90,13 @@ namespace AutoTraderUI.Core
                     }
                 }
 
-                
 
-                if (_cts.Token.IsCancellationRequested) return;
+
+                if (_cts.Token.IsCancellationRequested)
+                {
+                    Trace.TraceInformation($"Strategy stop {_settings.Seccode}: begin");
+                    return;
+                }
 
                 await Task.Delay(_settings.Delay);
             }
@@ -95,6 +104,8 @@ namespace AutoTraderUI.Core
 
         public void Stop()
         {
+            Trace.TraceInformation($"Strategy stop {_settings.Seccode}: begin");
+
             _cts.Cancel();
         }
     }
