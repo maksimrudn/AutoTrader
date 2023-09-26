@@ -68,7 +68,7 @@ namespace AutoTraderUI.Presenters
 
             _view.Test += Test;
 
-            _connectors[0].OnMCPositionsUpdated += (target, args) =>
+            _connectors[0].MCPositionsUpdated += (target, args) =>
             {
                 _view.LoadPositions(args.data);
             };
@@ -78,6 +78,18 @@ namespace AutoTraderUI.Presenters
 
             _view.RunAllStrategies += _view_RunAllStrategies;
             _view.StopAllStrategies += _view_StopAllStrategies;
+
+
+
+            _connectors[0].SecuritiesUpdated += MainFormPresenter_SecuritiesUpdated;
+        }
+
+        private void MainFormPresenter_SecuritiesUpdated(object sender, TXMLEventArgs<HashSet<AutoTraderSDK.Model.Ingoing.securities_ns.security>> e)
+        {
+            _seccodeList = e.data.Where(x => x.board == boardsCode.FUT.ToString()).Select(x => x.seccode).OrderBy(x => x).ToList();
+
+            _view.LoadSeccodeList(_seccodeList);
+            _view.SetSelectedSeccode(_settings.Seccode);
         }
 
         private void _view_StopAllStrategies()
@@ -385,11 +397,6 @@ namespace AutoTraderUI.Presenters
 
                 _connectors[connectorNumber].Login(_settings.GetUsername(), _settings.GetPassword(), connType);
 
-
-                _seccodeList = _connectors[connectorNumber].GetSecurities().Where(x => x.board == boardsCode.FUT.ToString()).Select(x => x.seccode).OrderBy(x => x).ToList();
-
-                _view.LoadSeccodeList(_seccodeList);
-                _view.SetSelectedSeccode(_settings.Seccode);
                 _view.HandleConnected(connectorNumber);
 
                 _view.ClientId1 = _connectors[connectorNumber].FortsClientId;

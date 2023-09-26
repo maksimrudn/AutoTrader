@@ -76,7 +76,7 @@
     <Compile Include="Core\log.cs" />
     <Compile Include="Core\MarshalUTF8.cs" />
     <Compile Include="Core\NativeMethods.cs" />
-    <Compile Include="Core\OnMCPositionsUpdatedEventArgs.cs" />
+    <Compile Include="Core\TXMLEventArgs.cs" />
     <Compile Include="Core\QuotesLogger.cs" />
     <Compile Include="Core\TradeRobotEnvironment.cs" />
     <Compile Include="Core\TXMLConnector.cs" />

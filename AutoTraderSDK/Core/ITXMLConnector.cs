@@ -22,7 +22,11 @@ namespace AutoTraderSDK.Core
 
         double Money { get; }
 
-        event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
+        event EventHandler<TXMLEventArgs<Model.Ingoing.mc_portfolio>> MCPositionsUpdated;
+
+        event EventHandler<TXMLEventArgs<HashSet<Model.Ingoing.securities_ns.security>>> SecuritiesUpdated;
+
+        HashSet<Model.Ingoing.securities_ns.security> Securities { get; }
 
         void Login(string username, string password, ConnectionType connectionType);
 
@@ -55,10 +59,6 @@ namespace AutoTraderSDK.Core
         int NewStopOrder(boardsCode board, string seccode, AutoTraderSDK.Model.Outgoing.buysell buysell, double SLPrice, double TPPrice, int volume, long orderno = 0, double correction = 0);
 
         int NewStopOrderWithDistance(boardsCode board, string seccode, AutoTraderSDK.Model.Outgoing.buysell buysell, double price, double SLDistance, double TPDistance, int volume, long orderno = 0);
-
-
-
-        List<Model.Ingoing.securities_ns.security> GetSecurities();
 
 
         void SubscribeQuotes(AutoTraderSDK.Model.Outgoing.boardsCode board, string seccode);

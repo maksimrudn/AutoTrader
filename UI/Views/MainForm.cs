@@ -19,6 +19,7 @@ using AutoTraderUI;
 using AutoTraderUI.Common;
 using System.Globalization;
 using AutoTraderUI.Core;
+using System.Threading;
 
 namespace AutoTraderUI
 {
@@ -26,12 +27,14 @@ namespace AutoTraderUI
     {
         System.Timers.Timer _timerClock;
         protected ApplicationContext _context;
+        Settings _settings;
 
-        public MainForm(ApplicationContext context)
+        public MainForm(ApplicationContext context, Settings settings)
         {
             _context = context;
             InitializeComponent();
 
+            _settings = settings;
 
             buttonLogin.Click += (sender, args) => Invoke(Login1);
             buttonLogout.Click += (sender, args) => Invoke(Logout1);
@@ -72,6 +75,14 @@ namespace AutoTraderUI
             _timerClock.Interval = 100;
             _timerClock.Elapsed += new ElapsedEventHandler(timerClock_Elapsed);
             _timerClock.Start();
+
+            comboBoxSeccode.SelectedValueChanged += ComboBoxSeccode_SelectedValueChanged;
+        }
+
+        private void ComboBoxSeccode_SelectedValueChanged(object sender, EventArgs e)
+        {
+            _settings.Seccode = (string)comboBoxSeccode.SelectedValue;
+            _settings.Save();
         }
 
         public event Action Login1;
@@ -129,7 +140,32 @@ namespace AutoTraderUI
             };
 
             seccodes.AddRange(lst);
-            comboBoxSeccode.DataSource = seccodes;
+
+
+
+
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                BeginInvoke(new MethodInvoker(() =>
+                {
+                    comboBoxSeccode.DataSource = seccodes;
+                    //comboBoxSeccode.Refresh();
+                }));
+            });
+        }
+
+        public void SetSelectedSeccode(string seccode)
+        {
+            
+
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                BeginInvoke(new MethodInvoker(() =>
+                {
+                    comboBoxSeccode.SelectedItem = seccode;
+                    //comboBoxSeccode.Refresh();
+                }));
+            });
         }
 
 
@@ -244,10 +280,7 @@ namespace AutoTraderUI
             MessageBox.Show(msg);
         }
 
-        public void SetSelectedSeccode(string seccode)
-        {
-            comboBoxSeccode.SelectedItem = seccode;
-        }
+        
 
         public void HandleConnected(int connectorNumber)
         {

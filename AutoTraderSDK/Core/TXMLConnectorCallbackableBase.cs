@@ -14,11 +14,15 @@ namespace AutoTraderSDK.Core
     {
         public AutoResetEvent _serverStatusUpdated = new AutoResetEvent(false);
         public AutoResetEvent _positionsLoaded = new AutoResetEvent(false);
-        public AutoResetEvent _securitiesLoaded = new AutoResetEvent(false);
         public AutoResetEvent _tradesLoaded = new AutoResetEvent(false);
         public AutoResetEvent _candlesLoaded = new AutoResetEvent(false);
         protected AutoResetEvent _mc_portfolioLoaded = new AutoResetEvent(false);
 
+
+        public event EventHandler<TXMLEventArgs<HashSet<Model.Ingoing.securities_ns.security>>> SecuritiesUpdated;
+
+
+        public event EventHandler<TXMLEventArgs<Model.Ingoing.mc_portfolio>> MCPositionsUpdated;
 
         public bool Connected
         {
@@ -30,8 +34,7 @@ namespace AutoTraderSDK.Core
             }
         }
 
-        public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
-
+        
 
         /// <summary>
         /// Результат подключения к серверу
@@ -66,12 +69,19 @@ namespace AutoTraderSDK.Core
 
         protected HashSet<Model.Ingoing.securities_ns.security> _securities { get; set; }
 
+        public HashSet<Model.Ingoing.securities_ns.security> Securities { get
+            {
+                return _securities; 
+            }
+        }
+
         public TXMLConnectorCallbackableBase(string tConnFile) : base(tConnFile)
         {
             _quotes = new HashSet<Model.Ingoing.quotes_ns.quote>();
             _orders = new HashSet<Model.Ingoing.orders_ns.order>();
             _trades = new HashSet<Model.Ingoing.trades_ns.trade>();
             _securities = new HashSet<Model.Ingoing.securities_ns.security>();
+
         }
 
         protected override void _handleData(String result)
@@ -102,7 +112,9 @@ namespace AutoTraderSDK.Core
                     var securities = (securities)XMLHelper.Deserialize(result, typeof(securities));
 
                     _securitiesHandle(securities.security);
-                    _securitiesLoaded.Set();
+
+                    if (SecuritiesUpdated != null) SecuritiesUpdated.Invoke(this,new TXMLEventArgs<HashSet<Model.Ingoing.securities_ns.security>>(_securities));
+
                     break;
 
                 case "pits":
@@ -147,7 +159,7 @@ namespace AutoTraderSDK.Core
 
                    
                     _mc_portfolioLoaded.Set();
-                    OnMCPositionsUpdated.Invoke(this, new OnMCPositionsUpdatedEventArgs(_mc_portfolio));
+                    MCPositionsUpdated.Invoke(this, new TXMLEventArgs<mc_portfolio>(_mc_portfolio));
 
 
                     break;

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace AutoTraderSDK.Core
 {
-    public class OnMCPositionsUpdatedEventArgs : EventArgs
+    public class TXMLEventArgs<T> : EventArgs
     {
-        public OnMCPositionsUpdatedEventArgs(mc_portfolio mc_portfolio)
+        public TXMLEventArgs(T data)
         {
-            data = mc_portfolio;
+            this.data = data;
         }
-        public mc_portfolio data { get; set; }
+        public T data { get; set; }
     }
 }

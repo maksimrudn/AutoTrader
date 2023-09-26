@@ -656,27 +656,7 @@ namespace AutoTraderSDK.Core
             return res;
         }
 
-        public List<Model.Ingoing.securities_ns.security> GetSecurities()
-        {
-            List<Model.Ingoing.securities_ns.security> res = new List<Model.Ingoing.securities_ns.security>();
-            command com = command.CreateGetSecurities();
-
-            _securitiesLoaded.Reset();
-            result sendResult = ConnectorSendCommand(com, typeof(command));
-
-            if (sendResult.success == true)
-            {
-                _securitiesLoaded.WaitOne();
-
-                res = _securities.ToList();
-            }
-            else
-            {
-                throw new Exception(sendResult.message);
-            }
-
-            return res;
-        }
+        
 
         public int GetOpenPositions(string seccode)
         {

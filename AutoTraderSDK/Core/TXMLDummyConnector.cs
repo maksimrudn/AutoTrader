@@ -27,7 +27,11 @@ namespace AutoTraderSDK.Core
 
         public double Money { get; private set; }
 
-        public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
+        public HashSet<Model.Ingoing.securities_ns.security> Securities { get; }
+
+        public event EventHandler<TXMLEventArgs<Model.Ingoing.mc_portfolio>> MCPositionsUpdated;
+
+        public event EventHandler<TXMLEventArgs<HashSet<Model.Ingoing.securities_ns.security>>> SecuritiesUpdated;
 
         public void ChangePassword(string oldpass, string newpass)
         {
@@ -71,6 +75,7 @@ namespace AutoTraderSDK.Core
             return new Random().Next(0,10) == 0? signal:nonsignal;
         }
 
+        [Obsolete]
         public List<security> GetSecurities()
         {
             return new List<security>()
