@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="LightInject, Version=6.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LightInject.6.3.3\lib\netstandard1.1\LightInject.dll</HintPath>

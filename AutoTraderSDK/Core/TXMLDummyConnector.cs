@@ -62,7 +62,7 @@ namespace AutoTraderSDK.Core
                 },
                 new candle()
                 {
-                    close = 96030
+                    close = 96130
                 }
             };
 
