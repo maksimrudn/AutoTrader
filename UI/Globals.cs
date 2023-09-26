@@ -28,5 +28,15 @@ namespace AutoTraderUI
         }
 
         private static Settings _settings;
+
+        public const string ProductName = "Autotrader";
+
+        public const string NotificationEmail = "admin@viclouds.ru";
+
+        public const string NotificationEmailPassword = "Qwer1234";
+
+        public const string SMTPServer = "192.168.0.4";
+
+        public const int SMTPPort = 25;
     }
 }

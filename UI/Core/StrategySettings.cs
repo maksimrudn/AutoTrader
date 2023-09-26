@@ -21,6 +21,5 @@ namespace AutoTraderUI.Core
         public int Delay { get; set; }
 
         public NotificationTypes NotificationType { get; set; }
-
     }
 }

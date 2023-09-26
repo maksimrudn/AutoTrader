@@ -54,7 +54,7 @@ namespace AutoTraderUI
 
 
 
-            testButton.Click += (sender, args) => Invoke(Test);
+            //testButton.Click += (sender, args) => Invoke(Test);
 
             quotationsSubscribebutton.Click += (sender, args) => Invoke(SubscribeOnQuotations);
             quotationsUnSubscribebutton.Click += (sender, args) => Invoke(UnSubscribeOnQuotations);
@@ -347,5 +347,9 @@ namespace AutoTraderUI
 
         }
 
+        private void testButton_Click(object sender, EventArgs e)
+        {
+            EmailService.SendEmailAsync("m.rudneov@yandex.ru", "Autotrader", "test");
+        }
     }
 }

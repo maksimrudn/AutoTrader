@@ -16,11 +16,14 @@ namespace AutoTraderUI.Core
         StrategySettings _settings;
         List<ITXMLConnector> _connectors;
         string _notificationFile;
-        public StrategyWorker(StrategySettings settings, List<ITXMLConnector> connectors, string notificationFile)
+        string _notificationEmail;
+
+        public StrategyWorker(StrategySettings settings, List<ITXMLConnector> connectors, string notificationFile, string notificationEmail)
         {
             _settings = settings;
             _connectors = connectors;
             _notificationFile = notificationFile;
+            _notificationEmail = notificationEmail;
         }
 
         CancellationTokenSource _cts;
@@ -29,17 +32,23 @@ namespace AutoTraderUI.Core
         {
             Trace.TraceInformation($"Strategy start {_settings.Seccode}: begin");
 
+            try
+            {
+                if (_strategyTask != null && _strategyTask.Status == TaskStatus.Running) _cts.Cancel();
 
-            if (_strategyTask != null && _strategyTask.Status == TaskStatus.Running) _cts.Cancel();
 
+                if (string.IsNullOrEmpty(_settings.Seccode)) throw new Exception("Seccode is not specified");
 
-            if (string.IsNullOrEmpty(_settings.Seccode)) throw new Exception("seccode...");
+                _cts = new CancellationTokenSource();
 
-            _cts = new CancellationTokenSource();
+                _strategyTask = Task.Run(_strategyFunction, _cts.Token);
 
-            _strategyTask = Task.Run(_strategyFunction, _cts.Token);
-
-            Trace.TraceInformation($"Strategy start {_settings.Seccode}: completed");
+                Trace.TraceInformation($"Strategy start {_settings.Seccode}: completed");
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceInformation($"Strategy start {_settings.Seccode}: exception {ex.Message}");
+            }
         }
 
         private async void _strategyFunction()
@@ -59,10 +68,8 @@ namespace AutoTraderUI.Core
 
                     if (diff > _settings.Difference && prevPrice > curPrice)
                     {
-                        if (_settings.NotificationType == NotificationTypes.File)
-                        {
-                            File.AppendAllText(_notificationFile, $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
-                        }
+                        await _sendNotification(_settings, diff, res);
+                        
                     }
                 }
                 if (_settings.DifferenceType == DifferenceTypes.Overbought)
@@ -71,10 +78,7 @@ namespace AutoTraderUI.Core
 
                     if (diff > _settings.Difference && prevPrice > curPrice)
                     {
-                        if (_settings.NotificationType == NotificationTypes.File)
-                        {
-                            File.AppendAllText(_notificationFile, $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
-                        }
+                        await _sendNotification(_settings, diff, res);
                     }
                 }
                 else
@@ -83,10 +87,7 @@ namespace AutoTraderUI.Core
 
                     if (diff > _settings.Difference)
                     {
-                        if (_settings.NotificationType == NotificationTypes.File)
-                        {
-                            File.AppendAllText(_notificationFile, $"time {DateTime.Now}; diff = {diff}; prev close = {res[0].close}; prev close = {res[1].close}; ");
-                        }
+                        await _sendNotification(_settings, diff, res);
                     }
                 }
 
@@ -99,6 +100,25 @@ namespace AutoTraderUI.Core
                 }
 
                 await Task.Delay(_settings.Delay);
+            }
+        }
+
+        private async Task _sendNotification(StrategySettings settings, double diff, List<AutoTraderSDK.Model.Ingoing.candle> historyData)
+        {
+
+            string result =  $"Time {DateTime.Now}; Seccode {settings.Seccode}; Diff = {diff}; Prev close = {historyData[0].close}; Prev close = {historyData[1].close}; Signal {settings.DifferenceType}\n";
+            
+            if (_settings.NotificationType == NotificationTypes.File)
+            {
+                File.AppendAllText(_notificationFile, result);
+            }
+            else if (_settings.NotificationType == NotificationTypes.Email){
+                await EmailService.SendEmailAsync(_notificationEmail, "Autotrader", result);
+            }
+            else
+            {
+                File.AppendAllText(_notificationFile, result);
+                await EmailService.SendEmailAsync(_notificationEmail, "Autotrader", result);
             }
         }
 
