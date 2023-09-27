@@ -106,7 +106,7 @@ namespace AutoTraderUI.Core
         private async Task _sendNotification(StrategySettings settings, double diff, List<AutoTraderSDK.Model.Ingoing.candle> historyData)
         {
 
-            string result =  $"Time {DateTime.Now}; Seccode {settings.Seccode}; Diff = {diff}; Prev close = {historyData[0].close}; Prev close = {historyData[1].close}; Signal {settings.DifferenceType}\n";
+            string result =  $"Time {DateTime.Now}; Seccode {settings.Seccode}; Period {settings.Period.ToString()}; Diff = {diff}; Prev close = {historyData[0].close}; Prev close = {historyData[1].close}; Signal {settings.DifferenceType};\n";
             
             if (_settings.NotificationType == NotificationTypes.File)
             {
