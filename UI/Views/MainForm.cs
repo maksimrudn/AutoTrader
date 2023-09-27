@@ -73,10 +73,14 @@ namespace AutoTraderUI
             _timerClock = new System.Timers.Timer();
             _timerClock.Interval = 100;
             _timerClock.Elapsed += new ElapsedEventHandler(timerClock_Elapsed);
-            
 
-            
+            comboBoxTimezone.Items.Add(4);
+            comboBoxTimezone.Items.Add(7);
+            comboBoxTimezone.SelectedValueChanged += (sender, args) => Invoke(TimezoneChanged);
+
         }
+
+        public event Action TimezoneChanged;
 
         public event Action Login1;
         public event Action Logout1;
@@ -131,6 +135,9 @@ namespace AutoTraderUI
 
             _timerClock.Start();
 
+           
+
+
             Trace.TraceInformation("MainForm: created");
         }
 
@@ -162,6 +169,20 @@ namespace AutoTraderUI
             comboBoxConnectionType.SelectedItem = settings.ConnectionType;
             dateTimePickerMultidirectExecute.Value = settings.MultidirectExecuteTime;
             checkBoxShutdown.Checked = settings.Shutdown;
+            
+
+            for (int i = 0; i < comboBoxTimezone.Items.Count; i++)
+            {               
+                // Check if the value of the current item is equal to 3
+                if (comboBoxTimezone.Items[i].ToString() == settings.Timezone.ToString())
+                {
+                    // Set the SelectedIndex of the ComboBox to the index of the item with value 3
+                    comboBoxTimezone.SelectedIndex = i;
+                    break; // Exit the loop once the item is found
+                }
+            }
+
+
         }
 
         public void UpdateSettings(Settings settings)
@@ -196,6 +217,7 @@ namespace AutoTraderUI
             checkBoxShutdown.Invoke(new MethodInvoker(() => { settings.MultidirectExecuteTime = dateTimePickerMultidirectExecute.Value; }));
         }
 
+        public int Timezone { get { return int.Parse(comboBoxTimezone.SelectedItem.ToString()); } }
         public string ComboBoxConnectionType { get { return comboBoxConnectionType.Text; } }
 
         public string ComboBoxSeccode { get {

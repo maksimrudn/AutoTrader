@@ -78,6 +78,14 @@ namespace AutoTraderUI.Presenters
 
             _view.RunAllStrategies += _view_RunAllStrategies;
             _view.StopAllStrategies += _view_StopAllStrategies;
+
+            _view.TimezoneChanged += _view_TimezoneChanged;
+        }
+
+        private void _view_TimezoneChanged()
+        {
+            _settings.Timezone = _view.Timezone;
+            _settings.Save();
         }
 
         private void _view_StopAllStrategies()
@@ -107,7 +115,7 @@ namespace AutoTraderUI.Presenters
             {
                 try
                 {
-                    strategy.Start();
+                    strategy.Start(_view.Timezone);
                 }
                 catch (Exception ex)
                 {
