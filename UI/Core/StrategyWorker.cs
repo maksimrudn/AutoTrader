@@ -18,6 +18,12 @@ namespace AutoTraderUI.Core
         string _notificationFile;
         string _notificationEmail;
 
+        /// <summary>
+        /// msk 3
+        /// hcmc 7
+        /// </summary>
+        int? _timezone = null;
+
         public StrategyWorker(StrategySettings settings, List<ITXMLConnector> connectors, string notificationFile, string notificationEmail)
         {
             _settings = settings;
@@ -28,15 +34,14 @@ namespace AutoTraderUI.Core
 
         CancellationTokenSource _cts;
         Task _strategyTask;
-        public void Start()
+        public void Start(int? timezone = null)
         {
             Trace.TraceInformation($"Strategy start {_settings.Seccode}: begin");
 
+            _timezone = timezone;
+
             try
             {
-                if (_strategyTask != null && _strategyTask.Status == TaskStatus.Running) _cts.Cancel();
-
-
                 if (string.IsNullOrEmpty(_settings.Seccode)) throw new Exception("Seccode is not specified");
 
                 _cts = new CancellationTokenSource();
@@ -53,14 +58,46 @@ namespace AutoTraderUI.Core
 
         private async void _strategyFunction()
         {
+            DateTime lastSignalTime = DateTime.Now.AddDays(-1);
+
             while (true)
             {
+                // strategy works only stock exchange works (9:00-23.50)
+                if (_timezone != null)
+                {
+                    // Get the current time
+                    DateTime currentTime = DateTime.Now;
+
+                    if (_timezone == 7) currentTime.AddHours(-4);
+
+                    // Set the start and end times for the range
+                    TimeSpan startTime = new TimeSpan(9, 0, 0); // 9:00 AM
+                    TimeSpan endTime = new TimeSpan(23, 50, 0); // 11:50 PM
+                                                               // Check if the current time is within the range
+                    if ( !(currentTime.TimeOfDay >= startTime && currentTime.TimeOfDay <= endTime) )
+                    {
+                        await Task.Delay(_settings.Delay);
+                        continue;
+                    }
+                   
+                }
+
                 var res = _connectors[0].GetHistoryData(_settings.Seccode, boardsCode.FUT, _settings.Period, 2);
 
                 double prevPrice = res[0].close;
                 double curPrice = res[1].close;
 
                 double diff = prevPrice - curPrice;
+
+
+
+                // Signal must be send only once at minute. Initial value lastSignalTime NOW - 1D
+                if ((DateTime.Now - lastSignalTime).TotalMinutes < 1)
+                {
+                    await Task.Delay(_settings.Delay);
+                    continue;
+                }
+
 
                 if (_settings.DifferenceType == DifferenceTypes.Oversold)
                 {
@@ -69,7 +106,8 @@ namespace AutoTraderUI.Core
                     if (diff > _settings.Difference && prevPrice > curPrice)
                     {
                         await _sendNotification(_settings, diff, res);
-                        
+
+                        lastSignalTime = DateTime.Now;
                     }
                 }
                 if (_settings.DifferenceType == DifferenceTypes.Overbought)

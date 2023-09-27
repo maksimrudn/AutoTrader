@@ -1,6 +1,7 @@
 ﻿using AutoTraderSDK.Model;
 using AutoTraderSDK.Model.Ingoing;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +17,11 @@ namespace AutoTraderSDK.Core
         public AutoResetEvent _positionsLoaded = new AutoResetEvent(false);
         public AutoResetEvent _securitiesLoaded = new AutoResetEvent(false);
         public AutoResetEvent _tradesLoaded = new AutoResetEvent(false);
-        public AutoResetEvent _candlesLoaded = new AutoResetEvent(false);
+        
         protected AutoResetEvent _mc_portfolioLoaded = new AutoResetEvent(false);
 
+
+        public ConcurrentDictionary<string, AutoResetEvent> _candlesLoaded = new ConcurrentDictionary<string, AutoResetEvent>();
 
         public bool Connected
         {
@@ -57,7 +60,7 @@ namespace AutoTraderSDK.Core
         /// <summary>
         /// for history data
         /// </summary>
-        protected Model.Ingoing.candles _candles { get; set; }
+        protected ConcurrentDictionary<string, Model.Ingoing.candles> _candles { get; set; } = new ConcurrentDictionary<string, candles>();
 
         protected Model.Ingoing.candlekinds _candlekinds { get; set; }
 
@@ -173,8 +176,8 @@ namespace AutoTraderSDK.Core
                 case "candles":
                     var candles = (candles)XMLHelper.Deserialize(result, typeof(candles));
                     _currentCandle = candles.candlesValue[0];
-                    _candles = candles;
-                    _candlesLoaded.Set();                    
+                    _candles[candles.seccode] = candles;
+                    _candlesLoaded[candles.seccode].Set();                    
                     break;
 
                 case "ticks":

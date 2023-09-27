@@ -46,7 +46,6 @@
             this.comboBoxSeccode = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.testButton = new System.Windows.Forms.Button();
             this.observeButton = new System.Windows.Forms.Button();
             this.quotationsUnSubscribebutton = new System.Windows.Forms.Button();
             this.quotationsSubscribebutton = new System.Windows.Forms.Button();
@@ -117,7 +116,10 @@
             this.groupBoxObservers = new System.Windows.Forms.GroupBox();
             this.buttonAddObserver = new System.Windows.Forms.Button();
             this.observersDataGridView = new AutoTraderUI.Controls.ObserversDataGridView();
+            this.testButton = new System.Windows.Forms.Button();
             this.labelTime = new System.Windows.Forms.Label();
+            this.comboBoxTimezone = new System.Windows.Forms.ComboBox();
+            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -336,16 +338,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Trading";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // testButton
-            // 
-            this.testButton.Location = new System.Drawing.Point(376, 11);
-            this.testButton.Name = "testButton";
-            this.testButton.Size = new System.Drawing.Size(188, 23);
-            this.testButton.TabIndex = 35;
-            this.testButton.Text = "Test";
-            this.testButton.UseVisualStyleBackColor = true;
-            this.testButton.Click += new System.EventHandler(this.testButton_Click);
             // 
             // observeButton
             // 
@@ -1009,6 +1001,16 @@
             this.observersDataGridView.Size = new System.Drawing.Size(637, 191);
             this.observersDataGridView.TabIndex = 0;
             // 
+            // testButton
+            // 
+            this.testButton.Location = new System.Drawing.Point(376, 11);
+            this.testButton.Name = "testButton";
+            this.testButton.Size = new System.Drawing.Size(188, 23);
+            this.testButton.TabIndex = 35;
+            this.testButton.Text = "Test";
+            this.testButton.UseVisualStyleBackColor = true;
+            this.testButton.Click += new System.EventHandler(this.testButton_Click);
+            // 
             // labelTime
             // 
             this.labelTime.AutoSize = true;
@@ -1019,11 +1021,30 @@
             this.labelTime.TabIndex = 19;
             this.labelTime.Text = "Time: hh:mm:ss";
             // 
+            // comboBoxTimezone
+            // 
+            this.comboBoxTimezone.FormattingEnabled = true;
+            this.comboBoxTimezone.Location = new System.Drawing.Point(274, 11);
+            this.comboBoxTimezone.Name = "comboBoxTimezone";
+            this.comboBoxTimezone.Size = new System.Drawing.Size(69, 21);
+            this.comboBoxTimezone.TabIndex = 36;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(215, 16);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(53, 13);
+            this.label21.TabIndex = 37;
+            this.label21.Text = "Timezone";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(690, 612);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.comboBoxTimezone);
             this.Controls.Add(this.testButton);
             this.Controls.Add(this.labelTime);
             this.Controls.Add(this.tabControl1);
@@ -1151,5 +1172,7 @@
         private System.Windows.Forms.Button buttonAddObserver;
         private System.Windows.Forms.Button buttonStopAll;
         private System.Windows.Forms.Button buttonRunAll;
+        private System.Windows.Forms.ComboBox comboBoxTimezone;
+        private System.Windows.Forms.Label label21;
     }
 }

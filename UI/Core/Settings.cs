@@ -62,6 +62,9 @@ namespace AutoTraderUI.Core
         #endregion
 
         #region PROPERTIES
+
+        public int Timezone { get; set; }
+
         public string Username { get; set; }
 
         public string Password { get; set; }

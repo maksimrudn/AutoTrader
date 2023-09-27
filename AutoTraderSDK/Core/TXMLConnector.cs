@@ -317,18 +317,22 @@ namespace AutoTraderSDK.Core
 
         }
 
+
         public List<candle> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, SecurityPeriods periodId =  SecurityPeriods.M1, int candlesCount = 1)
         {
             candle res = null;
 
             command com = command.CreateGetHistoryDataCommand(board, seccode, periodId, candlesCount);
 
-            
+            // initialization must be before call of txml connector because response can be come fast
+            if (!_candlesLoaded.ContainsKey(seccode))
+                _candlesLoaded[seccode] = new AutoResetEvent(false);
+
             result sendResult = ConnectorSendCommand(com, typeof(command));
 
             if (sendResult.success == true)
             {
-                _candlesLoaded.WaitOne();
+                _candlesLoaded[seccode].WaitOne();
             }
             else
             {
@@ -337,7 +341,7 @@ namespace AutoTraderSDK.Core
 
 
 
-            return _candles.candlesValue;
+            return _candles[seccode].candlesValue;
         }
         public candle GetCurrentCandle(string seccode, boardsCode board = boardsCode.FUT)
         {
