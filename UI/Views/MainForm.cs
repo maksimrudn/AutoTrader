@@ -155,7 +155,7 @@ namespace AutoTraderUI
         }
 
 
-        public void LoadSettings(AppSettings settings)
+        public void LoadSettings(Settings settings)
         {
             textBoxUsername.Text = settings.GetUsername();
             textBoxPassword.Text = settings.GetPassword();
@@ -187,7 +187,7 @@ namespace AutoTraderUI
 
         }
 
-        public void UpdateSettings(AppSettings settings)
+        public void UpdateSettings(Settings settings)
         {
             //settings.SetUsername(textBoxUsername.Text);
             //settings.SetPassword(textBoxPassword.Text);

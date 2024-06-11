@@ -35,6 +35,8 @@
     <ProjectReference Include="..\AutoTrader.Infrastructure\AutoTrader.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\" />
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

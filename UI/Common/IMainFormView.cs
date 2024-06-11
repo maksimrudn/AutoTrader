@@ -43,14 +43,14 @@ namespace AutoTraderUI.Common
         string Union1 { set; }
         //string ComboBoxConnectionType2 { get; }
 
-        void LoadSettings(AppSettings settings);
+        void LoadSettings(Settings settings);
 
         void ShowMessage(string msg);
         void LoadSeccodeList(List<string> list);
         void SetSelectedSeccode(string seccode);
         void HandleConnected(int conectorNumber);
         void HandleDisconnected(int connNumber);
-        void UpdateSettings(AppSettings settings);
+        void UpdateSettings(Settings settings);
         void LoadPositions(mc_portfolio portfolio);
     }
 }
