@@ -59,45 +59,5 @@ namespace AutoTraderUI
 
 
         }
-
-        static IHostBuilder CreateHostBuilder()
-        {
-            return Host.CreateDefaultBuilder()
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    config.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);
-                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-                })
-                .ConfigureServices((context, services) => {
-                    var configuration = context.Configuration;
-                    string connectionString = configuration.GetConnectionString("DefaultConnection");
-
-                    services.AddDbContext<TelegramAnalyserDbContext>(options =>
-                        options.UseSqlServer(connectionString));
-
-                    services.AddTransient<TelegramAnalyserDbContextFactory>();
-
-                    services.AddTransient<TelegramRepository>(serviceProvider =>
-                    {
-                        var dbContext = serviceProvider.GetRequiredService<TelegramAnalyserDbContext>();
-                        var dbContextFactory = serviceProvider.GetRequiredService<TelegramAnalyserDbContextFactory>();
-                        return new TelegramRepository(dbContext, dbContextFactory);
-                    });
-
-                    services.AddTransient<TelegramClient>(serviceProvider =>
-                    {
-                        var apiId = configuration["TGClientSettings2:ApiId"];
-                        var apiHash = configuration["TGClientSettings2:ApiHash"];
-                        var phoneNum = configuration["TGClientSettings2:PhoneNum"];
-                        return new TelegramClient(apiId, apiHash, phoneNum);
-                    });
-
-                    //var serviceProvider = services.BuildServiceProvider();
-                    //var dbContext = serviceProvider.GetRequiredService<TGAnalyserDbContext>();
-                    //dbContext.Database.EnsureCreated();
-
-                    services.AddSingleton<Form1>();
-                });
-        }
     }
 }
