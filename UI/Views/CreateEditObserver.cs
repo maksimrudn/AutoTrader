@@ -1,5 +1,5 @@
-﻿using AutoTraderSDK.Common;
-using AutoTraderUI.Core;
+﻿using AutoTrader.Domain.Models;
+using AutoTrader.Domain.Models.Strategies;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

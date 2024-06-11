@@ -1,5 +1,5 @@
-﻿using AutoTraderSDK.Model.Ingoing;
-using AutoTraderUI.Core;
+﻿using AutoTrader.Application.Features.Settings;
+using AutoTrader.Application.Models.TXMLConnector.Ingoing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,14 +43,14 @@ namespace AutoTraderUI.Common
         string Union1 { set; }
         //string ComboBoxConnectionType2 { get; }
 
-        void LoadSettings(Settings settings);
+        void LoadSettings(AppSettings settings);
 
         void ShowMessage(string msg);
         void LoadSeccodeList(List<string> list);
         void SetSelectedSeccode(string seccode);
         void HandleConnected(int conectorNumber);
         void HandleDisconnected(int connNumber);
-        void UpdateSettings(Settings settings);
+        void UpdateSettings(AppSettings settings);
         void LoadPositions(mc_portfolio portfolio);
     }
 }

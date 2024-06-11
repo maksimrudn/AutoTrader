@@ -1,8 +1,4 @@
-﻿using AutoTraderSDK.Model;
-using AutoTraderSDK.Model.Ingoing;
-using AutoTraderSDK.Model.Outgoing;
-using AutoTraderSDK.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -18,7 +14,11 @@ using System.Windows.Forms;
 using AutoTraderUI;
 using AutoTraderUI.Common;
 using System.Globalization;
-using AutoTraderUI.Core;
+using AutoTrader.Application.Models.TXMLConnector.Ingoing;
+using AutoTrader.Domain.Models.Strategies;
+using AutoTrader.Application.Features.Settings;
+using AutoTrader.Infrastructure.Stock;
+using AutoTrader.Application.Contracts.Infrastructure;
 
 namespace AutoTraderUI
 {
@@ -26,12 +26,14 @@ namespace AutoTraderUI
     {
         System.Timers.Timer _timerClock;
         protected ApplicationContext _context;
+        private readonly IEmailService _emailService;
 
-        public MainForm(ApplicationContext context)
+        public MainForm(ApplicationContext context, IEmailService emailService)
         {
             Trace.TraceInformation("MainForm: begin creation");
 
             _context = context;
+            this._emailService = emailService;
             InitializeComponent();
 
 
@@ -153,7 +155,7 @@ namespace AutoTraderUI
         }
 
 
-        public void LoadSettings(Settings settings)
+        public void LoadSettings(AppSettings settings)
         {
             textBoxUsername.Text = settings.GetUsername();
             textBoxPassword.Text = settings.GetPassword();
@@ -185,7 +187,7 @@ namespace AutoTraderUI
 
         }
 
-        public void UpdateSettings(Settings settings)
+        public void UpdateSettings(AppSettings settings)
         {
             //settings.SetUsername(textBoxUsername.Text);
             //settings.SetPassword(textBoxPassword.Text);
@@ -371,7 +373,7 @@ namespace AutoTraderUI
 
         private void testButton_Click(object sender, EventArgs e)
         {
-            EmailService.SendEmailAsync("m.rudneov@yandex.ru", "Autotrader", "test");
+            _emailService.SendEmailAsync("m.rudneov@yandex.ru", "Autotrader", "test");
         }
     }
 }

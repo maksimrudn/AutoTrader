@@ -176,7 +176,7 @@ namespace AutoTraderSDK
 
                         Task t1 = Task.Factory.StartNew(() =>
                             {
-                                cl.NewOrder(boardsCode.FUT, _seccode, AutoTraderSDK.Model.Outgoing.buysell.B, false, bPrice, 1);
+                                cl.NewOrder(boardsCode.FUT, _seccode, buysell.B, false, bPrice, 1);
                             });
 
                         Task t2 = Task.Factory.StartNew(() =>

@@ -1,10 +1,16 @@
-﻿using AutoTraderSDK.Core;
+﻿using AutoTrader.Application.Contracts.Infrastructure;
+using AutoTrader.Application.Contracts.Infrastructure.TXMLConnector;
+using AutoTrader.Application.Features.Settings;
+using AutoTrader.Application.Features.Strategies;
+using AutoTrader.Infrastructure.Stock;
+using AutoTraderSDK.Core;
 using AutoTraderUI;
 using AutoTraderUI.Common;
-using AutoTraderUI.Core;
 using AutoTraderUI.Presenters;
 using AutoTraderUI.Views;
 using LightInject;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -37,8 +43,10 @@ namespace AutoTraderUI
 
             ServiceContainer container = new ServiceContainer();
             container.RegisterInstance<List<ITXMLConnector>>(connectors);
-            container.RegisterInstance<Settings>(Globals.Settings);
+            container.RegisterInstance<AppSettings>(AutoTrader.Infrastructure.Globals.Settings);
             container.RegisterInstance<ApplicationContext>(Context);
+
+            container.Register<IEmailService, EmailService>();
             container.Register<StrategyManager>();
 
             container.Register<MainForm>();
@@ -50,6 +58,46 @@ namespace AutoTraderUI
             controller.Run<MainFormPresenter>();
 
 
+        }
+
+        static IHostBuilder CreateHostBuilder()
+        {
+            return Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);
+                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                })
+                .ConfigureServices((context, services) => {
+                    var configuration = context.Configuration;
+                    string connectionString = configuration.GetConnectionString("DefaultConnection");
+
+                    services.AddDbContext<TelegramAnalyserDbContext>(options =>
+                        options.UseSqlServer(connectionString));
+
+                    services.AddTransient<TelegramAnalyserDbContextFactory>();
+
+                    services.AddTransient<TelegramRepository>(serviceProvider =>
+                    {
+                        var dbContext = serviceProvider.GetRequiredService<TelegramAnalyserDbContext>();
+                        var dbContextFactory = serviceProvider.GetRequiredService<TelegramAnalyserDbContextFactory>();
+                        return new TelegramRepository(dbContext, dbContextFactory);
+                    });
+
+                    services.AddTransient<TelegramClient>(serviceProvider =>
+                    {
+                        var apiId = configuration["TGClientSettings2:ApiId"];
+                        var apiHash = configuration["TGClientSettings2:ApiHash"];
+                        var phoneNum = configuration["TGClientSettings2:PhoneNum"];
+                        return new TelegramClient(apiId, apiHash, phoneNum);
+                    });
+
+                    //var serviceProvider = services.BuildServiceProvider();
+                    //var dbContext = serviceProvider.GetRequiredService<TGAnalyserDbContext>();
+                    //dbContext.Database.EnsureCreated();
+
+                    services.AddSingleton<Form1>();
+                });
         }
     }
 }
