@@ -1,160 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3EFC5869-F549-4DAD-81D9-6F6AF6AA1328}</ProjectGuid>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoTraderSDK</RootNamespace>
-    <AssemblyName>AutoTraderSDK</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
     <OutputPath>bin\Test\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|x64'">
     <OutputPath>bin\x64\Test\</OutputPath>
-    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Common\SecurityPeriods.cs" />
-    <Compile Include="Core\TXMLDummyConnector.cs" />
-    <Compile Include="Core\InputStreamEventArgs.cs" />
-    <Compile Include="Core\ITXMLConnector.cs" />
-    <Compile Include="Core\log.cs" />
-    <Compile Include="Core\MarshalUTF8.cs" />
-    <Compile Include="Core\NativeMethods.cs" />
-    <Compile Include="Core\OnMCPositionsUpdatedEventArgs.cs" />
-    <Compile Include="Core\QuotesLogger.cs" />
-    <Compile Include="Core\TradeRobotEnvironment.cs" />
-    <Compile Include="Core\TXMLConnector.cs" />
-    <Compile Include="Core\TXMLConnectorBase.cs" />
-    <Compile Include="Core\TXMLConnectorCallbackableBase.cs" />
-    <Compile Include="Core\XMLHelper.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Globals.cs" />
-    <Compile Include="Model\ClientInfoUpdatedEventArgs.cs" />
-    <Compile Include="Model\ComboOrder.cs" />
-    <Compile Include="Model\ConnectionType.cs" />
-    <Compile Include="Model\Ingoing\alltrades_ns\trade.cs" />
-    <Compile Include="Model\Ingoing\board.cs" />
-    <Compile Include="Model\Ingoing\boards.cs" />
-    <Compile Include="Model\Ingoing\candle.cs" />
-    <Compile Include="Model\Ingoing\candlekinds.cs" />
-    <Compile Include="Model\Ingoing\candles.cs" />
-    <Compile Include="Model\Ingoing\client.cs" />
-    <Compile Include="Model\Ingoing\error.cs" />
-    <Compile Include="Model\Ingoing\forts_collaterals.cs" />
-    <Compile Include="Model\Ingoing\forts_money.cs" />
-    <Compile Include="Model\Ingoing\forts_position.cs" />
-    <Compile Include="Model\Ingoing\kind.cs" />
-    <Compile Include="Model\Ingoing\market.cs" />
-    <Compile Include="Model\Ingoing\markets.cs" />
-    <Compile Include="Model\Ingoing\mc_portfolio.cs" />
-    <Compile Include="Model\Ingoing\mc_portfolio_ns\asset.cs" />
-    <Compile Include="Model\Ingoing\mc_portfolio_ns\money.cs" />
-    <Compile Include="Model\Ingoing\mc_portfolio_ns\money_ns\value_part.cs" />
-    <Compile Include="Model\Ingoing\mc_portfolio_ns\portfolio_currency.cs" />
-    <Compile Include="Model\Ingoing\mc_portfolio_ns\security.cs" />
-    <Compile Include="Model\Ingoing\mc_portfolio_ns\security_ns\value_part.cs" />
-    <Compile Include="Model\Ingoing\money_position.cs" />
-    <Compile Include="Model\Ingoing\orders.cs" />
-    <Compile Include="Model\Ingoing\orders_ns\order.cs" />
-    <Compile Include="Model\Ingoing\overnight.cs" />
-    <Compile Include="Model\Ingoing\pit.cs" />
-    <Compile Include="Model\Ingoing\pits.cs" />
-    <Compile Include="Model\Ingoing\positions.cs" />
-    <Compile Include="Model\Ingoing\quotations_ns\quotation.cs" />
-    <Compile Include="Model\Ingoing\quotes.cs" />
-    <Compile Include="Model\Ingoing\quotes_ns\quote.cs" />
-    <Compile Include="Model\Ingoing\result.cs" />
-    <Compile Include="Model\Ingoing\securities.cs" />
-    <Compile Include="Model\Ingoing\securities_ns\opmask.cs" />
-    <Compile Include="Model\Ingoing\securities_ns\security.cs" />
-    <Compile Include="Model\Ingoing\sec_info_upd.cs" />
-    <Compile Include="Model\Ingoing\sec_position.cs" />
-    <Compile Include="Model\Ingoing\server_status.cs" />
-    <Compile Include="Model\Ingoing\spot_limit.cs" />
-    <Compile Include="Model\Ingoing\status.cs" />
-    <Compile Include="Model\Ingoing\trades.cs" />
-    <Compile Include="Model\Ingoing\trades_ns\trade.cs" />
-    <Compile Include="Model\Outgoing\alltrades.cs" />
-    <Compile Include="Model\Outgoing\boardsCode.cs" />
-    <Compile Include="Model\Outgoing\buysell.cs" />
-    <Compile Include="Model\Outgoing\bymarket.cs" />
-    <Compile Include="Model\Outgoing\command.cs" />
-    <Compile Include="Model\Outgoing\command_id.cs" />
-    <Compile Include="Model\Outgoing\command_ns\quotations.cs" />
-    <Compile Include="Model\Outgoing\command_ns\quotes.cs" />
-    <Compile Include="Model\Outgoing\command_ns\security.cs" />
-    <Compile Include="Model\Outgoing\cond_type.cs" />
-    <Compile Include="Model\Outgoing\proxy.cs" />
-    <Compile Include="Model\Outgoing\stoploss.cs" />
-    <Compile Include="Model\Outgoing\takeprofit.cs" />
-    <Compile Include="Model\Outgoing\unfilled.cs" />
-    <Compile Include="Model\Outgoing\validbefore.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="txmlconnector1.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -163,13 +32,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
 </Project>
