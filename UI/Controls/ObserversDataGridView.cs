@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using AutoTraderUI.Core;
+using AutoTrader.Domain.Models.Strategies;
 
 namespace AutoTraderUI.Controls
 {

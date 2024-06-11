@@ -1,5 +1,4 @@
-﻿using AutoTraderSDK.Model;
-using AutoTraderSDK.Model.Outgoing;
+﻿
 using AutoTraderSDK.Core;
 using AutoTraderUI.Common;
 using System;
@@ -13,7 +12,12 @@ using System.Timers;
 using System.Threading;
 using System.IO;
 using AutoTraderUI.Views;
-using AutoTraderUI.Core;
+using AutoTrader.Application.Features.Settings;
+using AutoTrader.Application.Contracts.Infrastructure.TXMLConnector;
+using AutoTrader.Application.Features.Strategies;
+using AutoTrader.Domain.Models.Strategies;
+using AutoTrader.Infrastructure;
+using AutoTrader.Domain.Models;
 
 namespace AutoTraderUI.Presenters
 {
@@ -21,7 +25,7 @@ namespace AutoTraderUI.Presenters
     {
         ApplicationController _applicationController;
         MainForm _view;
-        Settings _settings;
+        AppSettings _settings;
         List<ITXMLConnector> _connectors;
         System.Timers.Timer _timerMultidirect;
 
@@ -30,7 +34,7 @@ namespace AutoTraderUI.Presenters
 
         StrategyManager _strategyManager;
 
-        public MainFormPresenter(ApplicationController applicationController, MainForm view, Settings settings, List<ITXMLConnector> connectors, StrategyManager strategyManager)
+        public MainFormPresenter(ApplicationController applicationController, MainForm view, AppSettings settings, List<ITXMLConnector> connectors, StrategyManager strategyManager)
         {
             if (connectors.Count != 2) throw new Exception("Загружено недопустимое колличество коннекторов");
 
@@ -85,7 +89,7 @@ namespace AutoTraderUI.Presenters
         private void _view_TimezoneChanged()
         {
             _settings.Timezone = _view.Timezone;
-            _settings.Save();
+            _settings.Save(Globals.SettingsFile);
         }
 
         private void _view_StopAllStrategies()
@@ -152,7 +156,7 @@ namespace AutoTraderUI.Presenters
         {
             try
             {
-                var res = _connectors[0].GetHistoryData( _view.ComboBoxSeccode  ,boardsCode.FUT, AutoTraderSDK.Common.SecurityPeriods.M1, 2);
+                var res = _connectors[0].GetHistoryData( _view.ComboBoxSeccode, boardsCode.FUT, SecurityPeriods.M1, 2);
             }
             catch (Exception e)
             {
@@ -182,7 +186,7 @@ namespace AutoTraderUI.Presenters
         private void StartMakeMultidirectByTimer()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save();
+            _settings.Save(Globals.SettingsFile);
 
             if (!_connectors[0].Connected || !_connectors[1].Connected)
             {
@@ -208,7 +212,7 @@ namespace AutoTraderUI.Presenters
             _timerMultidirect.Start();
         }
 
-        private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (DateTime.Now.Hour == _settings.MultidirectExecuteTime.Hour &&
                 DateTime.Now.Minute == _settings.MultidirectExecuteTime.Minute &&
@@ -216,7 +220,7 @@ namespace AutoTraderUI.Presenters
             {
                 _timerMultidirect.Stop();
 
-                _makeMultidirect(_settings.Price, 
+                await _makeMultidirect(_settings.Price, 
                                     _settings.Volume, 
                                     _settings.SL, 
                                     _settings.TP, 
@@ -230,10 +234,10 @@ namespace AutoTraderUI.Presenters
             }
         }
 
-        private void MakeMultidirect()
+        private async void MakeMultidirect()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save();
+            _settings.Save(Globals.SettingsFile);
 
             if (!_connectors[0].Connected || !_connectors[1].Connected)
             {
@@ -254,10 +258,10 @@ namespace AutoTraderUI.Presenters
             bool bymarket = _settings.ByMarket;
             string seccode = _settings.Seccode;
 
-            _makeMultidirect(price, vol, sl, tp, bymarket, seccode);
+            await _makeMultidirect(price, vol, sl, tp, bymarket, seccode);
         }
 
-        private void _makeMultidirect(int price, int vol, int sl, int tp, bool bymarket, string seccode)
+        private async Task _makeMultidirect(int price, int vol, int sl, int tp, bool bymarket, string seccode)
         {
             ComboOrder comboOrder1 = new ComboOrder();
             comboOrder1.Board = boardsCode.FUT;
@@ -272,24 +276,23 @@ namespace AutoTraderUI.Presenters
             ComboOrder comboOrder2 = (ComboOrder)comboOrder1.Clone();
             comboOrder2.BuySell = buysell.S;
 
-            Task md1 = Task.Run(() =>
+            Task md1 = Task.Run(async () =>
             {
-                _handleComboOperation(_connectors[0], comboOrder1);
+                await _handleComboOperation(_connectors[0], comboOrder1);
             });
 
-            Task md2 = Task.Run(() =>
+            Task md2 = Task.Run(async () =>
             {
-                _handleComboOperation(_connectors[1], comboOrder2);
+                await _handleComboOperation(_connectors[1], comboOrder2);
             });
 
-            md1.Wait();
-            md2.Wait();
+            await Task.WhenAll(md1, md2);
         }
 
-        private void ComboSell()
+        private async void ComboSell()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save();
+            _settings.Save(Globals.SettingsFile);
 
             ComboOrder co = new ComboOrder();
             co.SL = _settings.SL;
@@ -302,7 +305,7 @@ namespace AutoTraderUI.Presenters
 
             try
             {
-                _handleComboOperation(_connectors[0], co);
+                await _handleComboOperation(_connectors[0], co);
             }
             catch (Exception ex)
             {
@@ -310,10 +313,10 @@ namespace AutoTraderUI.Presenters
             }
         }
 
-        private void ComboBuy()
+        private async void ComboBuy()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save();
+            _settings.Save(Globals.SettingsFile);
 
             ComboOrder co = new ComboOrder();
             co.SL = _settings.SL;
@@ -326,15 +329,14 @@ namespace AutoTraderUI.Presenters
 
             try
             {
-                _handleComboOperation(_connectors[0], co);
+                await _handleComboOperation(_connectors[0], co);
             }
             catch (Exception ex)
             {
                 _view.ShowMessage(ex.Message);
             }
         }
-
-        private void _handleComboOperation(ITXMLConnector cl, ComboOrder co)
+        private async Task _handleComboOperation(ITXMLConnector cl, ComboOrder co)
         {
 
             if (string.IsNullOrEmpty(co.Seccode))
@@ -343,7 +345,7 @@ namespace AutoTraderUI.Presenters
             }
             else
             {
-                cl.NewComboOrder(co);
+                await cl.NewComboOrder(co);
             }
         }
 
@@ -352,7 +354,7 @@ namespace AutoTraderUI.Presenters
             try
             {
                 _view.UpdateSettings(_settings);
-                _settings.Save();
+                _settings.Save(Globals.SettingsFile );
                 _connectors[1].ChangePassword(_settings.Username2, _settings.Password2);
             }
             catch (Exception ex)
@@ -366,7 +368,7 @@ namespace AutoTraderUI.Presenters
             try
             {
                 _view.UpdateSettings(_settings);
-                _settings.Save();
+                _settings.Save(Globals.SettingsFile);
                 _connectors[0].ChangePassword(_settings.Username, _settings.Password);
             }
             catch (Exception ex)
@@ -375,18 +377,19 @@ namespace AutoTraderUI.Presenters
             }
         }
 
-        private void Close()
+        private async void Close()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save();
-            _connectors[0].Dispose();
-            _connectors[1].Dispose();
+            _settings.Save(Globals.SettingsFile);            
+
+            await _connectors[0].DisposeAsync();
+            await _connectors[1].DisposeAsync();
         }
 
         /// <summary>
         /// Only this method (from Login1, Login2) gets securities infor
         /// </summary>
-        private void Login1()
+        private async void Login1()
         {
             Trace.TraceInformation("Login1: begin");
 
@@ -397,14 +400,17 @@ namespace AutoTraderUI.Presenters
 
                 int connectorNumber = 0;
                 _view.UpdateSettings(_settings);
-                _settings.Save();
+                _settings.Save(Globals.SettingsFile);
 
                 ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
 
-                _connectors[connectorNumber].Login(_settings.GetUsername(), _settings.GetPassword(), connType);
+                await _connectors[connectorNumber].Login(_settings.GetUsername(), _settings.GetPassword(), connType);
 
-
-                _seccodeList = _connectors[connectorNumber].GetSecurities().Where(x => x.board == boardsCode.FUT.ToString()).Select(x => x.seccode).OrderBy(x => x).ToList();
+                _seccodeList = (await _connectors[connectorNumber].GetSecurities())
+                                            .Where(x => x.board == boardsCode.FUT.ToString())
+                                            .Select(x => x.seccode)
+                                            .OrderBy(x => x)
+                                            .ToList();
 
                 _view.LoadSeccodeList(_seccodeList);
                 _view.SetSelectedSeccode(_settings.Seccode);
@@ -425,7 +431,7 @@ namespace AutoTraderUI.Presenters
             }
         }
 
-        private void Login2()
+        private async void Login2()
         {
             try
             {
@@ -434,11 +440,12 @@ namespace AutoTraderUI.Presenters
 
                 int connectorNumber = 1;
                 _view.UpdateSettings(_settings);
-                _settings.Save();
+                _settings.Save(Globals.SettingsFile);
 
                 ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
 
-                _connectors[connectorNumber].Login(_settings.GetUsername2(), _settings.GetPassword2(), connType);
+                await _connectors[connectorNumber].Login(_settings.GetUsername2(), _settings.GetPassword2(), connType);
+
                 _view.HandleConnected(connectorNumber);
                 _view.FreeMoney2 = _connectors[connectorNumber].Money.ToString("N");
             }
@@ -475,8 +482,6 @@ namespace AutoTraderUI.Presenters
                 _view.ShowMessage(ex.Message);
             }
         }
-
-        
 
         public void Run()
         {
