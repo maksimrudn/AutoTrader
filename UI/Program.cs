@@ -10,6 +10,7 @@ using AutoTraderUI.Presenters;
 using AutoTraderUI.Views;
 using LightInject;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace AutoTraderUI
     {
         public static readonly ApplicationContext Context = new ApplicationContext();
 
+        public static IServiceProvider ServiceProvider { get; private set; }
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -33,31 +36,46 @@ namespace AutoTraderUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            List<ITXMLConnector> connectors = new List<ITXMLConnector>();
-            connectors.Add(new TXMLConnector("txmlconnector1.dll"));
-            connectors.Add(new TXMLConnector("txmlconnector2.dll"));
+            var host = CreateHostBuilder().Build();
+            ServiceProvider = host.Services;
+
+            var presenter = ServiceProvider.GetService<MainFormPresenter>();
+            presenter.Run();
+        }
 
 
-            //connectors.Add(new TXMLDummyConnector());
-            //connectors.Add(new TXMLDummyConnector());
-
-            ServiceContainer container = new ServiceContainer();
-            container.RegisterInstance<List<ITXMLConnector>>(connectors);
-            container.RegisterInstance<AppSettings>(AutoTrader.Infrastructure.Globals.Settings);
-            container.RegisterInstance<ApplicationContext>(Context);
-
-            container.Register<IEmailService, EmailService>();
-            container.Register<StrategyManager>();
-
-            container.Register<MainForm>();
-            container.Register<MainFormPresenter>();
-            container.Register<CreateEditObserver>();
-            
-
-            ApplicationController controller = new ApplicationController(container);
-            controller.Run<MainFormPresenter>();
+        static IHostBuilder CreateHostBuilder()
+        {
+            return Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);
+                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                })
+                .ConfigureServices((context, services) => {
+                    var configuration = context.Configuration;
 
 
+                    List<ITXMLConnector> connectors = new List<ITXMLConnector>();
+                    connectors.Add(new TXMLConnector("txmlconnector1.dll"));
+                    connectors.Add(new TXMLConnector("txmlconnector2.dll"));
+
+
+                    //connectors.Add(new TXMLDummyConnector());
+                    //connectors.Add(new TXMLDummyConnector());
+
+
+                    services.AddSingleton<List<ITXMLConnector>>(connectors);
+                    services.AddSingleton<ApplicationContext>(Context);
+
+                    services.AddSingleton<IAppSettingsService, SettingsService>();
+                    services.AddTransient<IEmailService, EmailService>();
+                    services.AddTransient<StrategyManager>();
+
+                    services.AddSingleton<MainForm>();
+                    services.AddSingleton<MainFormPresenter>();
+                    services.AddSingleton<CreateEditObserver>();
+                });
         }
     }
 }

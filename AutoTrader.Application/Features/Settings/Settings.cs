@@ -10,56 +10,8 @@ using System.Xml.Serialization;
 
 namespace AutoTrader.Application.Features.Settings
 {
-    public class AppSettings
+    public class Settings
     {
-        #region FILE READ/WRITE
-        /// <summary>
-        /// Функция получения данных настроек приложения из файла
-        /// </summary>
-        /// <returns></returns>
-        public static AppSettings GetSettings(string settingsFile)
-        {
-            AppSettings settings = null;
-            string filename = settingsFile;
-
-            //проверка наличия файла
-            if (File.Exists(filename))
-            {
-                using (FileStream fs = new FileStream(filename, FileMode.Open))
-                {
-                    XmlSerializer xser = new XmlSerializer(typeof(AppSettings));
-                    settings = (AppSettings)xser.Deserialize(fs);
-                    fs.Close();
-                }
-            }
-            else
-            {
-                settings = new AppSettings();
-            }
-
-            return settings;
-        }
-
-        /// <summary>
-        /// Процедура сохранения настроек в файл
-        /// </summary>
-        public void Save(string settingsFile)
-        {
-            string filename = settingsFile;
-
-            if (File.Exists(filename)) File.Delete(filename);
-
-
-            using (FileStream fs = new FileStream(filename, FileMode.Create))
-            {
-                XmlSerializer xser = new XmlSerializer(typeof(AppSettings));
-                xser.Serialize(fs, this);
-                fs.Close();
-            }
-        }
-
-        #endregion
-
         #region PROPERTIES
 
         public int Timezone { get; set; }

@@ -18,14 +18,15 @@ using AutoTrader.Application.Features.Strategies;
 using AutoTrader.Domain.Models.Strategies;
 using AutoTrader.Infrastructure;
 using AutoTrader.Domain.Models;
+using AutoTrader.Application.Contracts.Infrastructure;
 
 namespace AutoTraderUI.Presenters
 {
     public class MainFormPresenter: IPresenter
     {
-        ApplicationController _applicationController;
         MainForm _view;
-        AppSettings _settings;
+        IAppSettingsService _settingsService;
+        Settings _settings;
         List<ITXMLConnector> _connectors;
         System.Timers.Timer _timerMultidirect;
 
@@ -34,13 +35,13 @@ namespace AutoTraderUI.Presenters
 
         StrategyManager _strategyManager;
 
-        public MainFormPresenter(ApplicationController applicationController, MainForm view, AppSettings settings, List<ITXMLConnector> connectors, StrategyManager strategyManager)
+        public MainFormPresenter(MainForm view, IAppSettingsService settingsService, List<ITXMLConnector> connectors, StrategyManager strategyManager)
         {
             if (connectors.Count != 2) throw new Exception("Загружено недопустимое колличество коннекторов");
 
-            _applicationController = applicationController;
             _view = view;
-            _settings = settings;
+            this._settingsService = settingsService;
+            _settings = settingsService.GetSettings();
             _connectors = connectors;
             _strategyManager = strategyManager;
 
@@ -89,7 +90,7 @@ namespace AutoTraderUI.Presenters
         private void _view_TimezoneChanged()
         {
             _settings.Timezone = _view.Timezone;
-            _settings.Save(Globals.SettingsFile);
+            _settingsService.UpdateSettings(_settings);
         }
 
         private void _view_StopAllStrategies()
@@ -186,7 +187,7 @@ namespace AutoTraderUI.Presenters
         private void StartMakeMultidirectByTimer()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save(Globals.SettingsFile);
+            _settingsService.UpdateSettings(_settings);
 
             if (!_connectors[0].Connected || !_connectors[1].Connected)
             {
@@ -237,7 +238,7 @@ namespace AutoTraderUI.Presenters
         private async void MakeMultidirect()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save(Globals.SettingsFile);
+            _settingsService.UpdateSettings(_settings);
 
             if (!_connectors[0].Connected || !_connectors[1].Connected)
             {
@@ -292,7 +293,7 @@ namespace AutoTraderUI.Presenters
         private async void ComboSell()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save(Globals.SettingsFile);
+            _settingsService.UpdateSettings(_settings);
 
             ComboOrder co = new ComboOrder();
             co.SL = _settings.SL;
@@ -316,7 +317,7 @@ namespace AutoTraderUI.Presenters
         private async void ComboBuy()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save(Globals.SettingsFile);
+            _settingsService.UpdateSettings(_settings);
 
             ComboOrder co = new ComboOrder();
             co.SL = _settings.SL;
@@ -354,7 +355,7 @@ namespace AutoTraderUI.Presenters
             try
             {
                 _view.UpdateSettings(_settings);
-                _settings.Save(Globals.SettingsFile );
+                _settingsService.UpdateSettings(_settings);
                 _connectors[1].ChangePassword(_settings.Username2, _settings.Password2);
             }
             catch (Exception ex)
@@ -368,7 +369,7 @@ namespace AutoTraderUI.Presenters
             try
             {
                 _view.UpdateSettings(_settings);
-                _settings.Save(Globals.SettingsFile);
+                _settingsService.UpdateSettings(_settings);
                 _connectors[0].ChangePassword(_settings.Username, _settings.Password);
             }
             catch (Exception ex)
@@ -380,7 +381,7 @@ namespace AutoTraderUI.Presenters
         private async void Close()
         {
             _view.UpdateSettings(_settings);
-            _settings.Save(Globals.SettingsFile);            
+            _settingsService.UpdateSettings(_settings);      
 
             await _connectors[0].DisposeAsync();
             await _connectors[1].DisposeAsync();
@@ -400,7 +401,7 @@ namespace AutoTraderUI.Presenters
 
                 int connectorNumber = 0;
                 _view.UpdateSettings(_settings);
-                _settings.Save(Globals.SettingsFile);
+                _settingsService.UpdateSettings(_settings);
 
                 ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
 
@@ -440,7 +441,7 @@ namespace AutoTraderUI.Presenters
 
                 int connectorNumber = 1;
                 _view.UpdateSettings(_settings);
-                _settings.Save(Globals.SettingsFile);
+                _settingsService.UpdateSettings(_settings);
 
                 ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
 

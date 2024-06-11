@@ -1,5 +1,6 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Contracts.Infrastructure.TXMLConnector;
+using AutoTrader.Application.Features.Settings;
 using AutoTrader.Domain.Models.Strategies;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,18 @@ namespace AutoTrader.Application.Features.Strategies
 {
     public class StrategyManager
     {
-        AutoTrader.Application.Features.Settings.AppSettings _settings;
+        AutoTrader.Application.Features.Settings.Settings _settings;
+        private readonly IAppSettingsService _appSettingsService;
         List<ITXMLConnector> _connectors;
         private readonly IEmailService _emailService;
 
-        public StrategyManager(AutoTrader.Application.Features.Settings.AppSettings settings, List<ITXMLConnector> connectors, IEmailService emailService)
+        public StrategyManager(IAppSettingsService appSettingsService, List<ITXMLConnector> connectors, IEmailService emailService)
         {
-            _settings = settings;
+            _appSettingsService = appSettingsService;
+            _settings = _appSettingsService.GetSettings();
             _connectors = connectors;
             this._emailService = emailService;
-            StrategyWorkers = settings.StrategiesCollection
+            StrategyWorkers = _settings.StrategiesCollection
                                         .StrategyList
                                         .Select(strategySettings => { 
                                             return new StrategyWorker(
