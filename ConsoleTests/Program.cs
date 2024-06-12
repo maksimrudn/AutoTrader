@@ -15,7 +15,7 @@ namespace ConsoleTests
 
             //using (var cl2 = TXMLConnectorWrapper2.GetInstance())
             //{
-            await using (var cl = new StockClient())
+            await using (var cl = new StockClient("txmlconnector1.dll"))
             {
 
                 //try

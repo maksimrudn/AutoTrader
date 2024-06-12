@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public abstract class TXMLConnectorBase: IAsyncDisposable
+    public class TXMLConnectorRequestHandler: IDisposable
     {
         IntPtr _tConnectorDll;
         string _logpath = MainHelper.GetWorkFolder() + "\0";
@@ -21,8 +21,10 @@ namespace AutoTrader.Infrastructure.Stock
         protected string _tconfFile;
         
 
-        public TXMLConnectorBase(string tconFile = "txmlconnector1.dll")
+        public TXMLConnectorRequestHandler(string tconFile, Action<string> inputStreamHandler)
         {
+            _inputStreamHandlerAction = inputStreamHandler;
+
             _tconfFile = tconFile;
             _tConnectorDll = NativeMethods.LoadLibrary(tconFile);
 
@@ -75,7 +77,7 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        protected result ConnectorSendCommand(object commandInfo, Type type)
+        public result ConnectorSendCommand(object commandInfo, Type type)
         {
             string cmd = XMLHelper.SerializeToString(commandInfo, type);
             string res = ConnectorSendCommand(cmd);
@@ -90,9 +92,8 @@ namespace AutoTrader.Infrastructure.Stock
             return (result)XMLHelper.Deserialize(res, typeof(result));
         }
 
-        protected String ConnectorSendCommand(String command)
+        public String ConnectorSendCommand(String command)
         {
-
             IntPtr pData = MarshalUTF8.StringToHGlobalUTF8(command);
             IntPtr pResult = _sendCommand(pData);
 
@@ -104,9 +105,37 @@ namespace AutoTrader.Infrastructure.Stock
             return result;
         }
 
-        public virtual async ValueTask DisposeAsync()
+        bool _disposed = false;
+
+        public void Dispose()
         {
-            
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                }
+
+                IntPtr pResult = _unInitialize();
+
+                if (!pResult.Equals(IntPtr.Zero))
+                {
+                    String result = MarshalUTF8.PtrToStringUTF8(pResult);
+                    _freeUpMemory(pResult);
+                    log.WriteLog(result);
+                }
+                else
+                {
+                    log.WriteLog("UnInitialize() OK");
+                }
+
+                _disposed = true;
+            }            
         }
 
         // файл библиотеки TXmlConnector.dll должен находиться в одной папке с программой
@@ -184,10 +213,11 @@ namespace AutoTrader.Infrastructure.Stock
             String result = MarshalUTF8.PtrToStringUTF8(pData);
             _freeUpMemory(pData);
 
-            _handleData(result);
+            _inputStreamHandlerAction(result);
 
             return res;
         }
-        protected abstract void _handleData(String result);
+
+        protected Action<String> _inputStreamHandlerAction;
     }
 }
