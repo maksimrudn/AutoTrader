@@ -1,7 +1,10 @@
-﻿using AutoTrader.Application.Contracts.Infrastructure;
-using AutoTrader.Application.Contracts.Infrastructure.TXMLConnector;
+﻿using AutoTrader.Application;
+using AutoTrader.Application.Contracts.Infrastructure;
+using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Features.Settings;
 using AutoTrader.Application.Features.Strategies;
+using AutoTrader.Application.Models.Email;
+using AutoTrader.Infrastructure;
 using AutoTrader.Infrastructure.Stock;
 using AutoTraderSDK.Core;
 using AutoTraderUI;
@@ -12,6 +15,7 @@ using LightInject;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -53,24 +57,11 @@ namespace AutoTraderUI
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                 })
                 .ConfigureServices((context, services) => {
-                    var configuration = context.Configuration;
 
+                    services.AddInfrastructureServices(context.Configuration);
+                    services.AddApplicationServices();
 
-                    List<ITXMLConnector> connectors = new List<ITXMLConnector>();
-                    connectors.Add(new TXMLConnector("txmlconnector1.dll"));
-                    connectors.Add(new TXMLConnector("txmlconnector2.dll"));
-
-
-                    //connectors.Add(new TXMLDummyConnector());
-                    //connectors.Add(new TXMLDummyConnector());
-
-
-                    services.AddSingleton<List<ITXMLConnector>>(connectors);
                     services.AddSingleton<ApplicationContext>(Context);
-
-                    services.AddSingleton<IAppSettingsService, SettingsService>();
-                    services.AddTransient<IEmailService, EmailService>();
-                    services.AddTransient<StrategyManager>();
 
                     services.AddSingleton<MainForm>();
                     services.AddSingleton<MainFormPresenter>();

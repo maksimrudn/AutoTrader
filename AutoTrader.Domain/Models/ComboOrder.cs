@@ -19,6 +19,7 @@ namespace AutoTrader.Domain.Models
         public boardsCode Board { get; set; }
 
         public string Seccode { get; set;}
+
         public int Price { get; set; }
 
         public int SL { get; set; }

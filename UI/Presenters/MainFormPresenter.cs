@@ -13,7 +13,7 @@ using System.Threading;
 using System.IO;
 using AutoTraderUI.Views;
 using AutoTrader.Application.Features.Settings;
-using AutoTrader.Application.Contracts.Infrastructure.TXMLConnector;
+using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Features.Strategies;
 using AutoTrader.Domain.Models.Strategies;
 using AutoTrader.Infrastructure;
@@ -25,9 +25,9 @@ namespace AutoTraderUI.Presenters
     public class MainFormPresenter: IPresenter
     {
         MainForm _view;
-        IAppSettingsService _settingsService;
+        ISettingsService _settingsService;
         Settings _settings;
-        List<ITXMLConnector> _connectors;
+        List<IStockClient> _connectors;
         System.Timers.Timer _timerMultidirect;
 
         List<string> _seccodeList = new List<string>();
@@ -35,7 +35,7 @@ namespace AutoTraderUI.Presenters
 
         StrategyManager _strategyManager;
 
-        public MainFormPresenter(MainForm view, IAppSettingsService settingsService, List<ITXMLConnector> connectors, StrategyManager strategyManager)
+        public MainFormPresenter(MainForm view, ISettingsService settingsService, List<IStockClient> connectors, StrategyManager strategyManager)
         {
             if (connectors.Count != 2) throw new Exception("Загружено недопустимое колличество коннекторов");
 
@@ -337,7 +337,7 @@ namespace AutoTraderUI.Presenters
                 _view.ShowMessage(ex.Message);
             }
         }
-        private async Task _handleComboOperation(ITXMLConnector cl, ComboOrder co)
+        private async Task _handleComboOperation(IStockClient cl, ComboOrder co)
         {
 
             if (string.IsNullOrEmpty(co.Seccode))
@@ -346,7 +346,7 @@ namespace AutoTraderUI.Presenters
             }
             else
             {
-                await cl.NewComboOrder(co);
+                await cl.CreateNewComboOrder(co);
             }
         }
 

@@ -15,7 +15,7 @@ namespace ConsoleTests
 
             //using (var cl2 = TXMLConnectorWrapper2.GetInstance())
             //{
-            await using (var cl = new TXMLConnector())
+            await using (var cl = new StockClient())
             {
 
                 //try
@@ -87,7 +87,7 @@ namespace ConsoleTests
 
 
 
-        private static void _testPositions(TXMLConnector cl)
+        private static void _testPositions(StockClient cl)
         {
             while (true)
             {
@@ -122,7 +122,7 @@ namespace ConsoleTests
             close
         }
 
-        private static async Task _testQuotesPair(TXMLConnector cl)
+        private static async Task _testQuotesPair(StockClient cl)
         {
             cl.SubscribeQuotes(boardsCode.FUT, _seccode);
 
@@ -168,12 +168,12 @@ namespace ConsoleTests
 
                     Task t1 = Task.Factory.StartNew(() =>
                     {
-                        cl.NewOrder(boardsCode.FUT, _seccode, buysell.B, false, bPrice, 1);
+                        cl.CreateNewOrder(boardsCode.FUT, _seccode, buysell.B, false, bPrice, 1);
                     });
 
                     Task t2 = Task.Factory.StartNew(() =>
                     {
-                        cl.NewOrder(boardsCode.FUT, _seccode, buysell.S, false, sPrice, 1);
+                        cl.CreateNewOrder(boardsCode.FUT, _seccode, buysell.S, false, sPrice, 1);
                     });
 
                     cl.PositionsIsActual = false;

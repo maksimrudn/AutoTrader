@@ -1,5 +1,5 @@
 ﻿using AutoTrader.Application.Common;
-using AutoTrader.Application.Contracts.Infrastructure.TXMLConnector;
+using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Helpers;
 using AutoTrader.Application.Models.TXMLConnector.Ingoing;
 using AutoTrader.Application.Models.TXMLConnector.Outgoing;
@@ -18,17 +18,33 @@ using System.Xml.Serialization;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public class TXMLConnector: TXMLConnectorCallbackableBase, ITXMLConnector
+    public class StockClient: TXMLConnectorCallbackableBase, IStockClient
     {
-        
+        public bool Connected
+        {
+            get
+            {
+                bool res = false;
+                if (_serverStatus != null && _serverStatus.connected == "true") res = true;
+
+                return res;
+            }
+        }
+
         public bool PositionsIsActual
         {
             get { return _positionsIsActual; }
             set { _positionsIsActual = value; }
         }
-
         
-        public string FortsClientId { get { return (_forts_client != null) ? _forts_client.forts_acc : null; } }
+        public string FortsClientId 
+        { 
+            get 
+            { 
+                return (_forts_client != null) ? _forts_client.forts_acc : null; 
+            } 
+        }
+
         public double Money
         {
             get
@@ -44,6 +60,7 @@ namespace AutoTrader.Infrastructure.Stock
                 return res;
             }
         }
+
         public string Union
         {
             get
@@ -64,14 +81,12 @@ namespace AutoTrader.Infrastructure.Stock
         {
             get
             {
-
                 List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> quotes1;
 
                 lock (_quotes)
                 {
                     quotes1 = new List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote>(_quotes);
                 }
-
 
                 var q = quotes1.Where(x => x.buy > 0 && x.sell == 0).OrderByDescending(x => x.price).ToList();
 
@@ -90,8 +105,6 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        
-
         public List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> QuotesSell
         {
             get
@@ -106,7 +119,6 @@ namespace AutoTrader.Infrastructure.Stock
                 var q = quotes1.Where(x => x.sell > 0 && x.buy == 0).OrderBy(x => x.price).ToList();
 
                 return q;
-
 
                 ////var q = _quotes.Where(x => x.buy > 0 && x.sell == 0).OrderBy(x => x.price).ToList();
                 //lock (_quotes)
@@ -132,8 +144,6 @@ namespace AutoTrader.Infrastructure.Stock
                 {
                     if (_quotes.Count > 0)
                         res = _quotes.Where(x => x.buy > 0 && x.sell == 0).Max(x => x.price);
-
-
                 }
 
                 return res;
@@ -156,7 +166,6 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-
         public positions Positions { get { return _positions; } }
 
         public mc_portfolio MCPortfolio { get { return _mc_portfolio; } }
@@ -176,13 +185,10 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-
-        public TXMLConnector(string tconFile = "txmlconnector1.dll"):base(tconFile)
+        public StockClient(string tconFile = "txmlconnector1.dll"):base(tconFile)
         {
             
         }
-
-
 
         public async Task Login(string username, string password, ConnectionType connectionType)
         {
@@ -228,8 +234,6 @@ namespace AutoTrader.Infrastructure.Stock
                 await _mc_portfolioLoaded.WaitOne();
             }
         }
-
-        
 
         public void Logout()
         {
@@ -375,7 +379,6 @@ namespace AutoTrader.Infrastructure.Stock
 
             return res;
         }
-
         
         public void CloseLimitOrder(int transactionid)
         {
@@ -417,7 +420,7 @@ namespace AutoTrader.Infrastructure.Stock
             //return res;
         }
 
-        public int NewOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, double price, int volume)
+        public int CreateNewOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, double price, int volume)
         {
             if (!Connected) throw new Exception("Соединение не установлено. Операция не может быть выполнена");
 
@@ -446,9 +449,9 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
-        public int NewStopOrderWithDistance(boardsCode board, string seccode, buysell buysell, double price, double SLDistance, double TPDistance, int volume, Int64 orderno = 0)
+        public int CreateNewStopOrderWithDistance(boardsCode board, string seccode, buysell buysell, double price, double SLDistance, double TPDistance, int volume, Int64 orderno = 0)
         {
-            return NewStopOrder(board,
+            return CreateNewStopOrder(board,
                                 seccode,
                                 buysell,
                                 (buysell == buysell.B) ? (price + SLDistance) : (price - SLDistance),
@@ -457,7 +460,7 @@ namespace AutoTrader.Infrastructure.Stock
                                 orderno);
         }
 
-        public int NewStopOrder(boardsCode board, 
+        public int CreateNewStopOrder(boardsCode board, 
                                     string seccode, 
                                     buysell buysell, 
                                     double SLPrice, 
@@ -465,8 +468,7 @@ namespace AutoTrader.Infrastructure.Stock
                                     int volume, 
                                     Int64 orderno = 0, 
                                     double correction = 0)
-        {
-            
+        {            
             int res = 0;
 
             command com = new command();
@@ -510,7 +512,7 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
-        public int NewConditionOrder(boardsCode board, 
+        public int CreateNewConditionOrder(boardsCode board, 
                                     string seccode,
                                     AutoTrader.Domain.Models.buysell buysell, 
                                     bool bymarket, 
@@ -549,11 +551,11 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
-        public async Task NewComboOrder(ComboOrder co)
+        public async Task CreateNewComboOrder(ComboOrder co)
         {
             if (co.BuySell == null) throw new Exception("Не установлен параметр BuySell");
 
-            await NewComboOrder(co.Board, co.Seccode, co.BuySell.Value, co.ByMarket, co.Price, co.Vol, co.SL, co.TP);
+            await CreateNewComboOrder(co.Board, co.Seccode, co.BuySell.Value, co.ByMarket, co.Price, co.Vol, co.SL, co.TP);
         }
 
         /// <summary>
@@ -567,7 +569,7 @@ namespace AutoTrader.Infrastructure.Stock
         /// <param name="volume"></param>
         /// <param name="slDistance"></param>
         /// <param name="tpDistance"></param>
-        public async Task NewComboOrder(boardsCode board, 
+        public async Task CreateNewComboOrder(boardsCode board, 
                                         string seccode, 
                                         buysell buysell,
                                         bool bymarket,
@@ -578,14 +580,13 @@ namespace AutoTrader.Infrastructure.Stock
                                         int comboType = 1)
         {
             
-            int tid = NewOrder(board, 
+            int tid = CreateNewOrder(board, 
                                 seccode, 
                                 buysell, 
                                 bymarket, 
                                 price, 
                                 volume);
 
-            // todo перейти на AutoResetEvent
             Application.Models.TXMLConnector.Ingoing.orders_ns.order ord = null;
 
             await Task.Run(async () =>
@@ -595,7 +596,6 @@ namespace AutoTrader.Infrastructure.Stock
                     ord = GetOrderByTransactionId(tid); 
                 }
             });
-            
 
             // получение номера выполненного поручения
             Application.Models.TXMLConnector.Ingoing.trades_ns.trade tr = null;
@@ -619,7 +619,7 @@ namespace AutoTrader.Infrastructure.Stock
                     double slPrice = (buysell == buysell.B) ? tr.price - slDistance : tr.price + slDistance;
                     var closeCondition = (buysell == buysell.B) ? cond_type.LastDown : cond_type.LastUp;
 
-                    NewConditionOrder(board,
+                    CreateNewConditionOrder(board,
                                     seccode,
                                     closeOrderBysell,
                                     bymarket,
@@ -633,7 +633,7 @@ namespace AutoTrader.Infrastructure.Stock
                 {
 
                     double tpPrice = (buysell == buysell.B) ? tr.price + tpDistance : tr.price - tpDistance;
-                    NewOrder(board, seccode, closeOrderBysell, bymarket, tpPrice, volume);
+                    CreateNewOrder(board, seccode, closeOrderBysell, bymarket, tpPrice, volume);
                 }
             }
             else
@@ -641,13 +641,9 @@ namespace AutoTrader.Infrastructure.Stock
                 // todo дописать
                 //NewStopOrder(board, seccode, buysell, )
             }
-              
-
         }
 
-        
-
-        public Application.Models.TXMLConnector.Ingoing.orders_ns.order GetOrderByTransactionId(int transactionid)
+        private Application.Models.TXMLConnector.Ingoing.orders_ns.order GetOrderByTransactionId(int transactionid)
         {
             Application.Models.TXMLConnector.Ingoing.orders_ns.order res = null;
 
@@ -659,7 +655,7 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
-        public Application.Models.TXMLConnector.Ingoing.trades_ns.trade GetTradeByOrderNo(Int64 orderno)
+        private Application.Models.TXMLConnector.Ingoing.trades_ns.trade GetTradeByOrderNo(Int64 orderno)
         {
             Application.Models.TXMLConnector.Ingoing.trades_ns.trade res = null;
 
@@ -706,7 +702,6 @@ namespace AutoTrader.Infrastructure.Stock
             catch
             {
             }
-
 
             return res;
         }

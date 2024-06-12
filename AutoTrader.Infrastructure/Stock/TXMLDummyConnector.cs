@@ -8,12 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoTrader.Application.Contracts.Infrastructure.TXMLConnector;
+using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Models;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public class TXMLDummyConnector : ITXMLConnector
+    public class TXMLDummyConnector : IStockClient
     {
         public bool Connected { get; private set; } = false;
 
@@ -90,32 +90,32 @@ namespace AutoTrader.Infrastructure.Stock
             throw new NotImplementedException();
         }
 
-        public async Task NewComboOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, int price, int volume, int slDistance, int tpDistance, int comboType = 1)
+        public async Task CreateNewComboOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, int price, int volume, int slDistance, int tpDistance, int comboType = 1)
         {
             throw new NotImplementedException();
         }
 
-        public async Task NewComboOrder(ComboOrder co)
+        public async Task CreateNewComboOrder(ComboOrder co)
         {
             throw new NotImplementedException();
         }
 
-        public int NewConditionOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, cond_type condtype, double condvalue, int volume)
+        public int CreateNewConditionOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, cond_type condtype, double condvalue, int volume)
         {
             throw new NotImplementedException();
         }
 
-        public int NewOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, double price, int volume)
+        public int CreateNewOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, double price, int volume)
         {
             throw new NotImplementedException();
         }
 
-        public int NewStopOrder(boardsCode board, string seccode, buysell buysell, double SLPrice, double TPPrice, int volume, long orderno = 0, double correction = 0)
+        public int CreateNewStopOrder(boardsCode board, string seccode, buysell buysell, double SLPrice, double TPPrice, int volume, long orderno = 0, double correction = 0)
         {
             throw new NotImplementedException();
         }
 
-        public int NewStopOrderWithDistance(boardsCode board, string seccode, buysell buysell, double price, double SLDistance, double TPDistance, int volume, long orderno = 0)
+        public int CreateNewStopOrderWithDistance(boardsCode board, string seccode, buysell buysell, double price, double SLDistance, double TPDistance, int volume, long orderno = 0)
         {
             throw new NotImplementedException();
         }
