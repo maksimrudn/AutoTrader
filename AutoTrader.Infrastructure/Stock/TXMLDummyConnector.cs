@@ -41,7 +41,7 @@ namespace AutoTrader.Infrastructure.Stock
             
         }
 
-        public async Task<List<candle>> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, SecurityPeriods periodId = SecurityPeriods.M1 , int candlesCount = 1)
+        public async Task<List<candle>> GetHistoryData(string seccode, TradingMode tradingMode = TradingMode.Futures, SecurityPeriods periodId = SecurityPeriods.M1 , int candlesCount = 1)
         {
             var signal = new List<candle>()
             {
@@ -90,7 +90,7 @@ namespace AutoTrader.Infrastructure.Stock
             throw new NotImplementedException();
         }
 
-        public async Task CreateNewComboOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, int price, int volume, int slDistance, int tpDistance, int comboType = 1)
+        public async Task CreateNewComboOrder(TradingMode tradingMode, string seccode, OrderDirection orderDirection, bool bymarket, int price, int volume, int slDistance, int tpDistance, int comboType = 1)
         {
             throw new NotImplementedException();
         }
@@ -100,32 +100,32 @@ namespace AutoTrader.Infrastructure.Stock
             throw new NotImplementedException();
         }
 
-        public int CreateNewConditionOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, cond_type condtype, double condvalue, int volume)
+        public int CreateNewConditionOrder(TradingMode tradingMode, string seccode, OrderDirection orderDirection, bool bymarket, cond_type condtype, double condvalue, int volume)
         {
             throw new NotImplementedException();
         }
 
-        public int CreateNewOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, double price, int volume)
+        public int CreateNewOrder(TradingMode tradingMode, string seccode, OrderDirection orderDirection, bool bymarket, double price, int volume)
         {
             throw new NotImplementedException();
         }
 
-        public int CreateNewStopOrder(boardsCode board, string seccode, buysell buysell, double SLPrice, double TPPrice, int volume, long orderno = 0, double correction = 0)
+        public int CreateNewStopOrder(TradingMode tradingModes, string seccode, OrderDirection orderDirection, double SLPrice, double TPPrice, int volume, long orderno = 0, double correction = 0)
         {
             throw new NotImplementedException();
         }
 
-        public int CreateNewStopOrderWithDistance(boardsCode board, string seccode, buysell buysell, double price, double SLDistance, double TPDistance, int volume, long orderno = 0)
+        public int CreateNewStopOrderWithDistance(TradingMode tradingMode, string seccode, OrderDirection orderDirection, double price, double SLDistance, double TPDistance, int volume, long orderno = 0)
         {
             throw new NotImplementedException();
         }
 
-        public void SubscribeQuotations(boardsCode board, string seccode)
+        public void SubscribeQuotations(TradingMode tradingMode, string seccode)
         {
             throw new NotImplementedException();
         }
 
-        public void SubscribeQuotes(boardsCode board, string seccode)
+        public void SubscribeQuotes(TradingMode tradingMode, string seccode)
         {
             throw new NotImplementedException();
         }

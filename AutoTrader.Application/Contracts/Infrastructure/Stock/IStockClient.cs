@@ -33,9 +33,9 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 
         void ChangePassword(string oldpass, string newpass);
 
-        Task CreateNewComboOrder(boardsCode board,
+        Task CreateNewComboOrder(TradingMode tradingMode,
                                         string seccode,
-                                        buysell buysell,
+                                        OrderDirection orderDirection,
                                         bool bymarket,
                                         int price,
                                         int volume,
@@ -45,33 +45,33 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 
         Task CreateNewComboOrder(ComboOrder co);
 
-        int CreateNewConditionOrder(boardsCode board,
+        int CreateNewConditionOrder(TradingMode tradingMode,
                                     string seccode,
-                                    buysell buysell,
+                                    OrderDirection orderDirection,
                                     bool bymarket,
                                     Models.TXMLConnector.Outgoing.cond_type condtype,
                                     double condvalue,
                                     int volume);
 
-        int CreateNewOrder(boardsCode board, 
-                        string seccode, 
-                        buysell buysell, 
+        int CreateNewOrder(TradingMode tradingMode, 
+                        string seccode,
+                        OrderDirection orderDirection,
                         bool bymarket, 
                         double price, 
                         int volume);
 
-        int CreateNewStopOrder(boardsCode board, 
-                            string seccode, 
-                            buysell buysell, 
+        int CreateNewStopOrder(TradingMode tradingMode, 
+                            string seccode,
+                            OrderDirection orderDirection,
                             double SLPrice, 
                             double TPPrice, 
                             int volume, 
                             long orderno = 0, 
                             double correction = 0);
 
-        int CreateNewStopOrderWithDistance(boardsCode board, 
-                                        string seccode, 
-                                        buysell buysell, 
+        int CreateNewStopOrderWithDistance(TradingMode tradingMode, 
+                                        string seccode,
+                                        OrderDirection orderDirection, 
                                         double price, 
                                         double SLDistance, 
                                         double TPDistance, 
@@ -80,12 +80,12 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 
         Task<List<Models.TXMLConnector.Ingoing.securities_ns.security>> GetSecurities();
 
-        void SubscribeQuotes(boardsCode board, string seccode);
+        void SubscribeQuotes(TradingMode tradingMode, string seccode);
 
-        void SubscribeQuotations(boardsCode board, string seccode);
+        void SubscribeQuotations(TradingMode tradingMode, string seccode);
 
-        Task<List<candle>> GetHistoryData(string seccode, 
-                                            boardsCode board = boardsCode.FUT, 
+        Task<List<candle>> GetHistoryData(string seccode,
+                                            TradingMode tradingMode = TradingMode.Futures, 
                                             SecurityPeriods periodId = SecurityPeriods.M1, 
                                             int candlesCount = 1);
     }

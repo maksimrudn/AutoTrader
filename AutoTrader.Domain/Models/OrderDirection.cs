@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace AutoTrader.Domain.Models
 {
-    public enum buysell
+    public enum OrderDirection
     {
-        B,
-        S
+        Buy,
+        Sell
     }
-
 }

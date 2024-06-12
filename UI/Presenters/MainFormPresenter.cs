@@ -19,6 +19,7 @@ using AutoTrader.Domain.Models.Strategies;
 using AutoTrader.Infrastructure;
 using AutoTrader.Domain.Models;
 using AutoTrader.Application.Contracts.Infrastructure;
+using AutoTrader.Application.Models.TXMLConnector.Outgoing;
 
 namespace AutoTraderUI.Presenters
 {
@@ -157,7 +158,7 @@ namespace AutoTraderUI.Presenters
         {
             try
             {
-                var res = _connectors[0].GetHistoryData( _view.ComboBoxSeccode, boardsCode.FUT, SecurityPeriods.M1, 2);
+                var res = _connectors[0].GetHistoryData( _view.ComboBoxSeccode, TradingMode.Futures, SecurityPeriods.M1, 2);
             }
             catch (Exception e)
             {
@@ -176,7 +177,7 @@ namespace AutoTraderUI.Presenters
         {
             try
             {
-                _connectors[0].SubscribeQuotations(boardsCode.FUT, _view.ComboBoxSeccode);
+                _connectors[0].SubscribeQuotations(TradingMode.Futures, _view.ComboBoxSeccode);
             }
             catch (Exception e)
             {
@@ -265,17 +266,17 @@ namespace AutoTraderUI.Presenters
         private async Task _makeMultidirect(int price, int vol, int sl, int tp, bool bymarket, string seccode)
         {
             ComboOrder comboOrder1 = new ComboOrder();
-            comboOrder1.Board = boardsCode.FUT;
+            comboOrder1.TradingMode = TradingMode.Futures;
             comboOrder1.SL = sl;
             comboOrder1.TP = tp;
             comboOrder1.Price = price;
             comboOrder1.Vol = vol;
             comboOrder1.ByMarket = bymarket;
             comboOrder1.Seccode = seccode;
-            comboOrder1.BuySell = buysell.B;
+            comboOrder1.OrderDirection = OrderDirection.Buy;
 
             ComboOrder comboOrder2 = (ComboOrder)comboOrder1.Clone();
-            comboOrder2.BuySell = buysell.S;
+            comboOrder2.OrderDirection = OrderDirection.Sell;
 
             Task md1 = Task.Run(async () =>
             {
@@ -302,7 +303,7 @@ namespace AutoTraderUI.Presenters
             co.Vol = _settings.Volume;
             co.ByMarket = _settings.ByMarket;
             co.Seccode = _settings.Seccode;
-            co.BuySell = buysell.S;
+            co.OrderDirection = OrderDirection.Sell;
 
             try
             {
@@ -326,7 +327,7 @@ namespace AutoTraderUI.Presenters
             co.Vol = _settings.Volume;
             co.ByMarket = _settings.ByMarket;
             co.Seccode = _settings.Seccode;
-            co.BuySell = buysell.B;
+            co.OrderDirection = OrderDirection.Buy;
 
             try
             {

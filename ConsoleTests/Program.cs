@@ -124,7 +124,7 @@ namespace ConsoleTests
 
         private static async Task _testQuotesPair(StockClient cl)
         {
-            cl.SubscribeQuotes(boardsCode.FUT, _seccode);
+            cl.SubscribeQuotes(TradingMode.Futures, _seccode);
 
             double last = 0;
             int pos = 0;
@@ -168,12 +168,12 @@ namespace ConsoleTests
 
                     Task t1 = Task.Factory.StartNew(() =>
                     {
-                        cl.CreateNewOrder(boardsCode.FUT, _seccode, buysell.B, false, bPrice, 1);
+                        cl.CreateNewOrder(TradingMode.Futures, _seccode, OrderDirection.Buy, false, bPrice, 1);
                     });
 
                     Task t2 = Task.Factory.StartNew(() =>
                     {
-                        cl.CreateNewOrder(boardsCode.FUT, _seccode, buysell.S, false, sPrice, 1);
+                        cl.CreateNewOrder(TradingMode.Futures, _seccode, OrderDirection.Sell, false, sPrice, 1);
                     });
 
                     cl.PositionsIsActual = false;

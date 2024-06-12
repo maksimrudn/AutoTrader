@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoTrader.Domain.Models
+namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
 {
     // Don't rename this model. This model related to Infrastructure layer
     // todo: create separate entity and implement mapping to infrastructure layer

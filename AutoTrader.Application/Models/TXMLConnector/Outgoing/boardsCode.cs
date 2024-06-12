@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoTrader.Domain.Models
+namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
 {
     // don't change name of model and values
     // todo: create separate model and implement mepping to infrastructure layer

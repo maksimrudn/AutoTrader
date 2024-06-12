@@ -13,14 +13,14 @@ namespace AutoTrader.Application.Features.Strategies
     public class StrategyManager
     {
         AutoTrader.Application.Features.Settings.Settings _settings;
-        private readonly ISettingsService _appSettingsService;
+        private readonly ISettingsService _settingsService;
         List<IStockClient> _connectors;
         private readonly IEmailService _emailService;
 
-        public StrategyManager(ISettingsService appSettingsService, List<IStockClient> connectors, IEmailService emailService)
+        public StrategyManager(ISettingsService settingsService, List<IStockClient> connectors, IEmailService emailService)
         {
-            _appSettingsService = appSettingsService;
-            _settings = _appSettingsService.GetSettings();
+            _settingsService = settingsService;
+            _settings = _settingsService.GetSettings();
             _connectors = connectors;
             this._emailService = emailService;
             StrategyWorkers = _settings.StrategiesCollection

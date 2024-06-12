@@ -24,6 +24,17 @@ namespace AutoTrader.Infrastructure.Stock
         TXMLConnectorRequestHandler _requestHandler;
         TXMLConnectorInputStreamHandler _inputStreamHandler;
 
+        Dictionary<TradingMode, boardsCode> _tradingModeMapping = new Dictionary<TradingMode, boardsCode>()
+        {
+            { TradingMode.Futures, boardsCode.FUT }
+        };
+
+        Dictionary<OrderDirection, buysell> _orderDirectionMapping = new Dictionary<OrderDirection, buysell>()
+        {
+            { OrderDirection.Buy, buysell.B},
+            { OrderDirection.Sell, buysell.S}
+        };
+
         public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
 
         public bool Connected
@@ -307,39 +318,33 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        public void SubscribeQuotations(boardsCode board, string seccode)
+        public void SubscribeQuotations(TradingMode tradingMode, string seccode)
         {
-            if (board == null)
-            {
-                throw new Exception("board is not identified");
-            }
-            else if (string.IsNullOrEmpty(seccode))
+            if (string.IsNullOrEmpty(seccode))
             {
                 throw new Exception("seccode is not identified");
             }
 
-
-            var com = command.CreateSubscribeQuotationsCommand(board, seccode);
+            var com = command.CreateSubscribeQuotationsCommand(_tradingModeMapping[tradingMode], seccode);
 
             var res = _requestHandler.ConnectorSendCommand(com, com.GetType());
-
-
         }
-        public void SubscribeQuotes(boardsCode board, string seccode)
+        public void SubscribeQuotes(TradingMode tradingMode, string seccode)
         {
-            var com = command.CreateSubscribeQuotesCommand(board, seccode);
+            var com = command.CreateSubscribeQuotesCommand(_tradingModeMapping[tradingMode], seccode);
 
             var res = _requestHandler.ConnectorSendCommand(com, com.GetType());
-
-
         }
 
 
-        public async Task<List<candle>> GetHistoryData(string seccode, boardsCode board = boardsCode.FUT, SecurityPeriods periodId =  SecurityPeriods.M1, int candlesCount = 1)
+        public async Task<List<candle>> GetHistoryData(string seccode, 
+                                                        TradingMode tradingMode = TradingMode.Futures, 
+                                                        SecurityPeriods periodId =  SecurityPeriods.M1, 
+                                                        int candlesCount = 1)
         {
             candle res = null;
 
-            command com = command.CreateGetHistoryDataCommand(board, seccode, periodId, candlesCount);
+            command com = command.CreateGetHistoryDataCommand(_tradingModeMapping[tradingMode], seccode, periodId, candlesCount);
 
             // initialization must be before call of txml connector because response can be come fast
             if (!_inputStreamHandler.CandlesLoaded.ContainsKey(seccode))
@@ -359,13 +364,13 @@ namespace AutoTrader.Infrastructure.Stock
             return _inputStreamHandler.Candles[seccode].candlesValue;
         }
 
-        public async Task<candle> GetCurrentCandle(string seccode, boardsCode board = boardsCode.FUT)
+        public async Task<candle> GetCurrentCandle(string seccode, TradingMode tradingMode = TradingMode.Futures)
         {
             candle res = null;
 
             command com = new command();
             com.id = command_id.gethistorydata;
-            com.security.board = board.ToString();
+            com.security.board = _tradingModeMapping[tradingMode].ToString();
             com.security.seccode = seccode;
             com.periodValue = 1;
             com.countValue = 1;
@@ -416,7 +421,6 @@ namespace AutoTrader.Infrastructure.Stock
 
             command com = command.CreateCancelOrderCommand(transactionid);
 
-
             result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
 
             if (sendResult.success == true)
@@ -427,21 +431,25 @@ namespace AutoTrader.Infrastructure.Stock
             {
                 throw new Exception(sendResult.message);
             }
-
-            //return res;
         }
 
-        public int CreateNewOrder(boardsCode board, string seccode, buysell buysell, bool bymarket, double price, int volume)
+        public int CreateNewOrder(TradingMode tradingMode, string seccode, OrderDirection orderDirection, bool bymarket, double price, int volume)
         {
             if (!Connected) throw new Exception("Соединение не установлено. Операция не может быть выполнена");
 
             int res = 0;
 
+            boardsCode board;
+            if (tradingMode == TradingMode.Futures)
+                board = boardsCode.FUT;
+            else
+                throw new Exception($"Tradning mode {tradingMode} is not supported");
+
             command com = command.CreateNewOrder(this.FortsClientId, 
                                                         board, 
-                                                        seccode, 
-                                                        buysell, 
-                                                        bymarket? AutoTrader.Domain.Models.bymarket.yes: AutoTrader.Domain.Models.bymarket.no, 
+                                                        seccode,
+                                                        _orderDirectionMapping[orderDirection],
+                                                        bymarket? AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.no, 
                                                         price, 
                                                         volume);
 
@@ -460,35 +468,44 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
-        public int CreateNewStopOrderWithDistance(boardsCode board, string seccode, buysell buysell, double price, double SLDistance, double TPDistance, int volume, Int64 orderno = 0)
+        public int CreateNewStopOrderWithDistance(TradingMode tradingMode, 
+                                                    string seccode, 
+                                                    OrderDirection orderDirection, 
+                                                    double price, 
+                                                    double SLDistance, 
+                                                    double TPDistance, 
+                                                    int volume, 
+                                                    Int64 orderno = 0)
         {
-            return CreateNewStopOrder(board,
+            buysell buysell = _orderDirectionMapping[orderDirection];
+
+            return CreateNewStopOrder(tradingMode,
                                 seccode,
-                                buysell,
+                                orderDirection,
                                 (buysell == buysell.B) ? (price + SLDistance) : (price - SLDistance),
                                 (buysell == buysell.B) ? (price - TPDistance) : (price + TPDistance),
                                 volume,
                                 orderno);
         }
 
-        public int CreateNewStopOrder(boardsCode board, 
+        public int CreateNewStopOrder(TradingMode tradingMode, 
                                     string seccode, 
-                                    buysell buysell, 
+                                    OrderDirection orderDirection, 
                                     double SLPrice, 
                                     double TPPrice, 
                                     int volume, 
                                     Int64 orderno = 0, 
                                     double correction = 0)
-        {            
+        {
             int res = 0;
 
             command com = new command();
             com.id = command_id.newstoporder;
             com.security = new Application.Models.TXMLConnector.Outgoing.command_ns.security();
-            com.security.board = board.ToString();
+            com.security.board = _tradingModeMapping[tradingMode].ToString();
             com.security.seccode = seccode;
 
-            com.buysellValue = buysell;
+            com.buysellValue = _orderDirectionMapping[orderDirection];
             com.client = FortsClientId;
             if (orderno != 0) com.linkedordernoValue = orderno;
 
@@ -507,9 +524,7 @@ namespace AutoTrader.Infrastructure.Stock
             //com.takeprofit.orderprice = price - profitlimit;
             com.takeprofit.quantity = volume;
 
-
             result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
-
 
             if (sendResult.success == true)
             {
@@ -523,9 +538,9 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
-        public int CreateNewConditionOrder(boardsCode board, 
+        public int CreateNewConditionOrder(TradingMode tradingMode, 
                                     string seccode,
-                                    AutoTrader.Domain.Models.buysell buysell, 
+                                    OrderDirection orderDirection, 
                                     bool bymarket, 
                                     cond_type condtype, 
                                     double condvalue, 
@@ -535,9 +550,9 @@ namespace AutoTrader.Infrastructure.Stock
 
             command com = command.CreateNewCondOrderCommand(); ;
             com.id = command_id.newcondorder;
-            com.security.board = board.ToString();
+            com.security.board = _tradingModeMapping[tradingMode].ToString();
             com.security.seccode = seccode;
-            com.buysellValue = buysell;
+            com.buysellValue = _orderDirectionMapping[orderDirection];
             com.client = FortsClientId;
             // параметры, которые говорят переносить заявку на следующий день
             com.validafter = "0";
@@ -546,7 +561,7 @@ namespace AutoTrader.Infrastructure.Stock
             com.cond_typeValue = condtype;
             com.cond_valueValue = condvalue;
             com.quantityValue = volume;
-            com.bymarketValue = bymarket? AutoTrader.Domain.Models.bymarket.yes: AutoTrader.Domain.Models.bymarket.no;
+            com.bymarketValue = bymarket ? AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.no;
 
             result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
 
@@ -564,9 +579,9 @@ namespace AutoTrader.Infrastructure.Stock
 
         public async Task CreateNewComboOrder(ComboOrder co)
         {
-            if (co.BuySell == null) throw new Exception("Не установлен параметр BuySell");
+            if (co.OrderDirection == null) throw new Exception("Не установлен параметр BuySell");
 
-            await CreateNewComboOrder(co.Board, co.Seccode, co.BuySell.Value, co.ByMarket, co.Price, co.Vol, co.SL, co.TP);
+            await CreateNewComboOrder(co.TradingMode, co.Seccode, co.OrderDirection, co.ByMarket, co.Price, co.Vol, co.SL, co.TP);
         }
 
         /// <summary>
@@ -580,9 +595,9 @@ namespace AutoTrader.Infrastructure.Stock
         /// <param name="volume"></param>
         /// <param name="slDistance"></param>
         /// <param name="tpDistance"></param>
-        public async Task CreateNewComboOrder(boardsCode board, 
+        public async Task CreateNewComboOrder(TradingMode tradingMode, 
                                         string seccode, 
-                                        buysell buysell,
+                                        OrderDirection orderDirection,
                                         bool bymarket,
                                         int price,
                                         int volume, 
@@ -591,9 +606,9 @@ namespace AutoTrader.Infrastructure.Stock
                                         int comboType = 1)
         {
             
-            int tid = CreateNewOrder(board, 
-                                seccode, 
-                                buysell, 
+            int tid = CreateNewOrder(tradingMode, 
+                                seccode,
+                                orderDirection, 
                                 bymarket, 
                                 price, 
                                 volume);
@@ -620,19 +635,19 @@ namespace AutoTrader.Infrastructure.Stock
                 }
             });
 
-            var closeOrderBysell = (buysell == buysell.B) ? buysell.S : buysell.B;
+            var closeOrderDirection = (orderDirection == OrderDirection.Buy) ? OrderDirection.Sell : OrderDirection.Buy;
 
             if (comboType == 1)
             {
                 // открытие sl заявки
                 if (slDistance > 0)
                 {
-                    double slPrice = (buysell == buysell.B) ? tr.price - slDistance : tr.price + slDistance;
-                    var closeCondition = (buysell == buysell.B) ? cond_type.LastDown : cond_type.LastUp;
+                    double slPrice = (orderDirection == OrderDirection.Buy) ? tr.price - slDistance : tr.price + slDistance;
+                    var closeCondition = (orderDirection == OrderDirection.Buy) ? cond_type.LastDown : cond_type.LastUp;
 
-                    CreateNewConditionOrder(board,
+                    CreateNewConditionOrder(tradingMode,
                                     seccode,
-                                    closeOrderBysell,
+                                    closeOrderDirection,
                                     bymarket,
                                     closeCondition,
                                     slPrice,
@@ -642,9 +657,8 @@ namespace AutoTrader.Infrastructure.Stock
                 // открытие tp заявки
                 if (tpDistance > 0)
                 {
-
-                    double tpPrice = (buysell == buysell.B) ? tr.price + tpDistance : tr.price - tpDistance;
-                    CreateNewOrder(board, seccode, closeOrderBysell, bymarket, tpPrice, volume);
+                    double tpPrice = (orderDirection == OrderDirection.Buy) ? tr.price + tpDistance : tr.price - tpDistance;
+                    CreateNewOrder(tradingMode, seccode, closeOrderDirection, bymarket, tpPrice, volume);
                 }
             }
             else
