@@ -13,10 +13,10 @@ namespace AutoTrader.Domain.Models
     {
         public ComboOrder()
         {
-            Board = boardsCode.FUT;
+            TradingMode = TradingMode.Futures;
         }
 
-        public boardsCode Board { get; set; }
+        public TradingMode TradingMode { get; set; }
 
         public string Seccode { get; set;}
 
@@ -30,7 +30,7 @@ namespace AutoTrader.Domain.Models
 
         public bool ByMarket { get; set; }
 
-        public buysell? BuySell { get; set; }
+        public OrderDirection OrderDirection { get; set; }
 
         public object Clone()
         {

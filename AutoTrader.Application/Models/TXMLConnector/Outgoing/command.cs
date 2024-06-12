@@ -150,7 +150,7 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
 
             res.id = command_id.newcondorder;
             res.security = new command_ns.security();
-            res.bymarketValue = AutoTrader.Domain.Models.bymarket.yes;
+            res.bymarketValue = AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.yes;
             res.validafter = "0";
             res.validbeforeValue = AutoTrader.Application.Models.TXMLConnector.Outgoing.validbefore.till_canceled;
 

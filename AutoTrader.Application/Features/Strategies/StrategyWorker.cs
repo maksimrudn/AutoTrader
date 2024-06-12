@@ -83,17 +83,14 @@ namespace AutoTrader.Application.Features.Strategies
                         await Task.Delay(_settings.Delay);
                         continue;
                     }
-
                 }
 
-                var res = await _connectors[0].GetHistoryData(_settings.Seccode, boardsCode.FUT, _settings.Period, 2);
+                var res = await _connectors[0].GetHistoryData(_settings.Seccode, TradingMode.Futures, _settings.Period, 2);
 
                 double prevPrice = res[0].close;
                 double curPrice = res[1].close;
 
                 double diff = prevPrice - curPrice;
-
-
 
                 // Signal must be send only once at minute. Initial value lastSignalTime NOW - 1D
                 if ((DateTime.Now - lastSignalTime).TotalMinutes < 1)
@@ -101,7 +98,6 @@ namespace AutoTrader.Application.Features.Strategies
                     await Task.Delay(_settings.Delay);
                     continue;
                 }
-
 
                 if (_settings.DifferenceType == DifferenceTypes.Oversold)
                 {
@@ -133,8 +129,6 @@ namespace AutoTrader.Application.Features.Strategies
                     }
                 }
 
-
-
                 if (_cts.Token.IsCancellationRequested)
                 {
                     Trace.TraceInformation($"Strategy stop {_settings.Seccode}: begin");
@@ -147,7 +141,6 @@ namespace AutoTrader.Application.Features.Strategies
 
         private async Task _sendNotification(StrategySettings settings, double diff, List<Models.TXMLConnector.Ingoing.candle> historyData)
         {
-
             string result = $"Time {DateTime.Now}; Seccode {settings.Seccode}; Period {settings.Period.ToString()}; Diff = {diff}; Prev close = {historyData[0].close}; Prev close = {historyData[1].close}; Signal {settings.DifferenceType};\n";
 
             if (_settings.NotificationType == NotificationTypes.File)
