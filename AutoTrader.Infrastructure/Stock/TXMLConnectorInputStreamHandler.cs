@@ -14,67 +14,67 @@ using System.Xml;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public abstract class TXMLConnectorCallbackableBase: TXMLConnectorBase
+    public class TXMLConnectorInputStreamHandler
     {
-        protected AsyncAutoResetEvent _serverStatusUpdated = new AsyncAutoResetEvent(false);
-        protected AsyncAutoResetEvent _positionsLoaded = new AsyncAutoResetEvent(false);
-        protected AsyncAutoResetEvent _securitiesLoaded = new AsyncAutoResetEvent(false);
-        protected AsyncAutoResetEvent _tradesLoaded = new AsyncAutoResetEvent(false);
-        protected ConcurrentDictionary<string, AsyncAutoResetEvent> _waitForCurrentCandle = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
+        public AsyncAutoResetEvent ServerStatusUpdated = new AsyncAutoResetEvent(false);
+        public AsyncAutoResetEvent PositionsLoaded = new AsyncAutoResetEvent(false);
+        public AsyncAutoResetEvent SecuritiesLoaded = new AsyncAutoResetEvent(false);
+        public AsyncAutoResetEvent TradesLoaded = new AsyncAutoResetEvent(false);
+        public ConcurrentDictionary<string, AsyncAutoResetEvent> WaitForCurrentCandle = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
 
-        protected AsyncAutoResetEvent _mc_portfolioLoaded = new AsyncAutoResetEvent(false);
+        public AsyncAutoResetEvent MC_portfolioLoaded = new AsyncAutoResetEvent(false);
 
-        protected ConcurrentDictionary<string, AsyncAutoResetEvent> _candlesLoaded = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
+        public ConcurrentDictionary<string, AsyncAutoResetEvent> CandlesLoaded = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
 
         /// <summary>
         /// Результат подключения к серверу
         /// Заполняется с помощью обработчика _handleData
         /// </summary>
-        protected server_status _serverStatus = null;
+        public server_status ServerStatus = null;
 
-        protected client _forts_client = null;
+        public client Forts_client = null;
 
-        protected List<client> _clients = new List<client>();       // клиенты-счета различных площадок forts: market=4
+        public List<client> Clients = new List<client>();       // клиенты-счета различных площадок forts: market=4
 
-        protected positions _positions = new positions();
-        protected mc_portfolio _mc_portfolio = new mc_portfolio();
-        protected ConcurrentDictionary<string, Application.Models.TXMLConnector.Ingoing.candle> _currentCandle = new ConcurrentDictionary<string, candle>();
+        public positions Positions = new positions();
+        public mc_portfolio mc_portfolio = new mc_portfolio();
+        public ConcurrentDictionary<string, Application.Models.TXMLConnector.Ingoing.candle> CurrentCandle = new ConcurrentDictionary<string, candle>();
 
-        protected bool _positionsIsActual = false;
+        public bool PositionsIsActual = false;
 
-        protected HashSet<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> _quotes { get; set; }
-        protected HashSet<Application.Models.TXMLConnector.Ingoing.orders_ns.order> _orders { get; set; }
-        protected HashSet<Application.Models.TXMLConnector.Ingoing.trades_ns.trade> _trades { get; set; }
+        public HashSet<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> Quotes { get; set; }
+        public HashSet<Application.Models.TXMLConnector.Ingoing.orders_ns.order> Orders { get; set; }
+        public HashSet<Application.Models.TXMLConnector.Ingoing.trades_ns.trade> Trades { get; set; }
 
         /// <summary>
         /// for history data
         /// </summary>
-        protected ConcurrentDictionary<string, Application.Models.TXMLConnector.Ingoing.candles> _candles { get; set; } = new ConcurrentDictionary<string, candles>();
+        public ConcurrentDictionary<string, Application.Models.TXMLConnector.Ingoing.candles> Candles { get; set; } = new ConcurrentDictionary<string, candles>();
 
-        protected Application.Models.TXMLConnector.Ingoing.candlekinds _candlekinds { get; set; }
+        public Application.Models.TXMLConnector.Ingoing.candlekinds Candlekinds { get; set; }
 
-        protected HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security> _securities { get; set; }
+        public HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security> Securities { get; set; }
 
         public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
 
-        public TXMLConnectorCallbackableBase(string tConnFile) : base(tConnFile)
+        public TXMLConnectorInputStreamHandler()
         {
-            _quotes = new HashSet<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote>();
-            _orders = new HashSet<Application.Models.TXMLConnector.Ingoing.orders_ns.order>();
-            _trades = new HashSet<Application.Models.TXMLConnector.Ingoing.trades_ns.trade>();
-            _securities = new HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security>();
+            Quotes = new HashSet<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote>();
+            Orders = new HashSet<Application.Models.TXMLConnector.Ingoing.orders_ns.order>();
+            Trades = new HashSet<Application.Models.TXMLConnector.Ingoing.trades_ns.trade>();
+            Securities = new HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security>();
         }
 
-        protected override void _handleData(String result)
+        public void HandleData(String result)
         {
             string nodeName = _getNodeName(result);
 
             switch (nodeName)
             {
                 case "server_status":
-                    _serverStatus = (server_status)XMLHelper.Deserialize(result, typeof(server_status));
+                    ServerStatus = (server_status)XMLHelper.Deserialize(result, typeof(server_status));
 
-                    _serverStatusUpdated.Set();
+                    ServerStatusUpdated.Set();
 
                     break;
 
@@ -85,7 +85,7 @@ namespace AutoTrader.Infrastructure.Stock
                     break;
 
                 case "candlekinds":
-                    _candlekinds = (candlekinds)XMLHelper.Deserialize(result, typeof(candlekinds));
+                    Candlekinds = (candlekinds)XMLHelper.Deserialize(result, typeof(candlekinds));
 
                     break;
 
@@ -93,7 +93,7 @@ namespace AutoTrader.Infrastructure.Stock
                     var securities = (securities)XMLHelper.Deserialize(result, typeof(securities));
 
                     _securitiesHandle(securities.security);
-                    _securitiesLoaded.Set();
+                    SecuritiesLoaded.Set();
                     break;
 
                 case "pits":
@@ -106,35 +106,35 @@ namespace AutoTrader.Infrastructure.Stock
                     var clientInfo = (client)XMLHelper.Deserialize(result, typeof(client));
 
                     // todo реализовать проверку на присутствие и удаление элемента перед добавлением
-                    _clients.Add(clientInfo);
+                    Clients.Add(clientInfo);
 
                     if (clientInfo.forts_acc != null)
-                        _forts_client = clientInfo;
+                        Forts_client = clientInfo;
 
                     break;
 
                 case "positions":
                     var positions = (positions)XMLHelper.Deserialize(result, typeof(positions));
 
-                    if (positions.forts_collaterals != null) _positions.forts_collaterals = positions.forts_collaterals;
-                    if (positions.forts_money != null) _positions.forts_money = positions.forts_money;
-                    if (positions.forts_position != null) _positions.forts_position = positions.forts_position;
-                    if (positions.money_position != null) _positions.money_position = positions.money_position;
-                    if (positions.sec_position != null) _positions.sec_position = positions.sec_position;
-                    if (positions.spot_limit != null) _positions.spot_limit = positions.spot_limit;
+                    if (positions.forts_collaterals != null) Positions.forts_collaterals = positions.forts_collaterals;
+                    if (positions.forts_money != null) Positions.forts_money = positions.forts_money;
+                    if (positions.forts_position != null) Positions.forts_position = positions.forts_position;
+                    if (positions.money_position != null) Positions.money_position = positions.money_position;
+                    if (positions.sec_position != null) Positions.sec_position = positions.sec_position;
+                    if (positions.spot_limit != null) Positions.spot_limit = positions.spot_limit;
 
 
-                    _positionsIsActual = true;
+                    PositionsIsActual = true;
 
-                    _positionsLoaded.Set();
+                    PositionsLoaded.Set();
                     break;
 
                 case "mc_portfolio":
-                    _mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
+                    mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
 
                    
-                    _mc_portfolioLoaded.Set();
-                    OnMCPositionsUpdated.Invoke(this, new OnMCPositionsUpdatedEventArgs(_mc_portfolio));
+                    MC_portfolioLoaded.Set();
+                    OnMCPositionsUpdated.Invoke(this, new OnMCPositionsUpdatedEventArgs(mc_portfolio));
 
 
                     break;
@@ -160,11 +160,11 @@ namespace AutoTrader.Infrastructure.Stock
                 case "candles":
                     var candles = (candles)XMLHelper.Deserialize(result, typeof(candles));
                     
-                    _currentCandle[candles.seccode] = candles.candlesValue[0];
-                    _waitForCurrentCandle[candles.seccode].Set();
+                    CurrentCandle[candles.seccode] = candles.candlesValue[0];
+                    WaitForCurrentCandle[candles.seccode].Set();
 
-                    _candles[candles.seccode] = candles;
-                    _candlesLoaded[candles.seccode].Set();                    
+                    Candles[candles.seccode] = candles;
+                    CandlesLoaded[candles.seccode].Set();                    
                     break;
 
                 case "ticks":
@@ -183,28 +183,26 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-
-
         private void _securitiesHandle(List<Application.Models.TXMLConnector.Ingoing.securities_ns.security> security)
         {
-            lock(_securities)
+            lock(Securities)
             {
                 foreach (var sec in security)
                 {    
                     // filter only unique values
-                    if (_securities.Where(x=>x.seccode==sec.seccode).FirstOrDefault() == null)
-                        _securities.Add(sec);
+                    if (Securities.Where(x=>x.seccode==sec.seccode).FirstOrDefault() == null)
+                        Securities.Add(sec);
                 }
             }
         }
 
         protected void _tradesHandle(trades trades)
         {
-            lock (_trades)
+            lock (Trades)
             {
                 foreach (var trade in trades.trade)
                 {
-                    var temp = _trades.FirstOrDefault(x => x.tradeno == trade.tradeno);
+                    var temp = Trades.FirstOrDefault(x => x.tradeno == trade.tradeno);
 
                     if (temp != null)
                     {
@@ -213,18 +211,18 @@ namespace AutoTrader.Infrastructure.Stock
                         continue;
 
                     }
-                    else _trades.Add(trade);
+                    else Trades.Add(trade);
                 }
             }
         }
 
         protected void _ordersHandle(orders orders)
         {
-            lock (_orders)
+            lock (Orders)
             {
                 foreach (var order in orders.order)
                 {
-                    var temp = _orders.FirstOrDefault(x => x.orderno == order.orderno);
+                    var temp = Orders.FirstOrDefault(x => x.orderno == order.orderno);
 
                     if (temp != null)
                     {
@@ -234,7 +232,7 @@ namespace AutoTrader.Infrastructure.Stock
                         temp.status = order.status;
 
                     }
-                    else _orders.Add(order);
+                    else Orders.Add(order);
                 }
             }
         }
@@ -251,15 +249,15 @@ namespace AutoTrader.Infrastructure.Stock
                 //    }
                 //}
 
-                lock (_quotes)
+                lock (Quotes)
                 {
-                    var q = _quotes.FirstOrDefault(x => x.price == quote.price);
+                    var q = Quotes.FirstOrDefault(x => x.price == quote.price);
 
                     if (q != null)
                     {
                         if (quote.buy == -1 || quote.sell == -1)
                         {
-                            _quotes.Remove(q);
+                            Quotes.Remove(q);
                         }
                         else
                         {
@@ -269,7 +267,7 @@ namespace AutoTrader.Infrastructure.Stock
                     }
                     else if (quote.buy != -1 && quote.sell != -1)
                     {
-                        _quotes.Add(quote);
+                        Quotes.Add(quote);
                     }
                 }
             }

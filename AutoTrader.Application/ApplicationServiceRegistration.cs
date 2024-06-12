@@ -11,7 +11,7 @@ namespace AutoTrader.Application
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+            //services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSingleton<StrategyManager>();
 
