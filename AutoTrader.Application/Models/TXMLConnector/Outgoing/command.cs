@@ -17,7 +17,6 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
         {
             command res = new command();
 
-
             res.id = command_id.connect;
 
             res.login = login;
@@ -28,8 +27,7 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
             res.logsdir = MainHelper.GetWorkFolder();// +"\0";
             res.rqdelayValue = 100;
             res.session_timeoutValue = 25000;
-            res.request_timeoutValue = 10000;
-            
+            res.request_timeoutValue = 10000;            
 
             return res;
         }
@@ -142,7 +140,6 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
 
             return res;
         }
-
 
         public static command CreateNewCondOrderCommand()
         {
@@ -261,9 +258,6 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
         //указан, по умолчанию он принимается равным true.
         //Использование <autopos>false</autopos> при активной
         //торговле ускоряет взаимодействие с сервером.
-
-
-
         [XmlElement(IsNullable = false)]
         public string micex_registers { get; set; }
                     //Значение элемента micex_registers определяет набор
@@ -643,7 +637,6 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
             }
         }
 
-
         // validafter и validbefore задаются в форме даты, описанном выше. 
         // Для validafter можно передать значение "0", если заявка начинает действовать немедленно. 
         // Для validbefore значение "0" означает, что заявка будет действительна до конца сессии. 
@@ -669,9 +662,10 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
                 validbefore = value.ToString().ToLower();
             }
         }
-                    //0 – до конца торговой сессии
-                    //till_canceled – до отмены
-                    //ДД.ММ.ГГГГ ЧЧ:ММ:СС – до указанной даты и времени
+
+        //0 – до конца торговой сессии
+        //till_canceled – до отмены
+        //ДД.ММ.ГГГГ ЧЧ:ММ:СС – до указанной даты и времени
         [XmlElement(IsNullable = false)]
         public string transactionid { get; set; }
         [XmlIgnore]
@@ -696,7 +690,6 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
         #region GET HISTORY DATA
         [XmlElement(IsNullable = false)]
         public string period { get; set; }
-
 
         /// <summary>
         /// Возможные значения для period присылаются при установке соединения с 
@@ -773,11 +766,6 @@ namespace AutoTrader.Application.Models.TXMLConnector.Outgoing
         /// </summary>
         [XmlElement(IsNullable = false)]
         public command_ns.quotes quotes { get; set; }
-
-
         #endregion
-
-
-        
     }
 }
