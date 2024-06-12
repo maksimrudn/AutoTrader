@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AutoTrader.Application.Contracts.Infrastructure
 {
-    public interface IAppSettingsService
+    public interface ISettingsService
     {
         Settings GetSettings();
 

@@ -75,8 +75,6 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-
-
         protected result ConnectorSendCommand(object commandInfo, Type type)
         {
             string cmd = XMLHelper.SerializeToString(commandInfo, type);
@@ -90,7 +88,6 @@ namespace AutoTrader.Infrastructure.Stock
             }
 
             return (result)XMLHelper.Deserialize(res, typeof(result));
-
         }
 
         protected String ConnectorSendCommand(String command)
@@ -111,8 +108,6 @@ namespace AutoTrader.Infrastructure.Stock
         {
             
         }
-
-
 
         // файл библиотеки TXmlConnector.dll должен находиться в одной папке с программой
 
@@ -176,8 +171,6 @@ namespace AutoTrader.Infrastructure.Stock
         protected delegate IntPtr SendCommand(IntPtr pData);
         protected SendCommand _sendCommand;
 
-
-
         //Обработчик обратных вызовов
         //IntPtr - данные обратного вызова
         //после получения данных, их нужно очистить с помощью FreeMemory(pData);
@@ -195,8 +188,6 @@ namespace AutoTrader.Infrastructure.Stock
 
             return res;
         }
-
-
         protected abstract void _handleData(String result);
     }
 }

@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace AutoTrader.Application.Features.Settings
 {
-    public class SettingsService: IAppSettingsService
+    public class SettingsService: ISettingsService
     {
         private readonly IConfiguration _configuration;
         string _settingsFilename = "Settings.xml";

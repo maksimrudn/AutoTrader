@@ -16,29 +16,15 @@ namespace AutoTrader.Infrastructure.Stock
 {
     public abstract class TXMLConnectorCallbackableBase: TXMLConnectorBase
     {
-        public AsyncAutoResetEvent _serverStatusUpdated = new AsyncAutoResetEvent(false);
-        public AsyncAutoResetEvent _positionsLoaded = new AsyncAutoResetEvent(false);
-        public AsyncAutoResetEvent _securitiesLoaded = new AsyncAutoResetEvent(false);
-        public AsyncAutoResetEvent _tradesLoaded = new AsyncAutoResetEvent(false);
-        public ConcurrentDictionary<string, AsyncAutoResetEvent> _waitForCurrentCandle = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
+        protected AsyncAutoResetEvent _serverStatusUpdated = new AsyncAutoResetEvent(false);
+        protected AsyncAutoResetEvent _positionsLoaded = new AsyncAutoResetEvent(false);
+        protected AsyncAutoResetEvent _securitiesLoaded = new AsyncAutoResetEvent(false);
+        protected AsyncAutoResetEvent _tradesLoaded = new AsyncAutoResetEvent(false);
+        protected ConcurrentDictionary<string, AsyncAutoResetEvent> _waitForCurrentCandle = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
 
         protected AsyncAutoResetEvent _mc_portfolioLoaded = new AsyncAutoResetEvent(false);
 
-
-        public ConcurrentDictionary<string, AsyncAutoResetEvent> _candlesLoaded = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
-
-        public bool Connected
-        {
-            get {
-                bool res = false;
-                if (_serverStatus != null && _serverStatus.connected == "true") res = true;
-
-                return res;
-            }
-        }
-
-        public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
-
+        protected ConcurrentDictionary<string, AsyncAutoResetEvent> _candlesLoaded = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
 
         /// <summary>
         /// Результат подключения к серверу
@@ -49,7 +35,6 @@ namespace AutoTrader.Infrastructure.Stock
         protected client _forts_client = null;
 
         protected List<client> _clients = new List<client>();       // клиенты-счета различных площадок forts: market=4
-
 
         protected positions _positions = new positions();
         protected mc_portfolio _mc_portfolio = new mc_portfolio();
@@ -68,10 +53,9 @@ namespace AutoTrader.Infrastructure.Stock
 
         protected Application.Models.TXMLConnector.Ingoing.candlekinds _candlekinds { get; set; }
 
-
-
-
         protected HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security> _securities { get; set; }
+
+        public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
 
         public TXMLConnectorCallbackableBase(string tConnFile) : base(tConnFile)
         {
@@ -186,7 +170,6 @@ namespace AutoTrader.Infrastructure.Stock
                 case "ticks":
                     break;
 
-
                 ///ДАННЫЕ СТАКАНА///
                 case "alltrades":
 
@@ -197,9 +180,6 @@ namespace AutoTrader.Infrastructure.Stock
                     var q = (Application.Models.TXMLConnector.Ingoing.quotes)XMLHelper.Deserialize(result, typeof(Application.Models.TXMLConnector.Ingoing.quotes));
                     _quotesHandle(q);
                     break;
-
-
-
             }
         }
 
@@ -261,7 +241,6 @@ namespace AutoTrader.Infrastructure.Stock
 
         protected void _quotesHandle(Application.Models.TXMLConnector.Ingoing.quotes quotes)
         {
-
             foreach (var quote in quotes.quote)
             {
                 //if (quote.buy > 0 && quote.sell == 0)
@@ -271,7 +250,6 @@ namespace AutoTrader.Infrastructure.Stock
 
                 //    }
                 //}
-
 
                 lock (_quotes)
                 {
@@ -295,8 +273,6 @@ namespace AutoTrader.Infrastructure.Stock
                     }
                 }
             }
-
-
         }
 
         protected string _getNodeName(string data)
@@ -311,7 +287,6 @@ namespace AutoTrader.Infrastructure.Stock
 
             xr.Read();
             return xr.Name;
-
         }
     }
 }

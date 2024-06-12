@@ -1,5 +1,5 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure;
-using AutoTrader.Application.Contracts.Infrastructure.TXMLConnector;
+using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Domain.Models;
 using AutoTrader.Domain.Models.Strategies;
 using System;
@@ -16,7 +16,7 @@ namespace AutoTrader.Application.Features.Strategies
     public class StrategyWorker
     {
         StrategySettings _settings;
-        List<ITXMLConnector> _connectors;
+        List<IStockClient> _connectors;
         IEmailService _emailService;
         string _notificationFile;
         string _notificationEmail;
@@ -27,7 +27,7 @@ namespace AutoTrader.Application.Features.Strategies
         /// </summary>
         int? _timezone = null;
 
-        public StrategyWorker(StrategySettings settings, List<ITXMLConnector> connectors, IEmailService emailService, string notificationFile, string notificationEmail)
+        public StrategyWorker(StrategySettings settings, List<IStockClient> connectors, IEmailService emailService, string notificationFile, string notificationEmail)
         {
             _settings = settings;
             _connectors = connectors;
