@@ -24,7 +24,12 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 
         double Money { get; }
 
-        event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
+        event EventHandler<TXMLEventArgs<mc_portfolio>> MCPositionsUpdated;
+
+        event EventHandler<TXMLEventArgs<HashSet<Models.TXMLConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
+
+        HashSet<Models.TXMLConnector.Ingoing.securities_ns.security> Securities { get; }
+
 
         Task Login(string username, 
                     string password, 

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public class DoubleStockClient: IDoubleStockClient, IAsyncDisposable
+    public class DualStockClient: IDualStockClient, IAsyncDisposable
     {
         public IStockClient Master { get; }
 
         public IStockClient Slave { get; }
 
-        public DoubleStockClient() {
+        public DualStockClient() {
             Master = new StockClient("txmlconnector1.dll");
             Slave = new StockClient("txmlconnector2.dll");
         }

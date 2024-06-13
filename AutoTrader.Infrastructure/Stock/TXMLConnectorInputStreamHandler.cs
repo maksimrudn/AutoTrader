@@ -43,9 +43,10 @@ namespace AutoTrader.Infrastructure.Stock
 
         public bool PositionsIsActual = false;
 
-        public HashSet<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> Quotes { get; set; }
-        public HashSet<Application.Models.TXMLConnector.Ingoing.orders_ns.order> Orders { get; set; }
-        public HashSet<Application.Models.TXMLConnector.Ingoing.trades_ns.trade> Trades { get; set; }
+        public HashSet<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> Quotes { get; private set; }
+        public HashSet<Application.Models.TXMLConnector.Ingoing.orders_ns.order> Orders { get; private set; }
+        public HashSet<Application.Models.TXMLConnector.Ingoing.trades_ns.trade> Trades { get; private set; }
+        public HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security> Securities { get; private set; }
 
         /// <summary>
         /// for history data
@@ -54,9 +55,9 @@ namespace AutoTrader.Infrastructure.Stock
 
         public Application.Models.TXMLConnector.Ingoing.candlekinds Candlekinds { get; set; }
 
-        public HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security> Securities { get; set; }
+        public event EventHandler<TXMLEventArgs<HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
 
-        public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
+        public event EventHandler<TXMLEventArgs<mc_portfolio>> MCPositionsUpdated;
 
         public TXMLConnectorInputStreamHandler()
         {
@@ -94,6 +95,7 @@ namespace AutoTrader.Infrastructure.Stock
                     var securities = (securities)XMLHelper.Deserialize(result, typeof(securities));
 
                     _securitiesHandle(securities.security);
+                    SecuritiesUpdated?.Invoke(this, new TXMLEventArgs<HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security>>(Securities));
                     SecuritiesLoaded.Set();
                     break;
 
@@ -134,19 +136,14 @@ namespace AutoTrader.Infrastructure.Stock
 
                 case "mc_portfolio":
                     mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
-
                    
                     MC_portfolioLoaded.Set();
-                    OnMCPositionsUpdated.Invoke(this, new OnMCPositionsUpdatedEventArgs(mc_portfolio));
-
+                    MCPositionsUpdated?.Invoke(this, new TXMLEventArgs<mc_portfolio>(mc_portfolio));
 
                     break;
 
                 case "overnight":
                     break;
-
-
-
 
                 case "trades":
                     var trades = (trades)XMLHelper.Deserialize(result, typeof(trades));

@@ -30,7 +30,22 @@ namespace AutoTrader.Infrastructure.Stock
 
         public double Money { get; private set; }
 
-        public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
+        public HashSet<security> Securities => throw new NotImplementedException();
+
+        public event EventHandler<TXMLEventArgs<HashSet<security>>> SecuritiesUpdated;
+
+        public event EventHandler<TXMLEventArgs<mc_portfolio>> MCPositionsUpdated
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public void ChangePassword(string oldpass, string newpass)
         {

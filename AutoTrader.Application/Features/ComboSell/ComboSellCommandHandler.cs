@@ -20,27 +20,25 @@ namespace AutoTrader.Application.Features.ComboSell
     public class ComboSellCommandHandler : IRequestHandler<ComboSellCommand>
     {
         private readonly ISettingsService _settingsService;
-        private readonly Settings _settings;
-        private readonly IDoubleStockClient _stockClients;
+        private readonly IDualStockClient _stockClients;
 
-        public ComboSellCommandHandler(ISettingsService settingsService, IDoubleStockClient stockClients)
+        public ComboSellCommandHandler(ISettingsService settingsService, IDualStockClient stockClients)
         {
             this._settingsService = settingsService;
-            _settings = _settingsService.GetSettings();
             this._stockClients = stockClients;
         }
 
         public async Task<Unit> Handle(ComboSellCommand request, CancellationToken cancellationToken)
         {
-            _settingsService.UpdateSettings(_settings);
+            _settingsService.UpdateSettings(request.Settings);
 
             ComboOrder co = new ComboOrder();
-            co.SL = _settings.SL;
-            co.TP = _settings.TP;
-            co.Price = _settings.Price;
-            co.Vol = _settings.Volume;
-            co.ByMarket = _settings.ByMarket;
-            co.Seccode = _settings.Seccode;
+            co.SL = request.Settings.SL;
+            co.TP = request.Settings.TP;
+            co.Price = request.Settings.Price;
+            co.Vol = request.Settings.Volume;
+            co.ByMarket = request.Settings.ByMarket;
+            co.Seccode = request.Settings.Seccode;
             co.OrderDirection = OrderDirection.Sell;
 
             await StockOperationHelper.HandleComboOperation(_stockClients.Master, co);

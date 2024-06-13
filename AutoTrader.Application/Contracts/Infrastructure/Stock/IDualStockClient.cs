@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 {
-    public interface IDoubleStockClient
+    public interface IDualStockClient
     {
         IStockClient Master { get; }
 
