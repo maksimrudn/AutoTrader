@@ -1,4 +1,4 @@
-﻿using AutoTrader.Application.Features.Settings;
+﻿using AutoTrader.Application.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

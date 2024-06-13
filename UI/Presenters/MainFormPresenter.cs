@@ -12,14 +12,20 @@ using System.Timers;
 using System.Threading;
 using System.IO;
 using AutoTraderUI.Views;
-using AutoTrader.Application.Features.Settings;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Features.Strategies;
 using AutoTrader.Domain.Models.Strategies;
 using AutoTrader.Infrastructure;
 using AutoTrader.Domain.Models;
 using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Models.TXMLConnector.Outgoing;
+using AutoTrader.Application.Models;
+using AutoTrader.Domain.Models.Types;
+using MediatR;
+using AutoTrader.Application.Features.Login;
+using AutoTrader.Application.Features.Logout;
+using AutoTrader.Application.Features.ChangePassword;
+using AutoTrader.Application.Features.MultidirectOrder;
+using AutoTrader.Application.Services;
 
 namespace AutoTraderUI.Presenters
 {
@@ -28,24 +34,23 @@ namespace AutoTraderUI.Presenters
         MainForm _view;
         ISettingsService _settingsService;
         Settings _settings;
-        List<IStockClient> _connectors;
+        IDoubleStockClient _connectors;
         System.Timers.Timer _timerMultidirect;
 
         List<string> _seccodeList = new List<string>();
 
 
         StrategyManager _strategyManager;
+        private readonly IMediator _mediator;
 
-        public MainFormPresenter(MainForm view, ISettingsService settingsService, List<IStockClient> connectors, StrategyManager strategyManager)
+        public MainFormPresenter(MainForm view, ISettingsService settingsService, IDoubleStockClient connectors, StrategyManager strategyManager, IMediator mediator)
         {
-            if (connectors.Count != 2) throw new Exception("Загружено недопустимое колличество коннекторов");
-
             _view = view;
             this._settingsService = settingsService;
             _settings = settingsService.GetSettings();
             _connectors = connectors;
             _strategyManager = strategyManager;
-
+            this._mediator = mediator;
             _timerMultidirect = new System.Timers.Timer();
             _timerMultidirect.Interval = 100;
             _timerMultidirect.Elapsed += new ElapsedEventHandler(timer_Elapsed);
@@ -74,7 +79,7 @@ namespace AutoTraderUI.Presenters
 
             _view.Test += Test;
 
-            _connectors[0].OnMCPositionsUpdated += (target, args) =>
+            _connectors.Master.OnMCPositionsUpdated += (target, args) =>
             {
                 _view.LoadPositions(args.data);
             };
@@ -158,7 +163,7 @@ namespace AutoTraderUI.Presenters
         {
             try
             {
-                var res = _connectors[0].GetHistoryData( _view.ComboBoxSeccode, TradingMode.Futures, SecurityPeriods.M1, 2);
+                var res = _connectors.Master.GetHistoryData( _view.ComboBoxSeccode, TradingMode.Futures, SecurityPeriods.M1, 2);
             }
             catch (Exception e)
             {
@@ -173,16 +178,9 @@ namespace AutoTraderUI.Presenters
             
         }
 
-        private void SubscribeOnQuotations()
+        private async void SubscribeOnQuotations()
         {
-            try
-            {
-                _connectors[0].SubscribeQuotations(TradingMode.Futures, _view.ComboBoxSeccode);
-            }
-            catch (Exception e)
-            {
-                _view.ShowMessage(e.Message);
-            }
+            var id = await _mediator.Send(new CreateMultidirectOrderCommand());
         }
 
         private void StartMakeMultidirectByTimer()
@@ -190,7 +188,7 @@ namespace AutoTraderUI.Presenters
             _view.UpdateSettings(_settings);
             _settingsService.UpdateSettings(_settings);
 
-            if (!_connectors[0].Connected || !_connectors[1].Connected)
+            if (!_connectors.Master.Connected || !_connectors.Slave.Connected)
             {
                 _view.ShowMessage("Не все клиенты авторизованы!");
                 return;
@@ -238,29 +236,7 @@ namespace AutoTraderUI.Presenters
 
         private async void MakeMultidirect()
         {
-            _view.UpdateSettings(_settings);
-            _settingsService.UpdateSettings(_settings);
-
-            if (!_connectors[0].Connected || !_connectors[1].Connected)
-            {
-                _view.ShowMessage("Не все клиенты авторизованы!");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(_settings.Seccode))
-            {
-                _view.ShowMessage("Не выбран код инструмента");
-                return;
-            }
-
-            int sl = _settings.SL;
-            int tp = _settings.TP;
-            int price = _settings.Price;
-            int vol = _settings.Volume;
-            bool bymarket = _settings.ByMarket;
-            string seccode = _settings.Seccode;
-
-            await _makeMultidirect(price, vol, sl, tp, bymarket, seccode);
+            var id = await _mediator.Send(new CreateMultidirectOrderCommand());
         }
 
         private async Task _makeMultidirect(int price, int vol, int sl, int tp, bool bymarket, string seccode)
@@ -280,12 +256,12 @@ namespace AutoTraderUI.Presenters
 
             Task md1 = Task.Run(async () =>
             {
-                await _handleComboOperation(_connectors[0], comboOrder1);
+                await _handleComboOperation(_connectors.Master, comboOrder1);
             });
 
             Task md2 = Task.Run(async () =>
             {
-                await _handleComboOperation(_connectors[1], comboOrder2);
+                await _handleComboOperation(_connectors.Slave, comboOrder2);
             });
 
             await Task.WhenAll(md1, md2);
@@ -293,51 +269,14 @@ namespace AutoTraderUI.Presenters
 
         private async void ComboSell()
         {
-            _view.UpdateSettings(_settings);
-            _settingsService.UpdateSettings(_settings);
-
-            ComboOrder co = new ComboOrder();
-            co.SL = _settings.SL;
-            co.TP = _settings.TP;
-            co.Price = _settings.Price;
-            co.Vol = _settings.Volume;
-            co.ByMarket = _settings.ByMarket;
-            co.Seccode = _settings.Seccode;
-            co.OrderDirection = OrderDirection.Sell;
-
-            try
-            {
-                await _handleComboOperation(_connectors[0], co);
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            var id = await _mediator.Send(new ChangePassword2Command());
         }
 
         private async void ComboBuy()
         {
-            _view.UpdateSettings(_settings);
-            _settingsService.UpdateSettings(_settings);
-
-            ComboOrder co = new ComboOrder();
-            co.SL = _settings.SL;
-            co.TP = _settings.TP;
-            co.Price = _settings.Price;
-            co.Vol = _settings.Volume;
-            co.ByMarket = _settings.ByMarket;
-            co.Seccode = _settings.Seccode;
-            co.OrderDirection = OrderDirection.Buy;
-
-            try
-            {
-                await _handleComboOperation(_connectors[0], co);
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            var id = await _mediator.Send(new ChangePassword2Command());            
         }
+
         private async Task _handleComboOperation(IStockClient cl, ComboOrder co)
         {
 
@@ -351,41 +290,23 @@ namespace AutoTraderUI.Presenters
             }
         }
 
-        private void ChangePassword2()
+        private async void ChangePassword2()
         {
-            try
-            {
-                _view.UpdateSettings(_settings);
-                _settingsService.UpdateSettings(_settings);
-                _connectors[1].ChangePassword(_settings.Username2, _settings.Password2);
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            var id = await _mediator.Send(new ChangePassword2Command());
         }
 
-        private void ChangePassword1()
+        private async void ChangePassword1()
         {
-            try
-            {
-                _view.UpdateSettings(_settings);
-                _settingsService.UpdateSettings(_settings);
-                _connectors[0].ChangePassword(_settings.Username, _settings.Password);
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            var id = await _mediator.Send(new ChangePassword1Command());
         }
 
         private async void Close()
         {
-            _view.UpdateSettings(_settings);
-            _settingsService.UpdateSettings(_settings);      
+            //_view.UpdateSettings(_settings);
+            //_settingsService.UpdateSettings(_settings);      
 
-            await _connectors[0].DisposeAsync();
-            await _connectors[1].DisposeAsync();
+            //await _connectors[0].DisposeAsync();
+            //await _connectors[1].DisposeAsync();
         }
 
         /// <summary>
@@ -393,96 +314,22 @@ namespace AutoTraderUI.Presenters
         /// </summary>
         private async void Login1()
         {
-            Trace.TraceInformation("Login1: begin");
-
-            try
-            {
-                if (_view.ComboBoxConnectionType == string.Empty)
-                    throw new Exception("Не выбран режим доступа Демо/Прод");
-
-                int connectorNumber = 0;
-                _view.UpdateSettings(_settings);
-                _settingsService.UpdateSettings(_settings);
-
-                ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
-
-                await _connectors[connectorNumber].Login(_settings.GetUsername(), _settings.GetPassword(), connType);
-
-                _seccodeList = (await _connectors[connectorNumber].GetSecurities())
-                                            .Where(x => x.board == boardsCode.FUT.ToString())
-                                            .Select(x => x.seccode)
-                                            .OrderBy(x => x)
-                                            .ToList();
-
-                _view.LoadSeccodeList(_seccodeList);
-                _view.SetSelectedSeccode(_settings.Seccode);
-                _view.HandleConnected(connectorNumber);
-
-                _view.ClientId1 = _connectors[connectorNumber].FortsClientId;
-                _view.Union1 = _connectors[connectorNumber].Union;
-                _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString();
-
-                _view.FreeMoney1 = _connectors[connectorNumber].Money.ToString("N");
-                _view.FreeMoney = _connectors[connectorNumber].Money.ToString("N");
-
-                Trace.TraceInformation("Login1: completed");
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            var id = await _mediator.Send(new Login1Command());
         }
 
         private async void Login2()
         {
-            try
-            {
-                if (_view.ComboBoxConnectionType == string.Empty)
-                    throw new Exception("Не выбран режим доступа Демо/Прод");
-
-                int connectorNumber = 1;
-                _view.UpdateSettings(_settings);
-                _settingsService.UpdateSettings(_settings);
-
-                ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _view.ComboBoxConnectionType);
-
-                await _connectors[connectorNumber].Login(_settings.GetUsername2(), _settings.GetPassword2(), connType);
-
-                _view.HandleConnected(connectorNumber);
-                _view.FreeMoney2 = _connectors[connectorNumber].Money.ToString("N");
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            var id = await _mediator.Send(new Login2Command());
         }
 
-        private void Logout1()
+        private async void Logout1()
         {
-            try
-            {
-                int connNumber = 0;
-                _connectors[connNumber].Logout();
-                _view.HandleDisconnected(connNumber);
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            var id = await _mediator.Send(new Logout1Command());
         }
 
-        private void Logout2()
+        private async void Logout2()
         {
-            try
-            {
-                int connNumber = 0;
-                _connectors[connNumber].Logout();
-                _view.HandleDisconnected(connNumber);
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            var id = await _mediator.Send(new Logout2Command());
         }
 
         public void Run()

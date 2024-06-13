@@ -1,5 +1,5 @@
-﻿using AutoTrader.Domain.Models;
-using AutoTrader.Domain.Models.Strategies;
+﻿using AutoTrader.Domain.Models.Strategies;
+using AutoTrader.Domain.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -4,13 +4,17 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{FD9C6918-9D6F-40C3-B117-44E7A3BB0D4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTrader.Domain", "AutoTrader.Domain\AutoTrader.Domain.csproj", "{B6A04109-0F88-4E7D-A87D-079381DDC573}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTrader.Domain", "AutoTrader.Domain\AutoTrader.Domain.csproj", "{B6A04109-0F88-4E7D-A87D-079381DDC573}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTrader.Application", "AutoTrader.Application\AutoTrader.Application.csproj", "{ED203EAD-0219-4149-AAD9-68A655D23FC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTrader.Application", "AutoTrader.Application\AutoTrader.Application.csproj", "{ED203EAD-0219-4149-AAD9-68A655D23FC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTrader.Infrastructure", "AutoTrader.Infrastructure\AutoTrader.Infrastructure.csproj", "{0E0C4899-AE4D-4BAF-BEC3-4CE50977F047}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTrader.Infrastructure", "AutoTrader.Infrastructure\AutoTrader.Infrastructure.csproj", "{0E0C4899-AE4D-4BAF-BEC3-4CE50977F047}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTests", "ConsoleTests\ConsoleTests.csproj", "{5C7E41DB-E220-4A0B-8EB7-C799C6FED36F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTests", "ConsoleTests\ConsoleTests.csproj", "{5C7E41DB-E220-4A0B-8EB7-C799C6FED36F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BDB48062-CCD8-4908-A350-3CCF2507B60E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTrader.Application.UnitTests", "AutoTrader.Application.UnitTests\AutoTrader.Application.UnitTests.csproj", "{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,9 +86,24 @@ Global
 		{5C7E41DB-E220-4A0B-8EB7-C799C6FED36F}.Test|Any CPU.Build.0 = Debug|Any CPU
 		{5C7E41DB-E220-4A0B-8EB7-C799C6FED36F}.Test|x64.ActiveCfg = Debug|Any CPU
 		{5C7E41DB-E220-4A0B-8EB7-C799C6FED36F}.Test|x64.Build.0 = Debug|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Debug|x64.Build.0 = Debug|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Release|x64.ActiveCfg = Release|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Release|x64.Build.0 = Release|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Test|Any CPU.ActiveCfg = Debug|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Test|Any CPU.Build.0 = Debug|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Test|x64.ActiveCfg = Debug|Any CPU
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4}.Test|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E64B64A0-A737-439F-9BC0-BE9F4B16C0D4} = {BDB48062-CCD8-4908-A350-3CCF2507B60E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {73D9911D-E125-4A24-B96D-05B7233171ED}

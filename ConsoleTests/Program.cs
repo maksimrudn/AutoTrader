@@ -1,4 +1,4 @@
-﻿using AutoTrader.Domain.Models;
+﻿using AutoTrader.Domain.Models.Types;
 using AutoTrader.Infrastructure.Stock;
 using static System.Net.Mime.MediaTypeNames;
 

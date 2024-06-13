@@ -19,11 +19,12 @@ namespace AutoTrader.Infrastructure.Stock
         string _logpath = MainHelper.GetWorkFolder() + "\0";
         int _loglevel = 3;
         protected string _tconfFile;
-        
+        protected TXMLConnectorInputStreamHandler _inputStreamHandler;
 
-        public TXMLConnectorRequestHandler(string tconFile, Action<string> inputStreamHandler)
+
+        public TXMLConnectorRequestHandler(string tconFile, TXMLConnectorInputStreamHandler inputStreamHandler)
         {
-            _inputStreamHandlerAction = inputStreamHandler;
+            _inputStreamHandler = inputStreamHandler;
 
             _tconfFile = tconFile;
             _tConnectorDll = NativeMethods.LoadLibrary(tconFile);
@@ -66,7 +67,7 @@ namespace AutoTrader.Infrastructure.Stock
                 log.WriteLog("Initialize() OK");
             }
 
-            _callBackDelegate = new CallBackDelegate(_inputStreamHandler);
+            _callBackDelegate = new CallBackDelegate(_inputStreamCallBackHandler);
             _callbackHandle = GCHandle.Alloc(_callBackDelegate);
 
             //шаг 2
@@ -207,17 +208,15 @@ namespace AutoTrader.Infrastructure.Stock
         protected CallBackDelegate _callBackDelegate;
         protected GCHandle _callbackHandle;
 
-        protected bool _inputStreamHandler(IntPtr pData)
+        protected bool _inputStreamCallBackHandler(IntPtr pData)
         {
             bool res = true;
             String result = MarshalUTF8.PtrToStringUTF8(pData);
             _freeUpMemory(pData);
 
-            _inputStreamHandlerAction(result);
+            _inputStreamHandler.HandleData(result);
 
             return res;
         }
-
-        protected Action<String> _inputStreamHandlerAction;
     }
 }

@@ -4,11 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using AutoTrader.Domain.Models.Types;
 
-namespace AutoTrader.Application.Features.Settings
+namespace AutoTrader.Application.Models
 {
     public class Settings
     {
@@ -24,7 +27,7 @@ namespace AutoTrader.Application.Features.Settings
 
         public string Password2 { get; set; }
 
-        public string ConnectionType { get; set; }
+        public string ConnectionType { get; set; } = "Prod";
 
         public string Seccode { get; set; }
 
@@ -130,5 +133,16 @@ namespace AutoTrader.Application.Features.Settings
         }
 
         public StrategiesCollectionSettings StrategiesCollection { get; set; } = new StrategiesCollectionSettings();
+
+        public Settings DeepCopy()
+        {
+            using (var ms = new MemoryStream())
+            {
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(ms, this);
+                ms.Seek(0, SeekOrigin.Begin);
+                return (Settings)formatter.Deserialize(ms);
+            }
+        }
     }
 }
