@@ -18,7 +18,7 @@
             if (!_disposed)
             {
                 _timerClock.Dispose();
-                _ct_timer.Dispose();
+                _ct_timerMultidirectOrder.Dispose();
 
                 if (disposing && (components != null))
                 {
@@ -56,9 +56,8 @@
             comboBoxSeccode = new System.Windows.Forms.ComboBox();
             tabControl1 = new System.Windows.Forms.TabControl();
             tabPage1 = new System.Windows.Forms.TabPage();
-            observeButton = new System.Windows.Forms.Button();
-            quotationsUnSubscribebutton = new System.Windows.Forms.Button();
-            quotationsSubscribebutton = new System.Windows.Forms.Button();
+            buttonQuotationsUnSubscribe = new System.Windows.Forms.Button();
+            buttonQuotationsSubscribe = new System.Windows.Forms.Button();
             checkBoxShutdown = new System.Windows.Forms.CheckBox();
             label7 = new System.Windows.Forms.Label();
             dateTimePickerMultidirectExecute = new System.Windows.Forms.DateTimePicker();
@@ -71,7 +70,6 @@
             labelDifference = new System.Windows.Forms.Label();
             tabPage2 = new System.Windows.Forms.TabPage();
             groupBox4 = new System.Windows.Forms.GroupBox();
-            button2 = new System.Windows.Forms.Button();
             textBoxUnion = new System.Windows.Forms.TextBox();
             label17 = new System.Windows.Forms.Label();
             textBoxFreeMoney = new System.Windows.Forms.TextBox();
@@ -335,9 +333,8 @@
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(observeButton);
-            tabPage1.Controls.Add(quotationsUnSubscribebutton);
-            tabPage1.Controls.Add(quotationsSubscribebutton);
+            tabPage1.Controls.Add(buttonQuotationsUnSubscribe);
+            tabPage1.Controls.Add(buttonQuotationsSubscribe);
             tabPage1.Controls.Add(checkBoxShutdown);
             tabPage1.Controls.Add(label7);
             tabPage1.Controls.Add(dateTimePickerMultidirectExecute);
@@ -370,36 +367,26 @@
             tabPage1.Text = "Trading";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // observeButton
-            // 
-            observeButton.Location = new System.Drawing.Point(495, 583);
-            observeButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            observeButton.Name = "observeButton";
-            observeButton.Size = new System.Drawing.Size(217, 27);
-            observeButton.TabIndex = 34;
-            observeButton.Text = "Observe";
-            observeButton.UseVisualStyleBackColor = true;
-            // 
             // quotationsUnSubscribebutton
             // 
-            quotationsUnSubscribebutton.Location = new System.Drawing.Point(208, 583);
-            quotationsUnSubscribebutton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            quotationsUnSubscribebutton.Name = "quotationsUnSubscribebutton";
-            quotationsUnSubscribebutton.Size = new System.Drawing.Size(187, 27);
-            quotationsUnSubscribebutton.TabIndex = 33;
-            quotationsUnSubscribebutton.Text = "UnSubscribe on Quotations ";
-            quotationsUnSubscribebutton.UseVisualStyleBackColor = true;
+            buttonQuotationsUnSubscribe.Location = new System.Drawing.Point(208, 583);
+            buttonQuotationsUnSubscribe.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonQuotationsUnSubscribe.Name = "quotationsUnSubscribebutton";
+            buttonQuotationsUnSubscribe.Size = new System.Drawing.Size(187, 27);
+            buttonQuotationsUnSubscribe.TabIndex = 33;
+            buttonQuotationsUnSubscribe.Text = "UnSubscribe to Quotations ";
+            buttonQuotationsUnSubscribe.UseVisualStyleBackColor = true;
             // 
             // quotationsSubscribebutton
             // 
-            quotationsSubscribebutton.Location = new System.Drawing.Point(14, 583);
-            quotationsSubscribebutton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            quotationsSubscribebutton.Name = "quotationsSubscribebutton";
-            quotationsSubscribebutton.Size = new System.Drawing.Size(187, 27);
-            quotationsSubscribebutton.TabIndex = 33;
-            quotationsSubscribebutton.Text = "Subscribe on Quotations ";
-            quotationsSubscribebutton.UseVisualStyleBackColor = true;
-            quotationsSubscribebutton.Click += quotationsSubscribebutton_Click;
+            buttonQuotationsSubscribe.Location = new System.Drawing.Point(14, 583);
+            buttonQuotationsSubscribe.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonQuotationsSubscribe.Name = "quotationsSubscribebutton";
+            buttonQuotationsSubscribe.Size = new System.Drawing.Size(187, 27);
+            buttonQuotationsSubscribe.TabIndex = 33;
+            buttonQuotationsSubscribe.Text = "Subscribe to Quotations ";
+            buttonQuotationsSubscribe.UseVisualStyleBackColor = true;
+            buttonQuotationsSubscribe.Click += buttonQuotationsSubscribe_Click;
             // 
             // checkBoxShutdown
             // 
@@ -442,6 +429,7 @@
             buttonStartMultidirectTimer.TabIndex = 27;
             buttonStartMultidirectTimer.Text = "MULTIDIRECT BY TIMER";
             buttonStartMultidirectTimer.UseVisualStyleBackColor = true;
+            buttonStartMultidirectTimer.Click += buttonStartMultidirectTimer_Click;
             // 
             // buttonMakeMultidirect
             // 
@@ -529,7 +517,6 @@
             // 
             // groupBox4
             // 
-            groupBox4.Controls.Add(button2);
             groupBox4.Controls.Add(textBoxUnion);
             groupBox4.Controls.Add(label17);
             groupBox4.Controls.Add(textBoxFreeMoney);
@@ -544,17 +531,6 @@
             groupBox4.TabIndex = 19;
             groupBox4.TabStop = false;
             groupBox4.Text = "Info";
-            // 
-            // button2
-            // 
-            button2.Location = new System.Drawing.Point(443, 17);
-            button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(295, 23);
-            button2.TabIndex = 6;
-            button2.Text = "united_portfolio";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
             // 
             // textBoxUnion
             // 
@@ -1064,6 +1040,7 @@
             buttonStopAll.TabIndex = 1;
             buttonStopAll.Text = "StopAll";
             buttonStopAll.UseVisualStyleBackColor = true;
+            buttonStopAll.Click += buttonStopAll_Click;
             // 
             // buttonRunAll
             // 
@@ -1074,6 +1051,7 @@
             buttonRunAll.TabIndex = 1;
             buttonRunAll.Text = "RunAll";
             buttonRunAll.UseVisualStyleBackColor = true;
+            buttonRunAll.Click += buttonRunAll_Click;
             // 
             // groupBoxObservers
             // 
@@ -1097,6 +1075,7 @@
             buttonAddObserver.TabIndex = 1;
             buttonAddObserver.Text = "Add";
             buttonAddObserver.UseVisualStyleBackColor = true;
+            buttonAddObserver.Click += buttonAddObserver_Click;
             // 
             // observersDataGridView
             // 
@@ -1115,7 +1094,7 @@
             testButton.TabIndex = 35;
             testButton.Text = "Test";
             testButton.UseVisualStyleBackColor = true;
-            testButton.Click += testButton_Click;
+            testButton.Click += TestButton_Click;
             // 
             // labelTime
             // 
@@ -1254,7 +1233,6 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.ComboBox comboBoxConnectionType;
         private System.Windows.Forms.CheckBox checkBoxShutdown;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.DataGridView dataGridViewPositions;
@@ -1269,9 +1247,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Price;
         private System.Windows.Forms.DataGridViewTextBoxColumn Vol;
         private System.Windows.Forms.DataGridViewTextBoxColumn PNL;
-        private System.Windows.Forms.Button quotationsSubscribebutton;
-        private System.Windows.Forms.Button quotationsUnSubscribebutton;
-        private System.Windows.Forms.Button observeButton;
+        private System.Windows.Forms.Button buttonQuotationsSubscribe;
+        private System.Windows.Forms.Button buttonQuotationsUnSubscribe;
         private System.Windows.Forms.Button testButton;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.TextBox textBoxDifference;

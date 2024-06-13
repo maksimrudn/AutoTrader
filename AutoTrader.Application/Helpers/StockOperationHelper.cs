@@ -23,7 +23,7 @@ namespace AutoTrader.Application.Helpers
             }
         }
 
-        public static async Task MakeMultidirect(IDoubleStockClient stockClients, int price, int vol, int sl, int tp, bool bymarket, string seccode)
+        public static async Task MakeMultidirect(IDualStockClient stockClients, int price, int vol, int sl, int tp, bool bymarket, string seccode)
         {
             ComboOrder comboOrder1 = new ComboOrder();
             comboOrder1.TradingMode = TradingMode.Futures;

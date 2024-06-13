@@ -18,7 +18,7 @@ namespace AutoTrader.Infrastructure
 
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
-            services.AddSingleton<IDoubleStockClient, DoubleStockClient>();
+            services.AddSingleton<IDualStockClient, DualStockClient>();
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddTransient<IEmailService, EmailService>();
 

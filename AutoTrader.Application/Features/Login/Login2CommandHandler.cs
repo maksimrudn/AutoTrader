@@ -21,13 +21,11 @@ namespace AutoTrader.Application.Features.Login
     public class Login2CommandHandler : IRequestHandler<Login2Command, LoginResponse>
     {
         private readonly ISettingsService _settingsService;
-        private readonly Settings _settings;
-        private readonly IDoubleStockClient _stockClients;
+        private readonly IDualStockClient _stockClients;
 
-        public Login2CommandHandler(ISettingsService settingsService, IDoubleStockClient stockClients)
+        public Login2CommandHandler(ISettingsService settingsService, IDualStockClient stockClients)
         {
             this._settingsService = settingsService;
-            _settings = _settingsService.GetSettings();
             this._stockClients = stockClients;
         }
 
@@ -41,13 +39,13 @@ namespace AutoTrader.Application.Features.Login
             if (validationResult.Errors.Count > 0)
                 throw new Exceptions.ValidationException(validationResult);
 
-            ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _settings.ConnectionType);
+            ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), request.Settings.ConnectionType);
 
-            await _stockClients.Slave.Login(_settings.GetUsername(), _settings.GetPassword(), connType);
+            await _stockClients.Slave.Login(request.Settings.GetUsername(), request.Settings.GetPassword(), connType);
 
             var resp = new LoginResponse()
             {
-                SelectedSeccode = _settings.Seccode,
+                SelectedSeccode = request.Settings.Seccode,
                 ClientId = _stockClients.Slave.FortsClientId,
                 Union = _stockClients.Slave.Union,
                 FreeMoney = _stockClients.Slave.Money.ToString("N"),

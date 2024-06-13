@@ -20,19 +20,16 @@ namespace AutoTrader.Application.Features.Login
     public class Login1CommandHandler : IRequestHandler<Login1Command, LoginResponse>
     {
         private readonly ISettingsService _settingsService;
-        private readonly Settings _settings;
-        private readonly IDoubleStockClient _stockClients;
+        private readonly IDualStockClient _stockClients;
 
-        public Login1CommandHandler(ISettingsService settingsService, IDoubleStockClient stockClients)
+        public Login1CommandHandler(ISettingsService settingsService, IDualStockClient stockClients)
         {
             this._settingsService = settingsService;
-            _settings = _settingsService.GetSettings();
             this._stockClients = stockClients;
         }
 
         public async Task<LoginResponse> Handle(Login1Command request, CancellationToken cancellationToken)
         {
-            int connectorNumber = 0;
             _settingsService.UpdateSettings(request.Settings);
 
             var validator = new Login1CommandValidator();
@@ -41,9 +38,9 @@ namespace AutoTrader.Application.Features.Login
             if (validationResult.Errors.Count > 0)
                 throw new Exceptions.ValidationException(validationResult);
 
-            ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), _settings.ConnectionType);
+            ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), request.Settings.ConnectionType);
 
-            await _stockClients.Master.Login(_settings.GetUsername(), _settings.GetPassword(), connType);
+            await _stockClients.Master.Login(request.Settings.GetUsername(), request.Settings.GetPassword(), connType);
 
             var _seccodeList = (await _stockClients.Master.GetSecurities())
                                         .Where(x => x.board == boardsCode.FUT.ToString())
@@ -54,7 +51,7 @@ namespace AutoTrader.Application.Features.Login
             var resp = new LoginResponse()
             {
                 SeccodeList = _seccodeList,
-                SelectedSeccode = _settings.Seccode,
+                SelectedSeccode = request.Settings.Seccode,
                 ClientId = _stockClients.Master.FortsClientId,
                 Union = _stockClients.Master.Union,
                 FreeMoney = _stockClients.Master.Money.ToString("N"),

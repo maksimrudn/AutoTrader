@@ -36,7 +36,9 @@ namespace AutoTrader.Infrastructure.Stock
             { OrderDirection.Sell, buysell.S}
         };
 
-        public event EventHandler<OnMCPositionsUpdatedEventArgs> OnMCPositionsUpdated;
+        public event EventHandler<TXMLEventArgs<mc_portfolio>> MCPositionsUpdated;
+
+        public event EventHandler<TXMLEventArgs<HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
 
         public bool Connected
         {
@@ -48,6 +50,8 @@ namespace AutoTrader.Infrastructure.Stock
                 return res;
             }
         }
+
+        public HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security> Securities { get => _inputStreamHandler.Securities; }
 
         public bool PositionsIsActual
         {
@@ -208,12 +212,12 @@ namespace AutoTrader.Infrastructure.Stock
             _inputStreamHandler = new TXMLConnectorInputStreamHandler();
             _requestHandler = new TXMLConnectorRequestHandler(tconFile, _inputStreamHandler);
 
-            _inputStreamHandler.OnMCPositionsUpdated += OnMCPositionsUpdatedAction;
+            _inputStreamHandler.MCPositionsUpdated += OnMCPositionsUpdatedHandler;
         }
 
-        private void OnMCPositionsUpdatedAction(object? sender, OnMCPositionsUpdatedEventArgs e)
+        private void OnMCPositionsUpdatedHandler(object? sender, TXMLEventArgs<mc_portfolio> e)
         {
-            OnMCPositionsUpdated?.Invoke(sender, e);
+            MCPositionsUpdated?.Invoke(sender, e);
         }
 
         public async Task Login(string username, string password, ConnectionType connectionType)

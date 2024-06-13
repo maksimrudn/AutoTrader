@@ -22,9 +22,9 @@ namespace AutoTrader.Application.UnitTests.Mocks
             return settingsService;
         }
 
-        internal static Mock<IDoubleStockClient> GetDoubleStockClient()
+        internal static Mock<IDualStockClient> GetDoubleStockClient()
         {
-            var doubleStockClientService = new Mock<IDoubleStockClient>();
+            var doubleStockClientService = new Mock<IDualStockClient>();
             doubleStockClientService.Setup(srv => srv.Master).Returns(new DummyStockClient());
             doubleStockClientService.Setup(srv => srv.Slave).Returns(new DummyStockClient());
 

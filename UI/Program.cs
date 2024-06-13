@@ -1,7 +1,6 @@
 ﻿using AutoTrader.Application;
 using AutoTrader.Application.Contracts.UI;
 using AutoTrader.Infrastructure;
-using AutoTraderUI.Presenters;
 using AutoTraderUI.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,9 +17,6 @@ namespace AutoTraderUI
 
         public static IServiceProvider ServiceProvider { get; private set; }
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static async Task Main()
         {
@@ -32,8 +28,8 @@ namespace AutoTraderUI
 
             try
             {
-                var presenter = ServiceProvider.GetService<MainFormPresenter>();
-                presenter.Run();
+                var mainForm = ServiceProvider.GetService<MainForm>();
+                Application.Run(mainForm);
             }
             finally
             {
@@ -63,7 +59,6 @@ namespace AutoTraderUI
                         return mainForm;
                     });
 
-                    services.AddSingleton<MainFormPresenter>();
                     services.AddSingleton<CreateEditObserver>();
                 });
         }

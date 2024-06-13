@@ -14,10 +14,10 @@ namespace AutoTrader.Application.Services
     {
         Settings _settings;
         private readonly ISettingsService _settingsService;
-        IDoubleStockClient _connectors;
+        IDualStockClient _connectors;
         private readonly IEmailService _emailService;
 
-        public StrategyManager(ISettingsService settingsService, IDoubleStockClient connectors, IEmailService emailService)
+        public StrategyManager(ISettingsService settingsService, IDualStockClient connectors, IEmailService emailService)
         {
             _settingsService = settingsService;
             _settings = _settingsService.GetSettings();

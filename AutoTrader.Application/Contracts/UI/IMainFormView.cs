@@ -8,26 +8,8 @@ using System.Threading.Tasks;
 
 namespace AutoTrader.Application.Contracts.UI
 {
-    public interface IMainFormView : IView
+    public interface IMainFormView
     {
-        event Action Login1;
-        event Action Logout1;
-        event Action ChangePassword1;
-        event Action Login2;
-        event Action Logout2;
-        event Action ChangePassword2;
-        event Action ComboBuy;
-        event Action ComboSell;
-        event Action MakeMultidirect;
-        event Action StartMakeMultidirectByTimer;
-        event Action OnClose;
-        event Action GetUnion;
-        event Action SubscribeOnQuotations;
-        event Action UnSubscribeOnQuotations;
-        event Action Observe;
-        event Action Test;
-        
-
         string ComboBoxConnectionType { get; }
 
         string ComboBoxSeccode { get; }

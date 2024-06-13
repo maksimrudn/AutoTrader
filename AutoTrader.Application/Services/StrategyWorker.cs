@@ -16,7 +16,7 @@ namespace AutoTrader.Application.Services
     public class StrategyWorker
     {
         StrategySettings _settings;
-        IDoubleStockClient _connectors;
+        IDualStockClient _connectors;
         IEmailService _emailService;
         string _notificationFile;
         string _notificationEmail;
@@ -27,7 +27,7 @@ namespace AutoTrader.Application.Services
         /// </summary>
         int? _timezone = null;
 
-        public StrategyWorker(StrategySettings settings, IDoubleStockClient connectors, IEmailService emailService, string notificationFile, string notificationEmail)
+        public StrategyWorker(StrategySettings settings, IDualStockClient connectors, IEmailService emailService, string notificationFile, string notificationEmail)
         {
             _settings = settings;
             _connectors = connectors;

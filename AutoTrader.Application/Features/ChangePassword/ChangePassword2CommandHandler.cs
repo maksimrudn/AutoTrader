@@ -20,30 +20,18 @@ namespace AutoTrader.Application.Features.ChangePassword
     public class ChangePassword2CommandHandler : IRequestHandler<ChangePassword1Command>
     {
         private readonly ISettingsService _settingsService;
-        private readonly Settings _settings;
-        private readonly IDoubleStockClient _stockClients;
-        private readonly IMainFormView _view;
+        private readonly IDualStockClient _stockClients;
 
-        public ChangePassword2CommandHandler(ISettingsService settingsService, IDoubleStockClient stockClients, IMainFormView view)
+        public ChangePassword2CommandHandler(ISettingsService settingsService, IDualStockClient stockClients)
         {
             this._settingsService = settingsService;
-            _settings = _settingsService.GetSettings();
             this._stockClients = stockClients;
-            this._view = view;
         }
 
         public async Task<Unit> Handle(ChangePassword1Command request, CancellationToken cancellationToken)
         {
-            try
-            {
-                _view.UpdateSettings(_settings);
-                _settingsService.UpdateSettings(_settings);
-                _stockClients.Slave.ChangePassword(_settings.Username2, _settings.Password2);
-            }
-            catch (Exception ex)
-            {
-                _view.ShowMessage(ex.Message);
-            }
+            _stockClients.Slave.ChangePassword(request.Settings.Username2, request.Settings.Password2);
+            _settingsService.UpdateSettings(request.Settings);
 
             return Unit.Value;
         }

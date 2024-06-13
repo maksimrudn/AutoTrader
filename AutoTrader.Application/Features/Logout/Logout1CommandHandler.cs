@@ -19,9 +19,9 @@ namespace AutoTrader.Application.Features.Logout
 {
     public class Logout1CommandHandler : IRequestHandler<Logout1Command>
     {
-        private readonly IDoubleStockClient _stockClients;
+        private readonly IDualStockClient _stockClients;
 
-        public Logout1CommandHandler(IDoubleStockClient stockClients)
+        public Logout1CommandHandler(IDualStockClient stockClients)
         {
             this._stockClients = stockClients;
         }
