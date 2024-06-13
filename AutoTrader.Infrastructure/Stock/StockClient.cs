@@ -6,6 +6,7 @@ using AutoTrader.Application.Models.TXMLConnector.Ingoing;
 using AutoTrader.Application.Models.TXMLConnector.Outgoing;
 using AutoTrader.Application.UnManaged;
 using AutoTrader.Domain.Models;
+using AutoTrader.Domain.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -205,7 +206,7 @@ namespace AutoTrader.Infrastructure.Stock
         public StockClient(string tconFile)
         {
             _inputStreamHandler = new TXMLConnectorInputStreamHandler();
-            _requestHandler = new TXMLConnectorRequestHandler(tconFile, _inputStreamHandler.HandleData);
+            _requestHandler = new TXMLConnectorRequestHandler(tconFile, _inputStreamHandler);
 
             _inputStreamHandler.OnMCPositionsUpdated += OnMCPositionsUpdatedAction;
         }
@@ -245,10 +246,11 @@ namespace AutoTrader.Infrastructure.Stock
             }
             else
             {
-                // ждём ассинхронный ответ о результате подключения
+                // Waiting for server_status information
+                // Or for receiving of clients (that is inderect means connection is successfull)
                 await _inputStreamHandler.ServerStatusUpdated.WaitOne();
 
-                if (_inputStreamHandler.ServerStatus.connected == "error")
+                if (_inputStreamHandler.ServerStatus?.connected == "error")
                 {
                     throw new Exception(_inputStreamHandler.ServerStatus.InnerText);
                 }
@@ -293,11 +295,11 @@ namespace AutoTrader.Infrastructure.Stock
         }
 
 
-        bool _disposed = false;
+        volatile bool _disposed = false;
 
         public async ValueTask DisposeAsync()
         {
-            DisposeAsync(true);
+            await DisposeAsync(true);
             GC.SuppressFinalize(this);
         }
 

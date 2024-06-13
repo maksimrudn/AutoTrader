@@ -10,10 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Models;
+using AutoTrader.Domain.Models.Types;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public class TXMLDummyConnector : IStockClient
+    public class DummyStockClient : IStockClient
     {
         public bool Connected { get; private set; } = false;
 

@@ -1,25 +1,12 @@
 ﻿using AutoTrader.Application;
-using AutoTrader.Application.Contracts.Infrastructure;
-using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Features.Settings;
-using AutoTrader.Application.Features.Strategies;
-using AutoTrader.Application.Models.Email;
+using AutoTrader.Application.Contracts.UI;
 using AutoTrader.Infrastructure;
-using AutoTrader.Infrastructure.Stock;
-using AutoTraderSDK.Core;
-using AutoTraderUI;
-using AutoTraderUI.Common;
 using AutoTraderUI.Presenters;
 using AutoTraderUI.Views;
-using LightInject;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -35,7 +22,7 @@ namespace AutoTraderUI
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static async Task Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -43,10 +30,16 @@ namespace AutoTraderUI
             var host = CreateHostBuilder().Build();
             ServiceProvider = host.Services;
 
-            var presenter = ServiceProvider.GetService<MainFormPresenter>();
-            presenter.Run();
+            try
+            {
+                var presenter = ServiceProvider.GetService<MainFormPresenter>();
+                presenter.Run();
+            }
+            finally
+            {
+                await DisposeServices();
+            }
         }
-
 
         static IHostBuilder CreateHostBuilder()
         {
@@ -59,14 +52,28 @@ namespace AutoTraderUI
                 .ConfigureServices((context, services) => {
 
                     services.AddInfrastructureServices(context.Configuration);
-                    services.AddApplicationServices();
+                    services.AddApplicationServices();                    
 
                     services.AddSingleton<ApplicationContext>(Context);
 
-                    services.AddSingleton<MainForm>();
+                    services.AddSingleton<IMainFormView, MainForm>();
+                    services.AddSingleton<MainForm>(serviceProvider =>
+                    {
+                        var mainForm = (MainForm)serviceProvider.GetRequiredService<IMainFormView>();
+                        return mainForm;
+                    });
+
                     services.AddSingleton<MainFormPresenter>();
                     services.AddSingleton<CreateEditObserver>();
                 });
+        }
+        
+        private static async Task DisposeServices()
+        {
+            if (ServiceProvider is IAsyncDisposable asyncDisposable)
+            {
+                await asyncDisposable.DisposeAsync();
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using AutoTrader.Application.Helpers;
-using AutoTrader.Domain.Models;
+using AutoTrader.Domain.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

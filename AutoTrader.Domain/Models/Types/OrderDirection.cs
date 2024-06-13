@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoTrader.Infrastructure.Stock
+namespace AutoTrader.Domain.Models.Types
 {
-    public class TradeRobotEnvironment
+    public enum OrderDirection
     {
+        Buy,
+        Sell
     }
 }

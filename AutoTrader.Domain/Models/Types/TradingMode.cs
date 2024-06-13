@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoTraderUI.Common
+namespace AutoTrader.Domain.Models.Types
 {
-    public interface IView
+    public enum TradingMode
     {
-        void Show();
-
-        void Close();
+        Futures,
     }
 }

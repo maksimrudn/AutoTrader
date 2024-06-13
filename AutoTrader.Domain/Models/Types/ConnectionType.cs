@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoTrader.Domain.Models
+namespace AutoTrader.Domain.Models.Types
 {
     /// <summary>
     /// Тип подключение - демо/продуктив

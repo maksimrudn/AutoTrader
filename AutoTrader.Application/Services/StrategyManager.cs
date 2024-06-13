@@ -1,6 +1,6 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Features.Settings;
+using AutoTrader.Application.Models;
 using AutoTrader.Domain.Models.Strategies;
 using System;
 using System.Collections.Generic;
@@ -8,30 +8,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoTrader.Application.Features.Strategies
+namespace AutoTrader.Application.Services
 {
     public class StrategyManager
     {
-        AutoTrader.Application.Features.Settings.Settings _settings;
+        Settings _settings;
         private readonly ISettingsService _settingsService;
-        List<IStockClient> _connectors;
+        IDoubleStockClient _connectors;
         private readonly IEmailService _emailService;
 
-        public StrategyManager(ISettingsService settingsService, List<IStockClient> connectors, IEmailService emailService)
+        public StrategyManager(ISettingsService settingsService, IDoubleStockClient connectors, IEmailService emailService)
         {
             _settingsService = settingsService;
             _settings = _settingsService.GetSettings();
             _connectors = connectors;
-            this._emailService = emailService;
+            _emailService = emailService;
             StrategyWorkers = _settings.StrategiesCollection
                                         .StrategyList
-                                        .Select(strategySettings => { 
+                                        .Select(strategySettings =>
+                                        {
                                             return new StrategyWorker(
-                                                        strategySettings, 
-                                                        _connectors, 
+                                                        strategySettings,
+                                                        _connectors,
                                                         _emailService,
-                                                        _settings.StrategiesCollection.NotificationFilename, 
-                                                        _settings.StrategiesCollection.NotificationEmail); 
+                                                        _settings.StrategiesCollection.NotificationFilename,
+                                                        _settings.StrategiesCollection.NotificationEmail);
                                         }).ToList();
         }
 

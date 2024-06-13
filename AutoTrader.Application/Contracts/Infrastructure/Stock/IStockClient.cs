@@ -2,6 +2,7 @@
 using AutoTrader.Application.Models.TXMLConnector.Ingoing;
 using AutoTrader.Application.Models.TXMLConnector.Outgoing;
 using AutoTrader.Domain.Models;
+using AutoTrader.Domain.Models.Types;
 using System;
 using System.Collections.Generic;
 

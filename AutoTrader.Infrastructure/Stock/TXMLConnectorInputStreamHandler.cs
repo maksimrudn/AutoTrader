@@ -6,6 +6,7 @@ using AutoTrader.Domain.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -68,7 +69,7 @@ namespace AutoTrader.Infrastructure.Stock
         public void HandleData(String result)
         {
             string nodeName = _getNodeName(result);
-
+            Debug.WriteLine(nodeName);
             switch (nodeName)
             {
                 case "server_status":
@@ -107,6 +108,8 @@ namespace AutoTrader.Infrastructure.Stock
 
                     // todo реализовать проверку на присутствие и удаление элемента перед добавлением
                     Clients.Add(clientInfo);
+
+                    ServerStatusUpdated.Set();
 
                     if (clientInfo.forts_acc != null)
                         Forts_client = clientInfo;

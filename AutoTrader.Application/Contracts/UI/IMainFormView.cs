@@ -1,4 +1,4 @@
-﻿using AutoTrader.Application.Features.Settings;
+﻿using AutoTrader.Application.Models;
 using AutoTrader.Application.Models.TXMLConnector.Ingoing;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoTraderUI.Common
+namespace AutoTrader.Application.Contracts.UI
 {
     public interface IMainFormView : IView
     {
@@ -26,6 +26,7 @@ namespace AutoTraderUI.Common
         event Action UnSubscribeOnQuotations;
         event Action Observe;
         event Action Test;
+        
 
         string ComboBoxConnectionType { get; }
 
@@ -52,5 +53,7 @@ namespace AutoTraderUI.Common
         void HandleDisconnected(int connNumber);
         void UpdateSettings(Settings settings);
         void LoadPositions(mc_portfolio portfolio);
+        void FreezUI();
+        void UnFreezUI();
     }
 }

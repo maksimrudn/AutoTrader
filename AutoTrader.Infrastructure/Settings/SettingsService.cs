@@ -1,12 +1,6 @@
-﻿using AutoTrader.Application.Contracts.Infrastructure;
+﻿
+using AutoTrader.Application.Contracts.Infrastructure;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace AutoTrader.Application.Features.Settings
@@ -20,9 +14,9 @@ namespace AutoTrader.Application.Features.Settings
             this._configuration = configuration;
         }
 
-        public Settings GetSettings()
+        public AutoTrader.Application.Models.Settings GetSettings()
         {
-            Settings settings = null;
+            AutoTrader.Application.Models.Settings settings = null;
             
 
             //проверка наличия файла
@@ -30,14 +24,14 @@ namespace AutoTrader.Application.Features.Settings
             {
                 using (FileStream fs = new FileStream(_settingsFilename, FileMode.Open))
                 {
-                    XmlSerializer xser = new XmlSerializer(typeof(Settings));
-                    settings = (Settings)xser.Deserialize(fs);
+                    XmlSerializer xser = new XmlSerializer(typeof(AutoTrader.Application.Models.Settings));
+                    settings = (AutoTrader.Application.Models.Settings)xser.Deserialize(fs);
                     fs.Close();
                 }
             }
             else
             {
-                settings = new Settings();
+                settings = new AutoTrader.Application.Models.Settings();
             }
 
             return settings;
@@ -48,14 +42,14 @@ namespace AutoTrader.Application.Features.Settings
             //return settings;
         }
 
-        public void UpdateSettings(Settings settings)
+        public void UpdateSettings(AutoTrader.Application.Models.Settings settings)
         {
             if (File.Exists(_settingsFilename)) File.Delete(_settingsFilename);
 
 
             using (FileStream fs = new FileStream(_settingsFilename, FileMode.Create))
             {
-                XmlSerializer xser = new XmlSerializer(typeof(Settings));
+                XmlSerializer xser = new XmlSerializer(typeof(AutoTrader.Application.Models.Settings));
                 xser.Serialize(fs, settings);
                 fs.Close();
             }

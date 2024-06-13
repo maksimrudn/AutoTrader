@@ -18,12 +18,7 @@ namespace AutoTrader.Infrastructure
 
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
-            List<IStockClient> connectors = new List<IStockClient>();
-            connectors.Add(new StockClient("txmlconnector1.dll"));
-            connectors.Add(new StockClient("txmlconnector2.dll"));
-            //connectors.Add(new TXMLDummyConnector());
-            //connectors.Add(new TXMLDummyConnector());
-            services.AddSingleton<List<IStockClient>>(connectors);
+            services.AddSingleton<IDoubleStockClient, DoubleStockClient>();
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddTransient<IEmailService, EmailService>();
 

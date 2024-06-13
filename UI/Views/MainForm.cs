@@ -16,9 +16,20 @@ using AutoTraderUI.Common;
 using System.Globalization;
 using AutoTrader.Application.Models.TXMLConnector.Ingoing;
 using AutoTrader.Domain.Models.Strategies;
-using AutoTrader.Application.Features.Settings;
 using AutoTrader.Infrastructure.Stock;
 using AutoTrader.Application.Contracts.Infrastructure;
+using AutoTrader.Application.Models;
+using AutoTrader.Application.Contracts.UI;
+using AutoTrader.Application.Features.Login;
+using MediatR;
+using AutoTrader.Application.Features.Logout;
+using AutoTrader.Application.Features.ChangePassword;
+using AutoTrader.Application.Features.ComboBuy;
+using AutoTrader.Application.Features.ComboSell;
+using AutoTrader.Application.Features.MultidirectOrder;
+using AutoTrader.Application.Features.SubscribeOnQuotations;
+using Microsoft.Extensions.Primitives;
+using System.Threading;
 
 namespace AutoTraderUI
 {
@@ -27,25 +38,33 @@ namespace AutoTraderUI
         System.Timers.Timer _timerClock;
         protected ApplicationContext _context;
         private readonly IEmailService _emailService;
+        private readonly IMediator _mediator;
+        private readonly ISettingsService _settingsService;
+        Settings _settings;
+        Action<Func<Task>> _commandWrapperAction = null;
 
-        public MainForm(ApplicationContext context, IEmailService emailService)
+        public MainForm(ApplicationContext context, IEmailService emailService, IMediator mediator, ISettingsService settingsService)
         {
             Trace.TraceInformation("MainForm: begin creation");
 
             _context = context;
             this._emailService = emailService;
+            this._mediator = mediator;
+            this._settingsService = settingsService;
+            _settings = _settingsService.GetSettings();
+
             InitializeComponent();
 
 
-            buttonLogin.Click += (sender, args) => Invoke(Login1);
-            buttonLogout.Click += (sender, args) => Invoke(Logout1);
-            buttonChangePassword.Click += (sender, args) => Invoke(ChangePassword1);
-            buttonLogin2.Click += (sender, args) => Invoke(Login2);
-            buttonLogout2.Click += (sender, args) => Invoke(Logout2);
-            buttonChangePassword2.Click += (sender, args) => Invoke(ChangePassword2);
-            buttonComboBuy.Click += (sender, args) => Invoke(ComboBuy);
-            buttonComboSell.Click += (sender, args) => Invoke(ComboSell);
-            buttonMakeMultidirect.Click += (sender, args) => Invoke(MakeMultidirect);
+            //buttonLogin.Click += (sender, args) => Invoke(Login1);
+            //buttonLogout.Click += (sender, args) => Invoke(Logout1);
+            //buttonChangePassword.Click += (sender, args) => Invoke(ChangePassword1);
+            //buttonLogin2.Click += (sender, args) => Invoke(Login2);
+            //buttonLogout2.Click += (sender, args) => Invoke(Logout2);
+            //buttonChangePassword2.Click += (sender, args) => Invoke(ChangePassword2);
+            //buttonComboBuy.Click += (sender, args) => Invoke(ComboBuy);
+            //buttonComboSell.Click += (sender, args) => Invoke(ComboSell);
+            //buttonMakeMultidirect.Click += (sender, args) => Invoke(MakeMultidirect);
             buttonStartMultidirectTimer.Click += (sender, args) => Invoke(GetUnion);
             button2.Click += (sender, args) => Invoke(GetUnion);
 
@@ -58,15 +77,15 @@ namespace AutoTraderUI
 
             //testButton.Click += (sender, args) => Invoke(Test);
 
-            quotationsSubscribebutton.Click += (sender, args) => Invoke(SubscribeOnQuotations);
+            //quotationsSubscribebutton.Click += (sender, args) => Invoke(SubscribeOnQuotations);
             quotationsUnSubscribebutton.Click += (sender, args) => Invoke(UnSubscribeOnQuotations);
             observeButton.Click += (sender, args) => Invoke(Observe);
 
-            this.FormClosing += (sender, args) =>
-            {
-                _timerClock.Stop();
-                Invoke(OnClose);
-            };
+            //this.FormClosing += (sender, args) =>
+            //{
+            //    _timerClock.Stop();
+            //    Invoke(OnClose);
+            //};
 
             comboBoxConnectionType.DataSource = new List<string> { string.Empty, "Prod", "Demo" };
 
@@ -80,6 +99,22 @@ namespace AutoTraderUI
             comboBoxTimezone.Items.Add(7);
             comboBoxTimezone.SelectedValueChanged += (sender, args) => Invoke(TimezoneChanged);
 
+            _commandWrapperAction = async (act) =>
+            {
+                try
+                {
+                    this.FreezUI();
+                    await act();
+                }
+                catch (Exception ex)
+                {
+                    this.ShowMessage(ex.Message);
+                }
+                finally
+                {
+                    this.UnFreezUI();
+                }
+            };
         }
 
         public event Action TimezoneChanged;
@@ -122,23 +157,36 @@ namespace AutoTraderUI
             if (action != null) action();
         }
 
+
+        CancellationTokenSource _ct_timer = new CancellationTokenSource();
         private void timerClock_Elapsed(object sender, ElapsedEventArgs e)
         {
-            labelTime.Invoke(new MethodInvoker(() =>
-            {
-                labelTime.Text = $"Time: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
-            }));
+            if (_ct_timer.IsCancellationRequested) return;
 
+            if (!_disposed)
+            {
+                labelTime?.Invoke(new MethodInvoker(() =>
+                {
+                    labelTime.Text = $"Time: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
+                }));
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            _timerClock.Stop();
+            _ct_timer.Cancel();
+
+            base.OnClosed(e);
         }
 
         protected override void OnLoad(EventArgs e)
         {
+            this.LoadSettings(_settings);
+
             base.OnLoad(e);
 
             _timerClock.Start();
-
-           
-
 
             Trace.TraceInformation("MainForm: created");
         }
@@ -171,10 +219,9 @@ namespace AutoTraderUI
             comboBoxConnectionType.SelectedItem = settings.ConnectionType;
             dateTimePickerMultidirectExecute.Value = settings.MultidirectExecuteTime;
             checkBoxShutdown.Checked = settings.Shutdown;
-            
 
             for (int i = 0; i < comboBoxTimezone.Items.Count; i++)
-            {               
+            {
                 // Check if the value of the current item is equal to 3
                 if (comboBoxTimezone.Items[i].ToString() == settings.Timezone.ToString())
                 {
@@ -183,8 +230,6 @@ namespace AutoTraderUI
                     break; // Exit the loop once the item is found
                 }
             }
-
-
         }
 
         public void UpdateSettings(Settings settings)
@@ -222,14 +267,17 @@ namespace AutoTraderUI
         public int Timezone { get { return int.Parse(comboBoxTimezone.SelectedItem.ToString()); } }
         public string ComboBoxConnectionType { get { return comboBoxConnectionType.Text; } }
 
-        public string ComboBoxSeccode { get {
+        public string ComboBoxSeccode
+        {
+            get
+            {
 
                 string res = "";
 
                 comboBoxSeccode.Invoke(new MethodInvoker(delegate { res = comboBoxSeccode.Text; }));
 
-                return res; 
-            } 
+                return res;
+            }
         }
         public string Username1 { get { return textBoxUsername.Text; } }
         public string Password1 { get { return textBoxPassword.Text; } }
@@ -239,7 +287,8 @@ namespace AutoTraderUI
         public string FreeMoney1 { set { textBoxFreeMoney1.Text = value; } }
         public string FreeMoney2 { set { textBoxFreeMoney2.Text = value; } }
 
-        public double ObserveDifference { 
+        public double ObserveDifference
+        {
             get
             {
                 double res = 0;
@@ -247,7 +296,7 @@ namespace AutoTraderUI
                 textBoxDifference.Invoke(new MethodInvoker(delegate { res = string.IsNullOrEmpty(textBoxDifference.Text) ? 0 : double.Parse(textBoxDifference.Text); }));
 
                 return res;
-            } 
+            }
         }
 
         public string Union1 { set { textBoxUnion.Text = value; } }
@@ -271,9 +320,6 @@ namespace AutoTraderUI
                     });
                 }
             }));
-
-
-            
         }
 
         public void ShowMessage(string msg)
@@ -307,8 +353,6 @@ namespace AutoTraderUI
                 textBoxUsername2.Enabled = false;
             }
         }
-
-
 
         public void HandleDisconnected(int connNumber = -1)
         {
@@ -374,6 +418,149 @@ namespace AutoTraderUI
         private void testButton_Click(object sender, EventArgs e)
         {
             _emailService.SendEmailAsync("m.rudneov@yandex.ru", "Autotrader", "test");
+        }
+
+        public void FreezUI()
+        {
+            tabControl1.Enabled = false;
+            comboBoxTimezone.Enabled = false;
+            testButton.Enabled = false;
+        }
+
+        public void UnFreezUI()
+        {
+            tabControl1.Enabled = true;
+            comboBoxTimezone.Enabled = true;
+            testButton.Enabled = true;
+        }
+
+        private async void buttonLogin_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                this.UpdateSettings(_settings);
+
+                var resp = await _mediator.Send(new Login1Command()
+                {
+                    Settings = _settings
+                });
+
+                this.LoadSeccodeList(resp.SeccodeList);
+                this.SetSelectedSeccode(resp.SelectedSeccode);
+                this.HandleConnected(0);
+                this.ClientId1 = resp.ClientId;
+                this.Union1 = resp.Union;
+                this.FreeMoney = resp.FreeMoney;
+                this.FreeMoney1 = resp.FreeMoney;
+            });
+        }
+
+        private async void buttonLogin2_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                this.UpdateSettings(_settings);
+
+                var resp = await _mediator.Send(new Login2Command()
+                {
+                    Settings = _settings
+                });
+
+                this.LoadSeccodeList(resp.SeccodeList);
+                this.SetSelectedSeccode(resp.SelectedSeccode);
+                this.HandleConnected(1);
+                this.FreeMoney2 = resp.FreeMoney;
+            });
+        }
+
+        private async void buttonLogout_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                var id = await _mediator.Send(new Logout1Command());
+                this.HandleDisconnected(0);
+            });
+        }
+
+        private async void buttonLogout2_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                var id = await _mediator.Send(new Logout2Command());
+                this.HandleDisconnected(1);
+            });
+        }
+
+        private async void buttonChangePassword_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new ChangePassword1Command()
+                {
+                    Settings = _settings
+                });
+            });
+        }
+
+        private async void buttonChangePassword2_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new ChangePassword2Command()
+                {
+                    Settings = _settings
+                });
+            });
+        }
+
+        private void buttonComboBuy_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new ComboBuyCommand()
+                {
+                    Settings = _settings
+                });
+            });
+        }
+
+        private void buttonComboSell_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new ComboSellCommand()
+                {
+                    Settings = _settings
+                });
+            });
+        }
+
+        private void buttonMakeMultidirect_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new CreateMultidirectOrderCommand()
+                {
+                    Settings = _settings
+                });
+            });
+        }
+
+        private void quotationsSubscribebutton_Click(object sender, EventArgs e)
+        {
+            _commandWrapperAction(async () =>
+            {
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new SubscribeOnQuotationsCommand()
+                {
+                    Seccode = this.ComboBoxSeccode
+                });
+            });
         }
     }
 }

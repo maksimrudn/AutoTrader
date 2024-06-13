@@ -1,7 +1,7 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Domain.Models;
 using AutoTrader.Domain.Models.Strategies;
+using AutoTrader.Domain.Models.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,12 +11,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AutoTrader.Application.Features.Strategies
+namespace AutoTrader.Application.Services
 {
     public class StrategyWorker
     {
         StrategySettings _settings;
-        List<IStockClient> _connectors;
+        IDoubleStockClient _connectors;
         IEmailService _emailService;
         string _notificationFile;
         string _notificationEmail;
@@ -27,11 +27,11 @@ namespace AutoTrader.Application.Features.Strategies
         /// </summary>
         int? _timezone = null;
 
-        public StrategyWorker(StrategySettings settings, List<IStockClient> connectors, IEmailService emailService, string notificationFile, string notificationEmail)
+        public StrategyWorker(StrategySettings settings, IDoubleStockClient connectors, IEmailService emailService, string notificationFile, string notificationEmail)
         {
             _settings = settings;
             _connectors = connectors;
-            this._emailService = emailService;
+            _emailService = emailService;
             _notificationFile = notificationFile;
             _notificationEmail = notificationEmail;
         }
@@ -85,7 +85,7 @@ namespace AutoTrader.Application.Features.Strategies
                     }
                 }
 
-                var res = await _connectors[0].GetHistoryData(_settings.Seccode, TradingMode.Futures, _settings.Period, 2);
+                var res = await _connectors.Master.GetHistoryData(_settings.Seccode, TradingMode.Futures, _settings.Period, 2);
 
                 double prevPrice = res[0].close;
                 double curPrice = res[1].close;
