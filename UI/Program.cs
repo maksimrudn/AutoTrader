@@ -13,8 +13,6 @@ namespace AutoTraderUI
 {
     static class Program
     {
-        public static readonly ApplicationContext Context = new ApplicationContext();
-
         public static IServiceProvider ServiceProvider { get; private set; }
 
         [STAThread]
@@ -48,9 +46,7 @@ namespace AutoTraderUI
                 .ConfigureServices((context, services) => {
 
                     services.AddInfrastructureServices(context.Configuration);
-                    services.AddApplicationServices();                    
-
-                    services.AddSingleton<ApplicationContext>(Context);
+                    services.AddApplicationServices();
 
                     services.AddSingleton<IMainFormView, MainForm>();
                     services.AddSingleton<MainForm>(serviceProvider =>

@@ -41,8 +41,7 @@ namespace AutoTraderUI
         System.Timers.Timer _timerMultidirectOrder;
         CancellationTokenSource _ct_timerMultidirectOrder = new CancellationTokenSource();
 
-        public MainForm(ApplicationContext context,
-                        IEmailService emailService,
+        public MainForm(IEmailService emailService,
                         IMediator mediator,
                         ISettingsService settingsService,
                         IDualStockClient dualStockClient,
