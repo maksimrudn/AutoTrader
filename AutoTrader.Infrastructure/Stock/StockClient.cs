@@ -271,9 +271,8 @@ namespace AutoTrader.Infrastructure.Stock
         public void Logout()
         {
             var com = command.CreateDisconnectCommand();
-
-            _inputStreamHandler.ServerStatusUpdated.Reset();
             var res = _requestHandler.ConnectorSendCommand(com);
+            _inputStreamHandler.ServerStatusUpdated.Reset();
         }
 
         public void ChangePassword(string oldpass, string newpass)
@@ -313,17 +312,16 @@ namespace AutoTrader.Infrastructure.Stock
         {
             if (!_disposed)
             {
-                if (Connected)
-                {
-                    Logout();
-                    await _inputStreamHandler.ServerStatusUpdated.WaitOne(25 * 1000);
-                }
-
                 _requestHandler.Dispose();
                 _inputStreamHandler.ServerStatusUpdated.Dispose();
 
                 _disposed = true;
             }
+        }
+
+        ~StockClient()
+        {
+            DisposeAsync(false).GetAwaiter().GetResult();
         }
 
         public void SubscribeQuotations(TradingMode tradingMode, string seccode)

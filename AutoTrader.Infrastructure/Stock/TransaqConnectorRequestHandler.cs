@@ -119,10 +119,6 @@ namespace AutoTrader.Infrastructure.Stock
         {
             if (!_disposed)
             {
-                if (disposing)
-                {
-                }
-
                 IntPtr pResult = _unInitialize();
 
                 if (!pResult.Equals(IntPtr.Zero))
@@ -138,6 +134,11 @@ namespace AutoTrader.Infrastructure.Stock
 
                 _disposed = true;
             }            
+        }
+
+        ~TransaqConnectorRequestHandler()
+        {
+            Dispose(false);
         }
 
         // файл библиотеки TXmlConnector.dll должен находиться в одной папке с программой
