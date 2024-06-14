@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using AutoTrader.Application.Models.TXMLConnector.Ingoing;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing;
 using AutoTrader.Domain.Models.Strategies;
 using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Models;
@@ -630,14 +630,14 @@ namespace AutoTraderUI
         }
 
         private void MCPositionsUpdated(object sender,
-                                                TXMLEventArgs<mc_portfolio> e)
+                                                TransaqEventArgs<mc_portfolio> e)
         {
             this.LoadPositions(e.data);
         }
 
-        private void SecuritiesUpdated(object sender, TXMLEventArgs<HashSet<AutoTrader.Application.Models.TXMLConnector.Ingoing.securities_ns.security>> e)
+        private void SecuritiesUpdated(object sender, TransaqEventArgs<HashSet<AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns.security>> e)
         {
-            _seccodeList = e.data.Where(x => x.board == AutoTrader.Application.Models.TXMLConnector.Outgoing.boardsCode.FUT.ToString())
+            _seccodeList = e.data.Where(x => x.board == AutoTrader.Application.Models.TransaqConnector.Outgoing.boardsCode.FUT.ToString())
                                     .Select(x => x.seccode)
                                     .OrderBy(x => x).ToList();
 

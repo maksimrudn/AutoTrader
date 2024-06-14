@@ -1,6 +1,6 @@
 ﻿using AutoTrader.Application.Models;
-using AutoTrader.Application.Models.TXMLConnector.Ingoing;
-using AutoTrader.Application.Models.TXMLConnector.Outgoing;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing;
+using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using AutoTrader.Domain.Models;
 using AutoTrader.Domain.Models.Types;
 using System;
@@ -14,21 +14,21 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 
         string FortsClientId { get; }
 
-        Models.TXMLConnector.Ingoing.positions Positions { get; }
+        Models.TransaqConnector.Ingoing.positions Positions { get; }
 
-        List<Models.TXMLConnector.Ingoing.quotes_ns.quote> QuotesBuy { get; }
+        List<Models.TransaqConnector.Ingoing.quotes_ns.quote> QuotesBuy { get; }
 
-        List<Models.TXMLConnector.Ingoing.quotes_ns.quote> QuotesSell { get; }
+        List<Models.TransaqConnector.Ingoing.quotes_ns.quote> QuotesSell { get; }
 
         string Union { get; }
 
         double Money { get; }
 
-        event EventHandler<TXMLEventArgs<mc_portfolio>> MCPositionsUpdated;
+        event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
-        event EventHandler<TXMLEventArgs<HashSet<Models.TXMLConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
+        event EventHandler<TransaqEventArgs<HashSet<Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
 
-        HashSet<Models.TXMLConnector.Ingoing.securities_ns.security> Securities { get; }
+        HashSet<Models.TransaqConnector.Ingoing.securities_ns.security> Securities { get; }
 
 
         Task Login(string username, 
@@ -55,7 +55,7 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
                                     string seccode,
                                     OrderDirection orderDirection,
                                     bool bymarket,
-                                    Models.TXMLConnector.Outgoing.cond_type condtype,
+                                    Models.TransaqConnector.Outgoing.cond_type condtype,
                                     double condvalue,
                                     int volume);
 
@@ -84,7 +84,7 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
                                         int volume, 
                                         long orderno = 0);
 
-        Task<List<Models.TXMLConnector.Ingoing.securities_ns.security>> GetSecurities();
+        Task<List<Models.TransaqConnector.Ingoing.securities_ns.security>> GetSecurities();
 
         void SubscribeQuotes(TradingMode tradingMode, string seccode);
 

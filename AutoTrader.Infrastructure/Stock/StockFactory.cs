@@ -11,31 +11,30 @@ namespace AutoTrader.Infrastructure.Stock
 {
     public class StockFactory: IAsyncDisposable
     {
-        private TXMLConnectorInputStreamHandler _master_inputStreamHandler;
-        private ITXMLConnectorRequestHandler _master_requestHandler;
-        private TXMLConnectorInputStreamHandler _slave_inputStreamHandler;
-        private ITXMLConnectorRequestHandler _slave_requestHandler;
+        private TransaqConnectorInputStreamHandler _master_inputStreamHandler;
+        private ITransaqConnectorRequestHandler _master_requestHandler;
+        private TransaqConnectorInputStreamHandler _slave_inputStreamHandler;
+        private ITransaqConnectorRequestHandler _slave_requestHandler;
 
         private IStockClient _master_stockClient;
         private IStockClient _slave_stockClient;
 
-        public StockFactory() { }
-        
+        public StockFactory() { }        
 
-        private (TXMLConnectorInputStreamHandler, ITXMLConnectorRequestHandler) GetHandlersForMaster(bool dummyMode = false)
+        private (TransaqConnectorInputStreamHandler, ITransaqConnectorRequestHandler) GetHandlersForMaster(bool dummyMode = false)
         {
-            _master_inputStreamHandler ??= new TXMLConnectorInputStreamHandler();
+            _master_inputStreamHandler ??= new TransaqConnectorInputStreamHandler();
             _master_requestHandler ??= dummyMode? new DummyRequestHandler(_master_inputStreamHandler):
-                                                new TXMLConnectorRequestHandler("txmlconnector1.dll", _master_inputStreamHandler);
+                                                new TransaqConnectorRequestHandler("txmlconnector1.dll", _master_inputStreamHandler);
 
             return (_master_inputStreamHandler,  _master_requestHandler);
         }
 
-        private (TXMLConnectorInputStreamHandler, ITXMLConnectorRequestHandler) GetHandlersForSlave(bool dummyMode = false)
+        private (TransaqConnectorInputStreamHandler, ITransaqConnectorRequestHandler) GetHandlersForSlave(bool dummyMode = false)
         {
-            _slave_inputStreamHandler ??= new TXMLConnectorInputStreamHandler();
+            _slave_inputStreamHandler ??= new TransaqConnectorInputStreamHandler();
             _slave_requestHandler ??= dummyMode ? new DummyRequestHandler(_master_inputStreamHandler) :
-                                            new TXMLConnectorRequestHandler("txmlconnector2.dll", _slave_inputStreamHandler);
+                                            new TransaqConnectorRequestHandler("txmlconnector2.dll", _slave_inputStreamHandler);
 
             return (_slave_inputStreamHandler, _slave_requestHandler);
         }

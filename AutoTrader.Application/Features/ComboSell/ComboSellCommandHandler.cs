@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoTrader.Application.Helpers;
 using AutoTrader.Application.Contracts.UI;
-using AutoTrader.Application.Models.TXMLConnector.Outgoing;
+using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using System.Diagnostics;
 using AutoTrader.Application.Models;
 

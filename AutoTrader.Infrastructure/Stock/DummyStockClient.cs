@@ -1,8 +1,8 @@
 ﻿using AutoTrader.Domain.Models;
-using AutoTrader.Application.Models.TXMLConnector.Ingoing;
-using AutoTrader.Application.Models.TXMLConnector.Ingoing.quotes_ns;
-using AutoTrader.Application.Models.TXMLConnector.Ingoing.securities_ns;
-using AutoTrader.Application.Models.TXMLConnector.Outgoing;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing.quotes_ns;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns;
+using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +32,9 @@ namespace AutoTrader.Infrastructure.Stock
 
         public HashSet<security> Securities => throw new NotImplementedException();
 
-        public event EventHandler<TXMLEventArgs<HashSet<security>>> SecuritiesUpdated;
+        public event EventHandler<TransaqEventArgs<HashSet<security>>> SecuritiesUpdated;
 
-        public event EventHandler<TXMLEventArgs<mc_portfolio>> MCPositionsUpdated
+        public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated
         {
             add
             {

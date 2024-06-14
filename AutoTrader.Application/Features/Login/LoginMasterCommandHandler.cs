@@ -1,6 +1,6 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Models.TXMLConnector.Outgoing;
+using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using AutoTrader.Domain.Models.Types;
 using MediatR;
 

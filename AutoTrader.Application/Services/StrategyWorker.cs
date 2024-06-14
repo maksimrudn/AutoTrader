@@ -139,7 +139,7 @@ namespace AutoTrader.Application.Services
             }
         }
 
-        private async Task _sendNotification(StrategySettings settings, double diff, List<Models.TXMLConnector.Ingoing.candle> historyData)
+        private async Task _sendNotification(StrategySettings settings, double diff, List<Models.TransaqConnector.Ingoing.candle> historyData)
         {
             string result = $"Time {DateTime.Now}; Seccode {settings.Seccode}; Period {settings.Period.ToString()}; Diff = {diff}; Prev close = {historyData[0].close}; Prev close = {historyData[1].close}; Signal {settings.DifferenceType};\n";
 

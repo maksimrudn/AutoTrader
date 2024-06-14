@@ -1,7 +1,7 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Helpers;
-using AutoTrader.Application.Models.TXMLConnector.Ingoing;
-using AutoTrader.Application.Models.TXMLConnector.Outgoing;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing;
+using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace AutoTrader.Infrastructure.Stock.Dummy
 {
-    public class DummyRequestHandler : ITXMLConnectorRequestHandler
+    public class DummyRequestHandler : ITransaqConnectorRequestHandler
     {
-        private readonly TXMLConnectorInputStreamHandler _inputStreamHandler;
+        private readonly TransaqConnectorInputStreamHandler _inputStreamHandler;
         string _username = "TEST";
         string _password = "TEST";
         decimal _freeMoney = 30_000;
-        public DummyRequestHandler(TXMLConnectorInputStreamHandler inputStreamHandler)
+        public DummyRequestHandler(TransaqConnectorInputStreamHandler inputStreamHandler)
         {
             _inputStreamHandler = inputStreamHandler;
         }

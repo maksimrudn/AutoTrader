@@ -2,8 +2,8 @@
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Helpers;
 using AutoTrader.Application.Models;
-using AutoTrader.Application.Models.TXMLConnector.Ingoing;
-using AutoTrader.Application.Models.TXMLConnector.Outgoing;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing;
+using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using AutoTrader.Application.UnManaged;
 using AutoTrader.Domain.Models;
 using AutoTrader.Domain.Models.Types;
@@ -22,8 +22,8 @@ namespace AutoTrader.Infrastructure.Stock
 {
     public class StockClient: IStockClient
     {
-        ITXMLConnectorRequestHandler _requestHandler;
-        TXMLConnectorInputStreamHandler _inputStreamHandler;
+        ITransaqConnectorRequestHandler _requestHandler;
+        TransaqConnectorInputStreamHandler _inputStreamHandler;
 
         Dictionary<TradingMode, boardsCode> _tradingModeMapping = new Dictionary<TradingMode, boardsCode>()
         {
@@ -36,7 +36,7 @@ namespace AutoTrader.Infrastructure.Stock
             { OrderDirection.Sell, buysell.S}
         };
 
-        public StockClient((TXMLConnectorInputStreamHandler, ITXMLConnectorRequestHandler) handlers)
+        public StockClient((TransaqConnectorInputStreamHandler, ITransaqConnectorRequestHandler) handlers)
         {
             _inputStreamHandler = handlers.Item1;
             _requestHandler = handlers.Item2;
@@ -46,9 +46,9 @@ namespace AutoTrader.Infrastructure.Stock
 
 
 
-        public event EventHandler<TXMLEventArgs<mc_portfolio>> MCPositionsUpdated;
+        public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
-        public event EventHandler<TXMLEventArgs<HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
+        public event EventHandler<TransaqEventArgs<HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
 
         public bool Connected
         {
@@ -61,7 +61,7 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        public HashSet<Application.Models.TXMLConnector.Ingoing.securities_ns.security> Securities { get => _inputStreamHandler.Securities; }
+        public HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities { get => _inputStreamHandler.Securities; }
 
         public bool PositionsIsActual
         {
@@ -109,15 +109,15 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        public List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> QuotesBuy
+        public List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> QuotesBuy
         {
             get
             {
-                List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> quotes1;
+                List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> quotes1;
 
                 lock (_inputStreamHandler.Quotes)
                 {
-                    quotes1 = new List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote>(_inputStreamHandler.Quotes);
+                    quotes1 = new List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>(_inputStreamHandler.Quotes);
                 }
 
                 var q = quotes1.Where(x => x.buy > 0 && x.sell == 0).OrderByDescending(x => x.price).ToList();
@@ -137,15 +137,15 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        public List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> QuotesSell
+        public List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> QuotesSell
         {
             get
             {
-                List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote> quotes1;
+                List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> quotes1;
 
                 lock (_inputStreamHandler.Quotes)
                 {
-                    quotes1 = new List<Application.Models.TXMLConnector.Ingoing.quotes_ns.quote>(_inputStreamHandler.Quotes);
+                    quotes1 = new List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>(_inputStreamHandler.Quotes);
                 }
 
                 var q = quotes1.Where(x => x.sell > 0 && x.buy == 0).OrderBy(x => x.price).ToList();
@@ -202,11 +202,11 @@ namespace AutoTrader.Infrastructure.Stock
 
         public mc_portfolio MCPortfolio { get { return _inputStreamHandler.mc_portfolio; } }
 
-        public List<Application.Models.TXMLConnector.Ingoing.orders_ns.order> OpenOrders
+        public List<Application.Models.TransaqConnector.Ingoing.orders_ns.order> OpenOrders
         {
             get
             {
-                List<Application.Models.TXMLConnector.Ingoing.orders_ns.order> res = null;
+                List<Application.Models.TransaqConnector.Ingoing.orders_ns.order> res = null;
 
                 lock (_inputStreamHandler.Orders)
                 {
@@ -219,7 +219,7 @@ namespace AutoTrader.Infrastructure.Stock
 
         
 
-        private void OnMCPositionsUpdatedHandler(object? sender, TXMLEventArgs<mc_portfolio> e)
+        private void OnMCPositionsUpdatedHandler(object? sender, TransaqEventArgs<mc_portfolio> e)
         {
             MCPositionsUpdated?.Invoke(sender, e);
         }
@@ -459,7 +459,7 @@ namespace AutoTrader.Infrastructure.Stock
                                                         board, 
                                                         seccode,
                                                         _orderDirectionMapping[orderDirection],
-                                                        bymarket? AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.no, 
+                                                        bymarket? AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.no, 
                                                         price, 
                                                         volume);
 
@@ -511,7 +511,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             command com = new command();
             com.id = command_id.newstoporder;
-            com.security = new Application.Models.TXMLConnector.Outgoing.command_ns.security();
+            com.security = new Application.Models.TransaqConnector.Outgoing.command_ns.security();
             com.security.board = _tradingModeMapping[tradingMode].ToString();
             com.security.seccode = seccode;
 
@@ -571,7 +571,7 @@ namespace AutoTrader.Infrastructure.Stock
             com.cond_typeValue = condtype;
             com.cond_valueValue = condvalue;
             com.quantityValue = volume;
-            com.bymarketValue = bymarket ? AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.no;
+            com.bymarketValue = bymarket ? AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.no;
 
             result sendResult = _requestHandler.ConnectorSendCommand(com);
 
@@ -623,7 +623,7 @@ namespace AutoTrader.Infrastructure.Stock
                                 price, 
                                 volume);
 
-            Application.Models.TXMLConnector.Ingoing.orders_ns.order ord = null;
+            Application.Models.TransaqConnector.Ingoing.orders_ns.order ord = null;
 
             await Task.Run(async () =>
             {
@@ -634,7 +634,7 @@ namespace AutoTrader.Infrastructure.Stock
             });
 
             // получение номера выполненного поручения
-            Application.Models.TXMLConnector.Ingoing.trades_ns.trade tr = null;
+            Application.Models.TransaqConnector.Ingoing.trades_ns.trade tr = null;
 
             await Task.Run(async () =>
             {
@@ -678,9 +678,9 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        private Application.Models.TXMLConnector.Ingoing.orders_ns.order GetOrderByTransactionId(int transactionid)
+        private Application.Models.TransaqConnector.Ingoing.orders_ns.order GetOrderByTransactionId(int transactionid)
         {
-            Application.Models.TXMLConnector.Ingoing.orders_ns.order res = null;
+            Application.Models.TransaqConnector.Ingoing.orders_ns.order res = null;
 
             lock (_inputStreamHandler.Orders)
             {
@@ -690,9 +690,9 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
-        private Application.Models.TXMLConnector.Ingoing.trades_ns.trade GetTradeByOrderNo(Int64 orderno)
+        private Application.Models.TransaqConnector.Ingoing.trades_ns.trade GetTradeByOrderNo(Int64 orderno)
         {
-            Application.Models.TXMLConnector.Ingoing.trades_ns.trade res = null;
+            Application.Models.TransaqConnector.Ingoing.trades_ns.trade res = null;
 
             lock (_inputStreamHandler.Trades)
             {
@@ -702,9 +702,9 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
-        public async Task<List<Application.Models.TXMLConnector.Ingoing.securities_ns.security>> GetSecurities()
+        public async Task<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>> GetSecurities()
         {
-            List<Application.Models.TXMLConnector.Ingoing.securities_ns.security> res = new List<Application.Models.TXMLConnector.Ingoing.securities_ns.security>();
+            List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> res = new List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>();
             command com = command.CreateGetSecurities();
 
             _inputStreamHandler.SecuritiesLoaded.Reset();
