@@ -8,7 +8,6 @@
         private System.ComponentModel.IContainer components = null;
 
         protected volatile bool _disposed = false;
-        object obj = new object();
 
         /// <summary>
         /// Clean up any resources being used.
