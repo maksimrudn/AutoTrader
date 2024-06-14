@@ -17,9 +17,7 @@ namespace AutoTrader.Application.Features.Settings
         public AutoTrader.Application.Models.Settings GetSettings()
         {
             AutoTrader.Application.Models.Settings settings = null;
-            
 
-            //проверка наличия файла
             if (File.Exists(_settingsFilename))
             {
                 using (FileStream fs = new FileStream(_settingsFilename, FileMode.Open))
@@ -35,17 +33,11 @@ namespace AutoTrader.Application.Features.Settings
             }
 
             return settings;
-
-
-            //AppSettings settings = (AppSettings)_configuration.GetSection(nameof(AppSettings));
-
-            //return settings;
         }
 
         public void UpdateSettings(AutoTrader.Application.Models.Settings settings)
         {
             if (File.Exists(_settingsFilename)) File.Delete(_settingsFilename);
-
 
             using (FileStream fs = new FileStream(_settingsFilename, FileMode.Create))
             {
@@ -53,11 +45,6 @@ namespace AutoTrader.Application.Features.Settings
                 xser.Serialize(fs, settings);
                 fs.Close();
             }
-
-            //string json = JsonConvert.SerializeObject(settings, Newtonsoft.Json.Formatting.Indented);
-
-            //// Write the JSON to the configuration file
-            //File.WriteAllText("appsettings.json", json);
         }
     }
 }

@@ -17,14 +17,20 @@ namespace AutoTrader.Infrastructure.Stock
 {
     public class TransaqConnectorInputStreamHandler
     {
+        public TransaqConnectorInputStreamHandler()
+        {
+            Quotes = new HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>();
+            Orders = new HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order>();
+            Trades = new HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade>();
+            Securities = new HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>();
+        }
+
         public AsyncAutoResetEvent ServerStatusUpdated = new AsyncAutoResetEvent(false);
         public AsyncAutoResetEvent PositionsLoaded = new AsyncAutoResetEvent(false);
         public AsyncAutoResetEvent SecuritiesLoaded = new AsyncAutoResetEvent(false);
         public AsyncAutoResetEvent TradesLoaded = new AsyncAutoResetEvent(false);
         public ConcurrentDictionary<string, AsyncAutoResetEvent> WaitForCurrentCandle = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
-
         public AsyncAutoResetEvent MC_portfolioLoaded = new AsyncAutoResetEvent(false);
-
         public ConcurrentDictionary<string, AsyncAutoResetEvent> CandlesLoaded = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
 
         /// <summary>
@@ -32,17 +38,12 @@ namespace AutoTrader.Infrastructure.Stock
         /// Заполняется с помощью обработчика _handleData
         /// </summary>
         public server_status ServerStatus = null;
-
         public client Forts_client = null;
-
         public List<client> Clients = new List<client>();       // клиенты-счета различных площадок forts: market=4
-
         public positions Positions = new positions();
         public mc_portfolio mc_portfolio = new mc_portfolio();
         public ConcurrentDictionary<string, Application.Models.TransaqConnector.Ingoing.candle> CurrentCandle = new ConcurrentDictionary<string, candle>();
-
         public bool PositionsIsActual = false;
-
         public HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> Quotes { get; private set; }
         public HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order> Orders { get; private set; }
         public HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade> Trades { get; private set; }
@@ -52,20 +53,9 @@ namespace AutoTrader.Infrastructure.Stock
         /// for history data
         /// </summary>
         public ConcurrentDictionary<string, Application.Models.TransaqConnector.Ingoing.candles> Candles { get; set; } = new ConcurrentDictionary<string, candles>();
-
         public Application.Models.TransaqConnector.Ingoing.candlekinds Candlekinds { get; set; }
-
         public event EventHandler<TransaqEventArgs<HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
-
         public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
-
-        public TransaqConnectorInputStreamHandler()
-        {
-            Quotes = new HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>();
-            Orders = new HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order>();
-            Trades = new HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade>();
-            Securities = new HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>();
-        }
 
         public void HandleData(String result)
         {

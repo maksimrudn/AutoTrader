@@ -12,7 +12,7 @@ namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
     [XmlRoot(ElementName = "command")]
     public class command
     {
-        #region FABRICS
+        #region FABRIC METHODS
         public static command CreateConnectionCommand(string login, string password, string server = "213.247.141.133", int port = 3900)
         {
             command res = new command();

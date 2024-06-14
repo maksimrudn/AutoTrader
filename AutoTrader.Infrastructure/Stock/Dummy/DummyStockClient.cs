@@ -12,7 +12,7 @@ using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Models;
 using AutoTrader.Domain.Models.Types;
 
-namespace AutoTrader.Infrastructure.Stock
+namespace AutoTrader.Infrastructure.Stock.Dummy
 {
     public class DummyStockClient : IStockClient
     {
@@ -54,10 +54,10 @@ namespace AutoTrader.Infrastructure.Stock
 
         public async new ValueTask DisposeAsync()
         {
-            
+
         }
 
-        public async Task<List<candle>> GetHistoryData(string seccode, TradingMode tradingMode = TradingMode.Futures, SecurityPeriods periodId = SecurityPeriods.M1 , int candlesCount = 1)
+        public async Task<List<candle>> GetHistoryData(string seccode, TradingMode tradingMode = TradingMode.Futures, SecurityPeriods periodId = SecurityPeriods.M1, int candlesCount = 1)
         {
             var signal = new List<candle>()
             {
@@ -84,7 +84,7 @@ namespace AutoTrader.Infrastructure.Stock
                 }
             };
 
-            return new Random().Next(0,10) == 0? signal:nonsignal;
+            return new Random().Next(0, 10) == 0 ? signal : nonsignal;
         }
 
         public async Task<List<security>> GetSecurities()

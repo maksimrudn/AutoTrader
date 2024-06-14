@@ -23,7 +23,6 @@ namespace AutoTrader.Infrastructure.Stock
         protected string _tconfFile;
         protected TransaqConnectorInputStreamHandler _inputStreamHandler;
 
-
         public TransaqConnectorRequestHandler(string tconFile, TransaqConnectorInputStreamHandler inputStreamHandler)
         {
             _inputStreamHandler = inputStreamHandler;

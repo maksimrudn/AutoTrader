@@ -44,8 +44,6 @@ namespace AutoTrader.Infrastructure.Stock
             _inputStreamHandler.MCPositionsUpdated += OnMCPositionsUpdatedHandler;
         }
 
-
-
         public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
         public event EventHandler<TransaqEventArgs<HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
