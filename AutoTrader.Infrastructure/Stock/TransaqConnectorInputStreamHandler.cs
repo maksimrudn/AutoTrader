@@ -61,7 +61,7 @@ namespace AutoTrader.Infrastructure.Stock
         {
             string nodeName = _getNodeName(result);
             Debug.WriteLine(nodeName);
-            //File.AppendAllText("stream.csv", result+"\n");
+            File.AppendAllText("stream.csv", result+"\n");
             switch (nodeName)
             {
                 case "server_status":
@@ -102,7 +102,7 @@ namespace AutoTrader.Infrastructure.Stock
                     // todo реализовать проверку на присутствие и удаление элемента перед добавлением
                     Clients.Add(clientInfo);
 
-                    ServerStatusUpdated.Set();
+                    //ServerStatusUpdated.Set();
 
                     if (clientInfo.forts_acc != null)
                         Forts_client = clientInfo;

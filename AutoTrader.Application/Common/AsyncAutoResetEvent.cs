@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoTrader.Application.Common
@@ -26,7 +27,7 @@ namespace AutoTrader.Application.Common
 
         private bool _signaled = false;
 
-        public Task WaitOne(int? timeout = null, CancellationToken cancellationToken = default)
+        public Task WaitOne(int? timeout = null)
         {
             lock (_queue)
             {
@@ -39,22 +40,14 @@ namespace AutoTrader.Application.Common
                 {
                     var tcs = new TaskCompletionSource();
                     Task timeoutTask = null;
-                    if (cancellationToken.CanBeCanceled)
+                    if (timeout != null)
                     {
+                        CancellationTokenSource cts = new CancellationTokenSource(timeout.Value);
+                        var cancellationToken = cts.Token;
+
                         // If the token is cancelled, cancel the waiter.
                         var registration = cancellationToken.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
                         
-                        if (timeout != null) {
-                            timeoutTask = Task.Run(async () =>
-                            {
-                                await Task.Delay(timeout.Value, cancellationToken);
-
-                                if (!tcs.Task.IsCompleted) 
-                                    cancellationToken.ThrowIfCancellationRequested();
-
-                            }, cancellationToken);
-                       }
-
                         // If the waiter completes or faults, unregister our interest in cancellation.
                         tcs.Task.ContinueWith(
                             _ => registration.Unregister(),
@@ -109,7 +102,6 @@ namespace AutoTrader.Application.Common
             {
                 if (disposing)
                 {
-                    // Dispose managed resources (if any)
                     lock (_queue)
                     {
                         while (_queue.Count > 0)
@@ -120,8 +112,6 @@ namespace AutoTrader.Application.Common
                         }
                     }
                 }
-
-                // Dispose unmanaged resources (if any)
 
                 _disposed = true;
             }

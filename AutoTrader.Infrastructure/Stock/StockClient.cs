@@ -1,5 +1,6 @@
 ﻿using AutoTrader.Application.Common;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
+using AutoTrader.Application.Exceptions;
 using AutoTrader.Application.Helpers;
 using AutoTrader.Application.Models;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing;
@@ -225,7 +226,7 @@ namespace AutoTrader.Infrastructure.Stock
         public async Task Login(string username, string password, ConnectionType connectionType)
         {
             if (Connected)
-                throw new Exception("Клиент уже авторизовался");
+                throw new StockClientException(CommonErrors.AlreadyLoggedIn);
             
             string server;
             int port;
@@ -254,14 +255,31 @@ namespace AutoTrader.Infrastructure.Stock
             {
                 // Waiting for server_status information
                 // Or for receiving of clients (that is inderect means connection is successfull)
-                await _inputStreamHandler.ServerStatusUpdated.WaitOne();
+                var waitServerStatus = _inputStreamHandler.ServerStatusUpdated.WaitOne();
+                var waitPositions = _inputStreamHandler.PositionsLoaded.WaitOne();
+                try
+                {
+                    await waitServerStatus;
+                }
+                catch (Exception ex)
+                {
+                    throw new StockClientException(CommonErrors.ServerStatusWaitingTimeout);
+                }
+
+                try
+                {
+                    await waitPositions;
+                }
+                catch (Exception ex)
+                {
+                    throw new StockClientException(CommonErrors.PositionsWaitingTimeout);
+                }
 
                 if (_inputStreamHandler.ServerStatus?.connected == "error")
                 {
-                    throw new Exception(_inputStreamHandler.ServerStatus.InnerText);
+                    throw new StockClientException(CommonErrors.ServerConnectionError,
+                                                    _inputStreamHandler.ServerStatus.InnerText);
                 }
-
-                await _inputStreamHandler.PositionsLoaded.WaitOne();
 
                 _getMCPortfolioPositions();
                 await _inputStreamHandler.MC_portfolioLoaded.WaitOne();
@@ -700,6 +718,8 @@ namespace AutoTrader.Infrastructure.Stock
 
         public async Task<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>> GetSecurities()
         {
+            if (!Connected) throw new StockClientException(CommonErrors.UnAuthorized);
+
             List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> res = new List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>();
             command com = command.CreateGetSecurities();
 

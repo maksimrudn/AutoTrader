@@ -12,10 +12,9 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
 {
     public class DummyRequestHandler : ITransaqConnectorRequestHandler
     {
-        private readonly TransaqConnectorInputStreamHandler _inputStreamHandler;
-        string _username = "TEST";
-        string _password = "TEST";
+        private readonly TransaqConnectorInputStreamHandler _inputStreamHandler;        
         decimal _freeMoney = 30_000;
+
         public DummyRequestHandler(TransaqConnectorInputStreamHandler inputStreamHandler)
         {
             _inputStreamHandler = inputStreamHandler;
@@ -28,8 +27,12 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
             switch (commandInfo.id)
             {
                 case command_id.connect:
-                    //if (commandInfo.login != _username || commandInfo.password != _password)
-                    //    throw new NotImplementedException();
+                    if (commandInfo.login != CorrectUsername || commandInfo.password != CorrectPassword)
+                    {
+                        Task.Run(() => {
+                            DummyStreamGenerator.Generate("stream-login-wrong-user-pass.csv", _inputStreamHandler.HandleData);
+                        });
+                    }
 
                     res.success = true;
                     // send stream
@@ -59,12 +62,32 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                     });
                     break;
 
+                case command_id.neworder:
+                    if (commandInfo.quantityValue > 1)
+                    {
+                        res.success = false;
+                        res.message = "[145]Недостаток обеспечения в сумме";
+                    }
+                    else
+                    {
+                        res.success = true;
+
+                        throw new NotImplementedException();
+                        //Task.Run(() => {
+                        //    DummyStreamGenerator.Generate("stream-getsecurities.csv", _inputStreamHandler.HandleData);
+                        //});
+                    }
+                    break; 
+
                 default:
                     break;
             }
 
             return res;
         }
+
+        public static string CorrectUsername { get; } = "TEST";
+        public static string CorrectPassword { get; } = "TEST";
 
         public void Dispose()
         {

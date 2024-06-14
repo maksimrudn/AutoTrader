@@ -36,6 +36,9 @@
     <None Update="Stock\Dummy\Data\stream-getsecurities.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Stock\Dummy\Data\stream-login-wrong-user-pass.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Stock\Dummy\Data\stream-login.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
