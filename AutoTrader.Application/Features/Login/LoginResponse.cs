@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutoTrader.Application.Features.Login
+﻿namespace AutoTrader.Application.Features.Login
 {
     public class LoginResponse
     {

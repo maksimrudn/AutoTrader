@@ -32,4 +32,19 @@
     <ProjectReference Include="..\AutoTrader.Application\AutoTrader.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Stock\Dummy\Data\stream-getsecurities.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Stock\Dummy\Data\stream-login.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Stock\Dummy\Data\stream-logout.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Stock\Dummy\Data\stream-portfolio.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

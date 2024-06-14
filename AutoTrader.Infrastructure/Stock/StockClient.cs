@@ -22,7 +22,7 @@ namespace AutoTrader.Infrastructure.Stock
 {
     public class StockClient: IStockClient
     {
-        TXMLConnectorRequestHandler _requestHandler;
+        ITXMLConnectorRequestHandler _requestHandler;
         TXMLConnectorInputStreamHandler _inputStreamHandler;
 
         Dictionary<TradingMode, boardsCode> _tradingModeMapping = new Dictionary<TradingMode, boardsCode>()
@@ -35,6 +35,16 @@ namespace AutoTrader.Infrastructure.Stock
             { OrderDirection.Buy, buysell.B},
             { OrderDirection.Sell, buysell.S}
         };
+
+        public StockClient((TXMLConnectorInputStreamHandler, ITXMLConnectorRequestHandler) handlers)
+        {
+            _inputStreamHandler = handlers.Item1;
+            _requestHandler = handlers.Item2;
+
+            _inputStreamHandler.MCPositionsUpdated += OnMCPositionsUpdatedHandler;
+        }
+
+
 
         public event EventHandler<TXMLEventArgs<mc_portfolio>> MCPositionsUpdated;
 
@@ -207,13 +217,7 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        public StockClient(string tconFile)
-        {
-            _inputStreamHandler = new TXMLConnectorInputStreamHandler();
-            _requestHandler = new TXMLConnectorRequestHandler(tconFile, _inputStreamHandler);
-
-            _inputStreamHandler.MCPositionsUpdated += OnMCPositionsUpdatedHandler;
-        }
+        
 
         private void OnMCPositionsUpdatedHandler(object? sender, TXMLEventArgs<mc_portfolio> e)
         {
@@ -241,7 +245,7 @@ namespace AutoTrader.Infrastructure.Stock
             var com = command.CreateConnectionCommand(username, password, server, port);
 
             // отправляем команду подключения
-            var sendCommandResult = _requestHandler.ConnectorSendCommand(com, com.GetType());
+            var sendCommandResult = _requestHandler.ConnectorSendCommand(com);
 
             
             if (sendCommandResult.success == false)
@@ -271,14 +275,14 @@ namespace AutoTrader.Infrastructure.Stock
             var com = command.CreateDisconnectCommand();
 
             _inputStreamHandler.ServerStatusUpdated.Reset();
-            var res = _requestHandler.ConnectorSendCommand(com, com.GetType());
+            var res = _requestHandler.ConnectorSendCommand(com);
         }
 
         public void ChangePassword(string oldpass, string newpass)
         {
             var com = command.CreateChangePasswordCommand(oldpass, newpass);
 
-            var res = _requestHandler.ConnectorSendCommand(com, com.GetType());
+            var res = _requestHandler.ConnectorSendCommand(com);
 
             if (!res.success)
             {
@@ -290,7 +294,7 @@ namespace AutoTrader.Infrastructure.Stock
         {
             var com = command.CreateGetMCPortfolioCommand(_inputStreamHandler.Positions.money_position.client);
 
-            var res = _requestHandler.ConnectorSendCommand(com, com.GetType());
+            var res = _requestHandler.ConnectorSendCommand(com);
 
             if (!res.success)
             {
@@ -333,13 +337,13 @@ namespace AutoTrader.Infrastructure.Stock
 
             var com = command.CreateSubscribeQuotationsCommand(_tradingModeMapping[tradingMode], seccode);
 
-            var res = _requestHandler.ConnectorSendCommand(com, com.GetType());
+            var res = _requestHandler.ConnectorSendCommand(com);
         }
         public void SubscribeQuotes(TradingMode tradingMode, string seccode)
         {
             var com = command.CreateSubscribeQuotesCommand(_tradingModeMapping[tradingMode], seccode);
 
-            var res = _requestHandler.ConnectorSendCommand(com, com.GetType());
+            var res = _requestHandler.ConnectorSendCommand(com);
         }
 
 
@@ -356,7 +360,7 @@ namespace AutoTrader.Infrastructure.Stock
             if (!_inputStreamHandler.CandlesLoaded.ContainsKey(seccode))
                 _inputStreamHandler.CandlesLoaded[seccode] = new AsyncAutoResetEvent(false);
 
-            result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
+            result sendResult = _requestHandler.ConnectorSendCommand(com);
 
             if (sendResult.success == true)
             {
@@ -386,7 +390,7 @@ namespace AutoTrader.Infrastructure.Stock
             if (!_inputStreamHandler.WaitForCurrentCandle.ContainsKey(seccode))
                 _inputStreamHandler.WaitForCurrentCandle[seccode] = new AsyncAutoResetEvent(false);
 
-            result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
+            result sendResult = _requestHandler.ConnectorSendCommand(com);
 
             if (sendResult.success == true)
             {
@@ -409,7 +413,7 @@ namespace AutoTrader.Infrastructure.Stock
             command com = command.CreateMoveOrderCommand(transactionid, 0, 2, 0);
 
 
-            result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
+            result sendResult = _requestHandler.ConnectorSendCommand(com);
 
             if (sendResult.success == true)
             {
@@ -427,7 +431,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             command com = command.CreateCancelOrderCommand(transactionid);
 
-            result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
+            result sendResult = _requestHandler.ConnectorSendCommand(com);
 
             if (sendResult.success == true)
             {
@@ -460,7 +464,7 @@ namespace AutoTrader.Infrastructure.Stock
                                                         volume);
 
 
-            result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
+            result sendResult = _requestHandler.ConnectorSendCommand(com);
 
             if (sendResult.success == true)
             {
@@ -530,7 +534,7 @@ namespace AutoTrader.Infrastructure.Stock
             //com.takeprofit.orderprice = price - profitlimit;
             com.takeprofit.quantity = volume;
 
-            result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
+            result sendResult = _requestHandler.ConnectorSendCommand(com);
 
             if (sendResult.success == true)
             {
@@ -569,7 +573,7 @@ namespace AutoTrader.Infrastructure.Stock
             com.quantityValue = volume;
             com.bymarketValue = bymarket ? AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TXMLConnector.Outgoing.bymarket.no;
 
-            result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
+            result sendResult = _requestHandler.ConnectorSendCommand(com);
 
             if (sendResult.success == true)
             {
@@ -704,7 +708,7 @@ namespace AutoTrader.Infrastructure.Stock
             command com = command.CreateGetSecurities();
 
             _inputStreamHandler.SecuritiesLoaded.Reset();
-            result sendResult = _requestHandler.ConnectorSendCommand(com, typeof(command));
+            result sendResult = _requestHandler.ConnectorSendCommand(com);
 
             if (sendResult.success == true)
             {

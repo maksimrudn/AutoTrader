@@ -8,6 +8,7 @@
         private System.ComponentModel.IContainer components = null;
 
         protected volatile bool _disposed = false;
+        object obj = new object();
 
         /// <summary>
         /// Clean up any resources being used.
@@ -16,7 +17,7 @@
         protected override void Dispose(bool disposing)
         {
             if (!_disposed)
-            {
+            {                
                 _timerClock.Dispose();
                 _ct_timerMultidirectOrder.Dispose();
 
@@ -24,9 +25,8 @@
                 {
                     components.Dispose();
                 }
-                base.Dispose(disposing);
-
                 _disposed = true;
+                base.Dispose(disposing);
             }
         }
 

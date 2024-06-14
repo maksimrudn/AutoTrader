@@ -65,7 +65,7 @@ namespace AutoTraderUI
             comboBoxConnectionType.DataSource = new List<string> { string.Empty, "Prod", "Demo" };
 
             _timerClock = new System.Timers.Timer();
-            _timerClock.Interval = 100;
+            _timerClock.Interval = 1000;
             _timerClock.Elapsed += new ElapsedEventHandler(TimerClock_Elapsed);
 
             comboBoxTimezone.Items.Add(4);
@@ -395,7 +395,7 @@ namespace AutoTraderUI
             {
                 this.UpdateSettings(_settings);
 
-                var resp = await _mediator.Send(new Login1Command()
+                var resp = await _mediator.Send(new LoginMasterCommand()
                 {
                     Settings = _settings
                 });
@@ -417,7 +417,7 @@ namespace AutoTraderUI
             {
                 this.UpdateSettings(_settings);
 
-                var resp = await _mediator.Send(new Login2Command()
+                var resp = await _mediator.Send(new LoginSlaveCommand()
                 {
                     Settings = _settings
                 });
@@ -469,7 +469,7 @@ namespace AutoTraderUI
             });
         }
 
-        private void buttonComboBuy_Click(object sender, EventArgs e)
+        private async void buttonComboBuy_Click(object sender, EventArgs e)
         {
             _commandWrapperAction(async () =>
             {

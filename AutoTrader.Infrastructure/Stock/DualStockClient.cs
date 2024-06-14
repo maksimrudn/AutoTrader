@@ -13,9 +13,12 @@ namespace AutoTrader.Infrastructure.Stock
 
         public IStockClient Slave { get; }
 
-        public DualStockClient() {
-            Master = new StockClient("txmlconnector1.dll");
-            Slave = new StockClient("txmlconnector2.dll");
+        public DualStockClient(IStockClient masterStockClient, IStockClient slaveStockClient) {
+            if (masterStockClient == null || slaveStockClient == null)
+                throw new Exception("Stock Client can't be null");
+
+            Master = masterStockClient;
+            Slave = slaveStockClient;
         }
 
 
@@ -37,7 +40,6 @@ namespace AutoTrader.Infrastructure.Stock
 
                 await Master.DisposeAsync();
                 await Slave.DisposeAsync();
-
                 _disposed = true;
             }            
         }

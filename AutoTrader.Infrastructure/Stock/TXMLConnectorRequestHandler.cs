@@ -1,5 +1,7 @@
-﻿using AutoTrader.Application.Helpers;
+﻿using AutoTrader.Application.Contracts.Infrastructure.Stock;
+using AutoTrader.Application.Helpers;
 using AutoTrader.Application.Models.TXMLConnector.Ingoing;
+using AutoTrader.Application.Models.TXMLConnector.Outgoing;
 using AutoTrader.Application.UnManaged;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ using System.Xml.Serialization;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public class TXMLConnectorRequestHandler: IDisposable
+    public class TXMLConnectorRequestHandler: ITXMLConnectorRequestHandler
     {
         IntPtr _tConnectorDll;
         string _logpath = MainHelper.GetWorkFolder() + "\0";
@@ -78,9 +80,9 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        public result ConnectorSendCommand(object commandInfo, Type type)
+        public result ConnectorSendCommand(command commandInfo)
         {
-            string cmd = XMLHelper.SerializeToString(commandInfo, type);
+            string cmd = XMLHelper.SerializeToString(commandInfo, commandInfo.GetType());
             string res = ConnectorSendCommand(cmd);
 
             if (res.Contains("<error>"))
