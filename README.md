@@ -1,9 +1,22 @@
-## About
+# About
 
 This is application for trading on Moscow Stock Exchange via Finam broker.
 Application uses Transaq connector.
 
-Functions:
+# How does it work (Common workflow)
+
+1. Open Transaq
+2. Open Security Chart
+3. Open AutoTrader
+4. Preconfigure order on AutoTrader
+5. Observe prices
+7. Buy or Sell with preconfigured SL/TP by COMBO-ORDER
+8. Or Buy AND Sell simultaneously by MULTIDIRECT ORDER
+
+![Main Screenshot](Documentation/images/how_does_it_works.png)
+
+
+# Functions:
 - Login / Logout
 - Change password
 - Create and send order by **one click** with specified Price / Stop Lose / Take Profit
@@ -14,7 +27,7 @@ Functions:
 - Subscribe to quotations
 * trading is only on futures stock
 
-## Used Approaches / Technologies
+# Used Approaches / Technologies
 
 - Clean Architecture
 - Dependency Injection
