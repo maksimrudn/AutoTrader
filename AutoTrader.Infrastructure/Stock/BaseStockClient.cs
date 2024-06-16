@@ -50,11 +50,11 @@ namespace AutoTrader.Infrastructure.Stock
 
         public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
-        public event EventHandler<TransaqEventArgs<HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
+        public event EventHandler<TransaqEventArgs<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
 
         public bool Connected => _requestHandler?.InputStreamHandler.ServerStatus?.connected == "true";
        
-        public HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities => _requestHandler?.InputStreamHandler.Securities ?? new ();
+        public List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities => _requestHandler?.InputStreamHandler.Securities ?? new ();
 
         [Obsolete]
         // todo: update this field inside StockClient on making order (in NewOrder method)

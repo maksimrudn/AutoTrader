@@ -134,5 +134,10 @@ namespace AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns
         /// </summary>
         [XmlElement(IsNullable = false)]
         public string currencyid { get; set; }
+
+        public string GetKey()
+        {
+            return $"{secid}-{seccode}-{board}-{market}";
+        }
     }
 }

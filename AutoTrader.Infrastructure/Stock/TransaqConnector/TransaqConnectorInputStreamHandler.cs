@@ -97,15 +97,15 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         }
 
         private readonly ReaderWriterLockSlim _securitiesLock = new();
-        private readonly HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security> _securities = new();
-        public HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities
+        private readonly ConcurrentDictionary<string, Application.Models.TransaqConnector.Ingoing.securities_ns.security> _securities = new();
+        public List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities
         {
             get
             {
                 try
                 {
                     _securitiesLock.EnterReadLock();
-                    return new HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>(_securities);
+                    return _securities.Values.ToList();
                 }
                 finally
                 {
@@ -119,7 +119,7 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         /// </summary>
         public ConcurrentDictionary<string, candles> Candles { get; set; } = new ConcurrentDictionary<string, candles>();
         public candlekinds Candlekinds { get; set; }
-        public event EventHandler<TransaqEventArgs<HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
+        public event EventHandler<TransaqEventArgs<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
         public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
         public void HandleData(string result)
@@ -151,7 +151,7 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                     var securities = (securities)XMLHelper.Deserialize(result, typeof(securities));
 
                     _securitiesHandle(securities.security);
-                    SecuritiesUpdated?.Invoke(this, new TransaqEventArgs<HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>(Securities));
+                    SecuritiesUpdated?.Invoke(this, new TransaqEventArgs<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>(Securities));
                     SecuritiesLoaded.Set();
                     break;
 
@@ -247,8 +247,9 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                 foreach (var sec in security)
                 {
                     // filter only unique values
-                    if (_securities.Where(x => x.seccode == sec.seccode).FirstOrDefault() == null)
-                        _securities.Add(sec);
+                    _securities.AddOrUpdate(sec.GetKey(), 
+                                            sec, 
+                                            (key, existingSecurity) => sec);
                 }
             }
             finally

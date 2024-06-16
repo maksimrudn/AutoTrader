@@ -635,7 +635,7 @@ namespace AutoTraderUI
             this.LoadPositions(e.data);
         }
 
-        private void SecuritiesUpdated(object sender, TransaqEventArgs<HashSet<AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns.security>> e)
+        private void SecuritiesUpdated(object sender, TransaqEventArgs<List<AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns.security>> e)
         {
             _seccodeList = e.data.Where(x => x.board == AutoTrader.Application.Models.TransaqConnector.Outgoing.boardsCode.FUT.ToString())
                                     .Select(x => x.seccode)

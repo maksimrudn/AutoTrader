@@ -26,9 +26,9 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 
         event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
-        event EventHandler<TransaqEventArgs<HashSet<Models.TransaqConnector.Ingoing.securities_ns.security>?>> SecuritiesUpdated;
+        event EventHandler<TransaqEventArgs<List<Models.TransaqConnector.Ingoing.securities_ns.security>?>> SecuritiesUpdated;
 
-        HashSet<Models.TransaqConnector.Ingoing.securities_ns.security>? Securities { get; }
+        List<Models.TransaqConnector.Ingoing.securities_ns.security>? Securities { get; }
 
 
         Task Login(string username, 
