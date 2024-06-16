@@ -35,7 +35,7 @@ namespace AutoTrader.Application.Features.Login
                 SelectedSeccode = request.Settings.Seccode,
                 ClientId = _stockClients.Slave.FortsClientId,
                 Union = _stockClients.Slave.Union,
-                FreeMoney = _stockClients.Slave.Money.ToString("N"),
+                FreeMoney = _stockClients.Slave.Money?.ToString("N"),
             };
 
             return resp;

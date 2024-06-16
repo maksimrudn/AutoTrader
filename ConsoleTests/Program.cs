@@ -1,5 +1,7 @@
-﻿using AutoTrader.Domain.Models.Types;
+﻿using AutoTrader.Application.Contracts.Infrastructure.Stock;
+using AutoTrader.Domain.Models.Types;
 using AutoTrader.Infrastructure.Stock;
+using AutoTrader.Infrastructure.Stock.TransaqConnector;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace ConsoleTests
@@ -15,7 +17,10 @@ namespace ConsoleTests
 
             //using (var cl2 = TXMLConnectorWrapper2.GetInstance())
             //{
-            await using (var cl = new StockClient("txmlconnector1.dll"))
+
+            var factory = new TransaqConnectorFactory();
+
+            await using (var cl = new StockClientMaster(factory))
             {
 
                 //try
@@ -87,7 +92,7 @@ namespace ConsoleTests
 
 
 
-        private static void _testPositions(StockClient cl)
+        private static void _testPositions(IStockClient cl)
         {
             while (true)
             {
@@ -122,7 +127,7 @@ namespace ConsoleTests
             close
         }
 
-        private static async Task _testQuotesPair(StockClient cl)
+        private static async Task _testQuotesPair(BaseStockClient cl)
         {
             cl.SubscribeQuotes(TradingMode.Futures, _seccode);
 
@@ -176,7 +181,7 @@ namespace ConsoleTests
                         cl.CreateNewOrder(TradingMode.Futures, _seccode, OrderDirection.Sell, false, sPrice, 1);
                     });
 
-                    cl.PositionsIsActual = false;
+                    cl.PositionsAreActual = false;
                     pos = 1;
                     status = Status.open;
 

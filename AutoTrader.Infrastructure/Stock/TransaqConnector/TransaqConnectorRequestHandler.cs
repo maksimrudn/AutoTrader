@@ -3,6 +3,7 @@ using AutoTrader.Application.Helpers;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing;
 using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using AutoTrader.Application.UnManaged;
+using AutoTrader.Infrastructure.Contracts.Transaq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,19 +14,20 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace AutoTrader.Infrastructure.Stock
+namespace AutoTrader.Infrastructure.Stock.TransaqConnector
 {
-    public class TransaqConnectorRequestHandler: ITransaqConnectorRequestHandler
+    public class TransaqConnectorRequestHandler : ITransaqConnectorRequestHandler
     {
         IntPtr _tConnectorDll;
         string _logpath = MainHelper.GetWorkFolder() + "\0";
         int _loglevel = 3;
         protected string _tconfFile;
-        protected TransaqConnectorInputStreamHandler _inputStreamHandler;
 
-        public TransaqConnectorRequestHandler(string tconFile, TransaqConnectorInputStreamHandler inputStreamHandler)
+        public TransaqConnectorInputStreamHandler InputStreamHandler { get; private set; }
+
+        public TransaqConnectorRequestHandler(string tconFile)
         {
-            _inputStreamHandler = inputStreamHandler;
+            InputStreamHandler = new TransaqConnectorInputStreamHandler();
 
             _tconfFile = tconFile;
             _tConnectorDll = NativeMethods.LoadLibrary(tconFile);
@@ -54,7 +56,7 @@ namespace AutoTrader.Infrastructure.Stock
             IntPtr pResult = _initialize(pPath, _loglevel);
             if (!pResult.Equals(IntPtr.Zero))
             {
-                String result = MarshalUTF8.PtrToStringUTF8(pResult);
+                string result = MarshalUTF8.PtrToStringUTF8(pResult);
                 Marshal.FreeHGlobal(pPath);
                 _freeUpMemory(pResult);
                 log.WriteLog(result);
@@ -94,12 +96,12 @@ namespace AutoTrader.Infrastructure.Stock
             return (result)XMLHelper.Deserialize(res, typeof(result));
         }
 
-        public String ConnectorSendCommand(String command)
+        public string ConnectorSendCommand(string command)
         {
             IntPtr pData = MarshalUTF8.StringToHGlobalUTF8(command);
             IntPtr pResult = _sendCommand(pData);
 
-            String result = MarshalUTF8.PtrToStringUTF8(pResult);
+            string result = MarshalUTF8.PtrToStringUTF8(pResult);
 
             Marshal.FreeHGlobal(pData);
             _freeUpMemory(pResult);
@@ -119,11 +121,16 @@ namespace AutoTrader.Infrastructure.Stock
         {
             if (!_disposed)
             {
+                if (disposing)
+                {
+                    InputStreamHandler.ServerStatusUpdated.Dispose();
+                }
+
                 IntPtr pResult = _unInitialize();
 
                 if (!pResult.Equals(IntPtr.Zero))
                 {
-                    String result = MarshalUTF8.PtrToStringUTF8(pResult);
+                    string result = MarshalUTF8.PtrToStringUTF8(pResult);
                     _freeUpMemory(pResult);
                     log.WriteLog(result);
                 }
@@ -133,7 +140,7 @@ namespace AutoTrader.Infrastructure.Stock
                 }
 
                 _disposed = true;
-            }            
+            }
         }
 
         ~TransaqConnectorRequestHandler()
@@ -163,7 +170,7 @@ namespace AutoTrader.Infrastructure.Stock
         //случае, когда библиотека остановлена, то есть была выполнена команда
         //disconnect или соединение еще не было установлено.
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        protected delegate IntPtr Initialize(IntPtr pPath, Int32 logLevel);
+        protected delegate IntPtr Initialize(IntPtr pPath, int logLevel);
         protected Initialize _initialize;
 
         //    Выполняет остановку внутренних потоков библиотеки, в том числе завершает
@@ -174,7 +181,7 @@ namespace AutoTrader.Infrastructure.Stock
         protected UnInitialize _unInitialize;
 
         [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        protected delegate IntPtr SetLogLevel(Int32 logLevel);
+        protected delegate IntPtr SetLogLevel(int logLevel);
         protected SetLogLevel _setLogLevel;
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -213,10 +220,10 @@ namespace AutoTrader.Infrastructure.Stock
         protected bool _inputStreamCallBackHandler(IntPtr pData)
         {
             bool res = true;
-            String result = MarshalUTF8.PtrToStringUTF8(pData);
+            string result = MarshalUTF8.PtrToStringUTF8(pData);
             _freeUpMemory(pData);
 
-            _inputStreamHandler.HandleData(result);
+            InputStreamHandler.HandleData(result);
 
             return res;
         }

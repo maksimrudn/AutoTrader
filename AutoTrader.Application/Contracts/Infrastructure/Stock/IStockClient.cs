@@ -12,30 +12,30 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
     {
         bool Connected { get; }
 
-        string FortsClientId { get; }
+        string? FortsClientId { get; }
 
-        Models.TransaqConnector.Ingoing.positions Positions { get; }
+        Models.TransaqConnector.Ingoing.positions? Positions { get; }
 
-        List<Models.TransaqConnector.Ingoing.quotes_ns.quote> QuotesBuy { get; }
+        List<Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesBuy { get; }
 
-        List<Models.TransaqConnector.Ingoing.quotes_ns.quote> QuotesSell { get; }
+        List<Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesSell { get; }
 
-        string Union { get; }
+        string? Union { get; }
 
-        double Money { get; }
+        double? Money { get; }
 
         event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
-        event EventHandler<TransaqEventArgs<HashSet<Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
+        event EventHandler<TransaqEventArgs<HashSet<Models.TransaqConnector.Ingoing.securities_ns.security>?>> SecuritiesUpdated;
 
-        HashSet<Models.TransaqConnector.Ingoing.securities_ns.security> Securities { get; }
+        HashSet<Models.TransaqConnector.Ingoing.securities_ns.security>? Securities { get; }
 
 
         Task Login(string username, 
                     string password, 
                     ConnectionType connectionType);
 
-        void Logout();
+        Task Logout();
 
         void ChangePassword(string oldpass, string newpass);
 
@@ -84,15 +84,19 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
                                         int volume, 
                                         long orderno = 0);
 
-        Task<List<Models.TransaqConnector.Ingoing.securities_ns.security>> GetSecurities();
+        Task<List<Models.TransaqConnector.Ingoing.securities_ns.security>?> GetSecurities();
 
         void SubscribeQuotes(TradingMode tradingMode, string seccode);
 
         void SubscribeQuotations(TradingMode tradingMode, string seccode);
 
-        Task<List<candle>> GetHistoryData(string seccode,
+        Task<List<candle>?> GetHistoryData(string seccode,
                                             TradingMode tradingMode = TradingMode.Futures, 
                                             SecurityPeriods periodId = SecurityPeriods.M1, 
                                             int candlesCount = 1);
+
+        int GetOpenPositions(string seccode);
+
+        List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? OpenOrders { get; }
     }
 }

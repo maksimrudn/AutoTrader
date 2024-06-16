@@ -13,55 +13,120 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace AutoTrader.Infrastructure.Stock
+namespace AutoTrader.Infrastructure.Stock.TransaqConnector
 {
     public class TransaqConnectorInputStreamHandler
     {
         public TransaqConnectorInputStreamHandler()
         {
-            Quotes = new HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>();
-            Orders = new HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order>();
-            Trades = new HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade>();
-            Securities = new HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>();
         }
 
-        public AsyncAutoResetEvent ServerStatusUpdated = new AsyncAutoResetEvent(false);
-        public AsyncAutoResetEvent PositionsLoaded = new AsyncAutoResetEvent(false);
-        public AsyncAutoResetEvent SecuritiesLoaded = new AsyncAutoResetEvent(false);
-        public AsyncAutoResetEvent TradesLoaded = new AsyncAutoResetEvent(false);
-        public ConcurrentDictionary<string, AsyncAutoResetEvent> WaitForCurrentCandle = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
-        public AsyncAutoResetEvent MC_portfolioLoaded = new AsyncAutoResetEvent(false);
-        public ConcurrentDictionary<string, AsyncAutoResetEvent> CandlesLoaded = new ConcurrentDictionary<string, AsyncAutoResetEvent>();
+        public AsyncAutoResetEvent ServerStatusUpdated = new(false);
+        public AsyncAutoResetEvent PositionsLoaded = new(false);
+        public AsyncAutoResetEvent SecuritiesLoaded = new(false);
+        public AsyncAutoResetEvent TradesLoaded = new(false);
+        public ConcurrentDictionary<string, AsyncAutoResetEvent> WaitForCurrentCandle = new();
+        public AsyncAutoResetEvent MC_portfolioLoaded = new(false);
+        public ConcurrentDictionary<string, AsyncAutoResetEvent> CandlesLoaded = new();
 
         /// <summary>
         /// Результат подключения к серверу
         /// Заполняется с помощью обработчика _handleData
         /// </summary>
-        public server_status ServerStatus = null;
-        public client Forts_client = null;
-        public List<client> Clients = new List<client>();       // клиенты-счета различных площадок forts: market=4
-        public positions Positions = new positions();
-        public mc_portfolio mc_portfolio = new mc_portfolio();
-        public ConcurrentDictionary<string, Application.Models.TransaqConnector.Ingoing.candle> CurrentCandle = new ConcurrentDictionary<string, candle>();
-        public bool PositionsIsActual = false;
-        public HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> Quotes { get; private set; }
-        public HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order> Orders { get; private set; }
-        public HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade> Trades { get; private set; }
-        public HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities { get; private set; }
+        public server_status? ServerStatus = null;
+        public client? Forts_client = null;
+        public List<client> Clients = new();       // клиенты-счета различных площадок forts: market=4
+        public positions Positions = new();
+        public mc_portfolio mc_portfolio = new();
+        public ConcurrentDictionary<string, candle> CurrentCandle = new();
+        public bool PositionsAreActual = false;
+
+        private readonly ReaderWriterLockSlim _quotesLock = new();
+        private readonly HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> _quotes = new();
+        public HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> Quotes
+        {
+            get
+            {
+                try
+                {
+                    _quotesLock.EnterReadLock();
+                    return new HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>(_quotes);
+                }
+                finally
+                {
+                    _quotesLock.ExitReadLock();
+                }
+
+            }
+        }
+
+        private readonly ReaderWriterLockSlim _ordersLock = new();
+        private readonly HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order> _orders = new();
+        public HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order> Orders
+        {
+            get
+            {
+                try
+                {
+                    _ordersLock.EnterReadLock();
+                    return new HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order>(_orders);
+                }
+                finally
+                {
+                    _ordersLock.ExitReadLock();
+                }
+            }
+        }
+
+        private readonly ReaderWriterLockSlim _tradesLock = new();
+        private readonly HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade> _trades = new();
+        public HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade> Trades
+        {
+            get
+            {
+                try
+                {
+                    _tradesLock.EnterReadLock();
+                    return new HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade>(_trades);
+                }
+                finally
+                {
+                    _tradesLock.ExitReadLock();
+                }
+            }
+        }
+
+        private readonly ReaderWriterLockSlim _securitiesLock = new();
+        private readonly HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security> _securities = new();
+        public HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities
+        {
+            get
+            {
+                try
+                {
+                    _securitiesLock.EnterReadLock();
+                    return new HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>(_securities);
+                }
+                finally
+                {
+                    _securitiesLock.ExitReadLock();
+                }
+            }
+        }
 
         /// <summary>
         /// for history data
         /// </summary>
-        public ConcurrentDictionary<string, Application.Models.TransaqConnector.Ingoing.candles> Candles { get; set; } = new ConcurrentDictionary<string, candles>();
-        public Application.Models.TransaqConnector.Ingoing.candlekinds Candlekinds { get; set; }
+        public ConcurrentDictionary<string, candles> Candles { get; set; } = new ConcurrentDictionary<string, candles>();
+        public candlekinds Candlekinds { get; set; }
         public event EventHandler<TransaqEventArgs<HashSet<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
         public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
-        public void HandleData(String result)
+        public void HandleData(string result)
         {
             string nodeName = _getNodeName(result);
             Debug.WriteLine(nodeName);
-            File.AppendAllText("stream.csv", result+"\n");
+            //File.AppendAllText("stream.csv", result+"\n");
             switch (nodeName)
             {
                 case "server_status":
@@ -120,14 +185,14 @@ namespace AutoTrader.Infrastructure.Stock
                     if (positions.spot_limit != null) Positions.spot_limit = positions.spot_limit;
 
 
-                    PositionsIsActual = true;
+                    PositionsAreActual = true;
 
                     PositionsLoaded.Set();
                     break;
 
                 case "mc_portfolio":
                     mc_portfolio = (mc_portfolio)XMLHelper.Deserialize(result, typeof(mc_portfolio));
-                   
+
                     MC_portfolioLoaded.Set();
                     MCPositionsUpdated?.Invoke(this, new TransaqEventArgs<mc_portfolio>(mc_portfolio));
 
@@ -150,12 +215,12 @@ namespace AutoTrader.Infrastructure.Stock
 
                 case "candles":
                     var candles = (candles)XMLHelper.Deserialize(result, typeof(candles));
-                    
+
                     CurrentCandle[candles.seccode] = candles.candlesValue[0];
                     WaitForCurrentCandle[candles.seccode].Set();
 
                     Candles[candles.seccode] = candles;
-                    CandlesLoaded[candles.seccode].Set();                    
+                    CandlesLoaded[candles.seccode].Set();
                     break;
 
                 case "ticks":
@@ -168,7 +233,7 @@ namespace AutoTrader.Infrastructure.Stock
                 case "quotations":
                     break;
                 case "quotes":
-                    var q = (Application.Models.TransaqConnector.Ingoing.quotes)XMLHelper.Deserialize(result, typeof(Application.Models.TransaqConnector.Ingoing.quotes));
+                    var q = (quotes)XMLHelper.Deserialize(result, typeof(quotes));
                     _quotesHandle(q);
                     break;
             }
@@ -176,24 +241,30 @@ namespace AutoTrader.Infrastructure.Stock
 
         private void _securitiesHandle(List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> security)
         {
-            lock(Securities)
+            try
             {
+                _securitiesLock.EnterWriteLock();
                 foreach (var sec in security)
-                {    
+                {
                     // filter only unique values
-                    if (Securities.Where(x=>x.seccode==sec.seccode).FirstOrDefault() == null)
-                        Securities.Add(sec);
+                    if (_securities.Where(x => x.seccode == sec.seccode).FirstOrDefault() == null)
+                        _securities.Add(sec);
                 }
+            }
+            finally
+            {
+                _securitiesLock.ExitWriteLock();
             }
         }
 
         protected void _tradesHandle(trades trades)
         {
-            lock (Trades)
+            try
             {
+                _tradesLock.EnterWriteLock();
                 foreach (var trade in trades.trade)
                 {
-                    var temp = Trades.FirstOrDefault(x => x.tradeno == trade.tradeno);
+                    var temp = _trades.FirstOrDefault(x => x.tradeno == trade.tradeno);
 
                     if (temp != null)
                     {
@@ -202,18 +273,23 @@ namespace AutoTrader.Infrastructure.Stock
                         continue;
 
                     }
-                    else Trades.Add(trade);
+                    else _trades.Add(trade);
                 }
+            }
+            finally
+            {
+                _tradesLock.ExitWriteLock();
             }
         }
 
         protected void _ordersHandle(orders orders)
         {
-            lock (Orders)
+            try
             {
+                _ordersLock.EnterWriteLock();
                 foreach (var order in orders.order)
                 {
-                    var temp = Orders.FirstOrDefault(x => x.orderno == order.orderno);
+                    var temp = _orders.FirstOrDefault(x => x.orderno == order.orderno);
 
                     if (temp != null)
                     {
@@ -223,12 +299,16 @@ namespace AutoTrader.Infrastructure.Stock
                         temp.status = order.status;
 
                     }
-                    else Orders.Add(order);
+                    else _orders.Add(order);
                 }
+            }
+            finally
+            {
+                _ordersLock?.ExitWriteLock();
             }
         }
 
-        protected void _quotesHandle(Application.Models.TransaqConnector.Ingoing.quotes quotes)
+        protected void _quotesHandle(quotes quotes)
         {
             foreach (var quote in quotes.quote)
             {
@@ -240,15 +320,16 @@ namespace AutoTrader.Infrastructure.Stock
                 //    }
                 //}
 
-                lock (Quotes)
+                try
                 {
-                    var q = Quotes.FirstOrDefault(x => x.price == quote.price);
+                    _quotesLock.EnterWriteLock();
+                    var q = _quotes.FirstOrDefault(x => x.price == quote.price);
 
                     if (q != null)
                     {
                         if (quote.buy == -1 || quote.sell == -1)
                         {
-                            Quotes.Remove(q);
+                            _quotes.Remove(q);
                         }
                         else
                         {
@@ -258,8 +339,12 @@ namespace AutoTrader.Infrastructure.Stock
                     }
                     else if (quote.buy != -1 && quote.sell != -1)
                     {
-                        Quotes.Add(quote);
+                        _quotes.Add(quote);
                     }
+                }
+                finally
+                {
+                    _quotesLock.ExitWriteLock();
                 }
             }
         }
@@ -272,7 +357,7 @@ namespace AutoTrader.Infrastructure.Stock
             xs.IgnoreWhitespace = true;
             xs.ConformanceLevel = ConformanceLevel.Fragment;
             xs.ProhibitDtd = false;
-            XmlReader xr = XmlReader.Create(new System.IO.StringReader(data), xs);
+            XmlReader xr = XmlReader.Create(new StringReader(data), xs);
 
             xr.Read();
             return xr.Name;

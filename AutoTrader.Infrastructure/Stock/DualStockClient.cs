@@ -13,12 +13,9 @@ namespace AutoTrader.Infrastructure.Stock
 
         public IStockClient Slave { get; }
 
-        public DualStockClient(IStockClient masterStockClient, IStockClient slaveStockClient) {
-            if (masterStockClient == null || slaveStockClient == null)
-                throw new Exception("Stock Client can't be null");
-
-            Master = masterStockClient;
-            Slave = slaveStockClient;
+        public DualStockClient(StockClientMaster stockClientMaster, StockClientSlave stockClientSlave) {
+            Master = stockClientMaster;
+            Slave = stockClientSlave;
         }
 
 

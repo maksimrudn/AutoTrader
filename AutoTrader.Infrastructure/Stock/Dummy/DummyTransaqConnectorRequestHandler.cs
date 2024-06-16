@@ -1,23 +1,18 @@
-﻿using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Helpers;
-using AutoTrader.Application.Models.TransaqConnector.Ingoing;
+﻿using AutoTrader.Application.Models.TransaqConnector.Ingoing;
 using AutoTrader.Application.Models.TransaqConnector.Outgoing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AutoTrader.Infrastructure.Contracts.Transaq;
+using AutoTrader.Infrastructure.Stock.TransaqConnector;
 
 namespace AutoTrader.Infrastructure.Stock.Dummy
 {
-    public class DummyRequestHandler : ITransaqConnectorRequestHandler
+    public class DummyTransaqConnectorRequestHandler : ITransaqConnectorRequestHandler
     {
-        private readonly TransaqConnectorInputStreamHandler _inputStreamHandler;        
+        public TransaqConnectorInputStreamHandler InputStreamHandler { get; private set; }
         decimal _freeMoney = 30_000;
 
-        public DummyRequestHandler(TransaqConnectorInputStreamHandler inputStreamHandler)
+        public DummyTransaqConnectorRequestHandler()
         {
-            _inputStreamHandler = inputStreamHandler;
+            InputStreamHandler = new TransaqConnectorInputStreamHandler();
         }
 
         public result ConnectorSendCommand(command commandInfo)
@@ -30,35 +25,35 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                     if (commandInfo.login != CorrectUsername || commandInfo.password != CorrectPassword)
                     {
                         Task.Run(() => {
-                            DummyStreamGenerator.Generate("stream-login-wrong-user-pass.csv", _inputStreamHandler.HandleData);
+                            DummyStreamGenerator.Generate("stream-login-wrong-user-pass.csv", InputStreamHandler.HandleData);
                         });
                     }
 
                     res.success = true;
                     // send stream
                     Task.Run(() => {
-                        DummyStreamGenerator.Generate("stream-login.csv", _inputStreamHandler.HandleData);
+                        DummyStreamGenerator.Generate("stream-login.csv", InputStreamHandler.HandleData);
                     });
                     break;
 
                 case command_id.get_mc_portfolio:
                     res.success = true;
                     Task.Run(() => {
-                        DummyStreamGenerator.Generate("stream-portfolio.csv", _inputStreamHandler.HandleData);
+                        DummyStreamGenerator.Generate("stream-portfolio.csv", InputStreamHandler.HandleData);
                     });
                     break;
 
                 case command_id.disconnect:
                     res.success = true;
                     Task.Run(() => {
-                        DummyStreamGenerator.Generate("stream-logout.csv", _inputStreamHandler.HandleData);
+                        DummyStreamGenerator.Generate("stream-logout.csv", InputStreamHandler.HandleData);
                     });
                     break;
 
                 case command_id.get_securities:
                     res.success = true;
                     Task.Run(() => {
-                        DummyStreamGenerator.Generate("stream-getsecurities.csv", _inputStreamHandler.HandleData);
+                        DummyStreamGenerator.Generate("stream-getsecurities.csv", InputStreamHandler.HandleData);
                     });
                     break;
 

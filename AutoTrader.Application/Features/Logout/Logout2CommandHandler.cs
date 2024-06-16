@@ -28,7 +28,7 @@ namespace AutoTrader.Application.Features.Logout
 
         public async Task<Unit> Handle(Logout2Command request, CancellationToken cancellationToken)
         {
-            _stockClients.Slave.Logout();
+            await _stockClients.Slave.Logout();
 
             return Unit.Value;
         }

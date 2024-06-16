@@ -42,7 +42,7 @@ namespace AutoTrader.Application.Models.TransaqConnector.Ingoing
 
         //forts_acc - счет FORTS клиента. Если клиент не имеет счета FORTS, то
         //элемент не передается.
-        public string forts_acc { get; set; }
+        public string? forts_acc { get; set; }
     }
 }
 
