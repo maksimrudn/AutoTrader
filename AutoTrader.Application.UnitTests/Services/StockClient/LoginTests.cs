@@ -25,12 +25,37 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, DummyTransaqConnectorRequestHandler.CorrectPassword, Domain.Models.Types.ConnectionType.Prod);
+            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, 
+                                    DummyTransaqConnectorRequestHandler.CorrectPassword, 
+                                    Domain.Models.Types.ConnectionType.Prod);
 
             stockClient.Connected.ShouldBeTrue();
             stockClient.FortsClientId.ShouldNotBeNull()
                                         .ShouldNotBeEmpty();
         }
+
+        [Fact]
+        public async Task ReLoginAfterConnectionError()
+        {
+            var stockClient = new StockClientMaster(_factory);
+
+            var exception = await Should.ThrowAsync<StockClientException>(async () =>
+                                await stockClient.Login("wrong username",
+                                                    DummyTransaqConnectorRequestHandler.CorrectPassword,
+                                                    Domain.Models.Types.ConnectionType.Prod));
+
+            stockClient.Connected.ShouldBeFalse();
+                        
+            await Should.NotThrowAsync(async () =>
+                                await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername,
+                                                        DummyTransaqConnectorRequestHandler.CorrectPassword,
+                                                        Domain.Models.Types.ConnectionType.Prod));
+
+            stockClient.Connected.ShouldBeTrue();
+            stockClient.FortsClientId.ShouldNotBeNull()
+                                        .ShouldNotBeEmpty();
+        }
+
 
         [Fact]
         public async Task AlreadyConnected()
@@ -41,10 +66,10 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
                                         DummyTransaqConnectorRequestHandler.CorrectPassword,
                                         Domain.Models.Types.ConnectionType.Prod);
 
-            var exception = await Should.ThrowAsync<StockClientException>(() =>
-                                stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                DummyTransaqConnectorRequestHandler.CorrectPassword,
-                                Domain.Models.Types.ConnectionType.Prod));
+            var exception = await Should.ThrowAsync<StockClientException>(async () =>
+                                await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername,
+                                                        DummyTransaqConnectorRequestHandler.CorrectPassword,
+                                                        Domain.Models.Types.ConnectionType.Prod));
 
             exception.ErrorCode.ShouldBeEquivalentTo(CommonErrors.AlreadyLoggedInCode);
         }
@@ -54,10 +79,11 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            var exception = await Should.ThrowAsync<StockClientException>(() =>
-                                stockClient.Login("wrong username",
+            var exception = await Should.ThrowAsync<StockClientException>(async () =>
+                                await stockClient.Login("wrong username",
                                                     DummyTransaqConnectorRequestHandler.CorrectPassword,
                                                     Domain.Models.Types.ConnectionType.Prod));
+            stockClient.Connected.ShouldBeFalse();
 
             exception.ErrorCode.ShouldBeEquivalentTo(CommonErrors.ServerConnectionErrorCode);
         }
@@ -67,7 +93,10 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, DummyTransaqConnectorRequestHandler.CorrectPassword, Domain.Models.Types.ConnectionType.Prod);
+            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, 
+                                    DummyTransaqConnectorRequestHandler.CorrectPassword, 
+                                    Domain.Models.Types.ConnectionType.Prod);
+
             stockClient.FortsClientId.ShouldNotBeNullOrEmpty();
             stockClient.Connected.ShouldBeTrue();
             await stockClient.Logout();

@@ -11,14 +11,14 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
     {
         static string _dummy_data_folder = @"Stock\Dummy\Data\";
 
-        public static void Generate(string filename, Action<string> handleData)
+        public static async void Generate(string filename, Action<string> handleData)
         {
             string filepath = @$"{MainHelper.GetWorkFolder()}{_dummy_data_folder}{filename}";
 
             using (StreamReader reader = new StreamReader(filepath))
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                string? line;
+                while ((line = await reader.ReadLineAsync()) != null)
                 {
                     handleData(line);
                 }

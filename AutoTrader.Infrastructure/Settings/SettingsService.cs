@@ -1,14 +1,15 @@
 ﻿
 using AutoTrader.Application.Contracts.Infrastructure;
+using AutoTrader.Application.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.Xml.Serialization;
 
-namespace AutoTrader.Application.Features.Settings
+namespace AutoTrader.Infrastructure.Settings
 {
     public class SettingsService: ISettingsService
     {
         private readonly IConfiguration _configuration;
-        string _settingsFilename = "Settings.xml";
+        string _settingsFilename = MainHelper.GetWorkFolder() + "Settings.xml";
 
         public SettingsService(IConfiguration configuration) {
             this._configuration = configuration;

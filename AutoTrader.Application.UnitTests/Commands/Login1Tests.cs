@@ -1,11 +1,5 @@
-using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Exceptions;
 using AutoTrader.Application.Features.Login;
-using AutoTrader.Application.Features.Settings;
 using AutoTrader.Application.Models;
-using AutoTrader.Application.UnitTests.Mocks;
-using AutoTrader.Infrastructure.Stock;
-using Shouldly;
 namespace AutoTrader.Application.UnitTests.Commands
 {
     public class Login1Tests

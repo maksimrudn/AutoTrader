@@ -24,16 +24,21 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                 case command_id.connect:
                     if (commandInfo.login != CorrectUsername || commandInfo.password != CorrectPassword)
                     {
-                        Task.Run(() => {
+                        res.success = true;
+                        Task.Run(() =>
+                        {
                             DummyStreamGenerator.Generate("stream-login-wrong-user-pass.csv", InputStreamHandler.HandleData);
                         });
                     }
-
-                    res.success = true;
-                    // send stream
-                    Task.Run(() => {
-                        DummyStreamGenerator.Generate("stream-login.csv", InputStreamHandler.HandleData);
-                    });
+                    else
+                    {
+                        res.success = true;
+                        // send stream
+                        Task.Run(() =>
+                        {
+                            DummyStreamGenerator.Generate("stream-login.csv", InputStreamHandler.HandleData);
+                        });
+                    }
                     break;
 
                 case command_id.get_mc_portfolio:

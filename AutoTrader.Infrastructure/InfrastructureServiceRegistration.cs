@@ -1,13 +1,12 @@
 ﻿
 using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Features.Settings;
 using AutoTrader.Application.Models.Email;
+using AutoTrader.Infrastructure.Settings;
 using AutoTrader.Infrastructure.Stock;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace AutoTrader.Infrastructure
 {

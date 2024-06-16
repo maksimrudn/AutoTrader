@@ -227,10 +227,16 @@ namespace AutoTrader.Infrastructure.Stock
                 try
                 {
                     await waitServerStatus;
+
+                    if (!Connected)
+                    {
+                        throw new StockClientException(CommonErrors.ServerConnectionError, _requestHandler.InputStreamHandler.ServerStatus?.InnerText);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    throw new StockClientException(CommonErrors.ServerStatusWaitingTimeout);
+                    _requestHandler = null;
+                    throw;
                 }
 
                 try

@@ -15,7 +15,6 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
     {
         TransaqConnectorFactory _factory;
 
-
         public GetSecurities()
         {
             _factory = new TransaqConnectorFactory(true);
@@ -26,7 +25,9 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, DummyTransaqConnectorRequestHandler.CorrectPassword, Domain.Models.Types.ConnectionType.Prod);
+            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, 
+                                    DummyTransaqConnectorRequestHandler.CorrectPassword, 
+                                    Domain.Models.Types.ConnectionType.Prod);
 
             var securities = await stockClient.GetSecurities();
             securities.ShouldNotBeNull();
@@ -38,8 +39,8 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            var exception = await Should.ThrowAsync<StockClientException>(() =>
-                                stockClient.GetSecurities());
+            var exception = await Should.ThrowAsync<StockClientException>(async () =>
+                                await stockClient.GetSecurities());
 
             exception.ErrorCode.ShouldBeEquivalentTo(CommonErrors.UnAuthorizedCode  );
         }
