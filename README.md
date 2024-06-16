@@ -33,12 +33,14 @@ Application uses Transaq connector.
 - Dependency Injection
 - **IDisposable**
   - For disposing of unmanaged resources
-  - **Path:** AutoTrader.Infrastructure.Stock.TXMLConnectorRequestHandler
+  - **Path:** AutoTrader.Infrastructure.Stock.TransaqConnector.TransaqConnectorRequestHandler
 - Unmanaged Resources
   - Using of C++ library
-  - **Path:** AutoTrader.Infrastructure.Stock.TXMLConnectorRequestHandler
+  - **Path:** AutoTrader.Infrastructure.Stock.TransaqConnector.TransaqConnectorRequestHandler
 - MultiThreading
 - Asynchronousness
 - Unit Tests
 - Mediatr
   - **Path:** AutoTrader.Application.Features
+- Concurrency
+  - **Path:** AutoTrader.Infrastructure.Stock.TransaqConnector.TransaqConnectorInputStreamHandler
