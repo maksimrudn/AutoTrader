@@ -14,7 +14,7 @@ namespace AutoTrader.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            bool dummyMode = true;
+            bool dummyMode = false;
 
             var s = configuration.GetSection("EmailSettings");
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));

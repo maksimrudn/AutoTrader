@@ -235,6 +235,7 @@ namespace AutoTrader.Infrastructure.Stock
                 }
                 catch (Exception ex)
                 {
+                    _requestHandler.Dispose();
                     _requestHandler = null;
                     throw;
                 }
