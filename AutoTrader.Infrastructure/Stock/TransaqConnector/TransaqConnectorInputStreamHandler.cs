@@ -42,15 +42,15 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         public bool PositionsAreActual = false;
 
         private readonly ReaderWriterLockSlim _quotesLock = new();
-        private readonly HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> _quotes = new();
-        public HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> Quotes
+        private readonly ConcurrentDictionary<string, Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> _quotes = new();
+        public List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> Quotes
         {
             get
             {
                 try
                 {
                     _quotesLock.EnterReadLock();
-                    return new HashSet<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>(_quotes);
+                    return _quotes.Values.ToList();
                 }
                 finally
                 {
@@ -61,15 +61,15 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         }
 
         private readonly ReaderWriterLockSlim _ordersLock = new();
-        private readonly HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order> _orders = new();
-        public HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order> Orders
+        private readonly ConcurrentDictionary<Int64, Application.Models.TransaqConnector.Ingoing.orders_ns.order> _orders = new();
+        public List<Application.Models.TransaqConnector.Ingoing.orders_ns.order> Orders
         {
             get
             {
                 try
                 {
                     _ordersLock.EnterReadLock();
-                    return new HashSet<Application.Models.TransaqConnector.Ingoing.orders_ns.order>(_orders);
+                    return _orders.Values.ToList();
                 }
                 finally
                 {
@@ -79,15 +79,15 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         }
 
         private readonly ReaderWriterLockSlim _tradesLock = new();
-        private readonly HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade> _trades = new();
-        public HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade> Trades
+        private readonly ConcurrentDictionary<long, Application.Models.TransaqConnector.Ingoing.trades_ns.trade> _trades = new();
+        public List<Application.Models.TransaqConnector.Ingoing.trades_ns.trade> Trades
         {
             get
             {
                 try
                 {
                     _tradesLock.EnterReadLock();
-                    return new HashSet<Application.Models.TransaqConnector.Ingoing.trades_ns.trade>(_trades);
+                    return _trades.Values.ToList();
                 }
                 finally
                 {
@@ -265,16 +265,15 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                 _tradesLock.EnterWriteLock();
                 foreach (var trade in trades.trade)
                 {
-                    var temp = _trades.FirstOrDefault(x => x.tradeno == trade.tradeno);
+                    var temp = _trades.GetValueOrDefault(trade.tradeno);
 
                     if (temp != null)
                     {
                         //temp = trade; // Globals.Trades[Globals.Trades.IndexOf(temp)] = trade;
 
                         continue;
-
                     }
-                    else _trades.Add(trade);
+                    else _trades.AddOrUpdate(trade.tradeno, trade, (key, curValue) => trade);
                 }
             }
             finally
@@ -290,17 +289,14 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                 _ordersLock.EnterWriteLock();
                 foreach (var order in orders.order)
                 {
-                    var temp = _orders.FirstOrDefault(x => x.orderno == order.orderno);
+                    var temp = _orders.GetValueOrDefault(order.orderno);
 
                     if (temp != null)
                     {
-                        //temp = order; //Globals.Orders[ Globals.Orders.IndexOf( temp ) ] = order;
-
                         temp.result = order.result;
                         temp.status = order.status;
-
                     }
-                    else _orders.Add(order);
+                    else _orders.AddOrUpdate(order.orderno, order, (key, curValue) => order);
                 }
             }
             finally
@@ -322,15 +318,15 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                 //}
 
                 try
-                {
-                    _quotesLock.EnterWriteLock();
-                    var q = _quotes.FirstOrDefault(x => x.price == quote.price);
+                {                    
+                    
+                    var q = _quotes.GetValueOrDefault(quote.GetKey());
 
                     if (q != null)
                     {
                         if (quote.buy == -1 || quote.sell == -1)
                         {
-                            _quotes.Remove(q);
+                            _quotes.Remove(q.GetKey(), out var value);
                         }
                         else
                         {
@@ -340,7 +336,7 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                     }
                     else if (quote.buy != -1 && quote.sell != -1)
                     {
-                        _quotes.Add(quote);
+                        _quotes.AddOrUpdate(quote.GetKey(), quote, (key, existingValue)=> quote);
                     }
                 }
                 finally

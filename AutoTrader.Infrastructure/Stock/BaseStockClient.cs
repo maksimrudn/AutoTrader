@@ -712,13 +712,13 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        private Application.Models.TransaqConnector.Ingoing.orders_ns.order? GetOrderByTransactionId(int transactionid) => _requestHandler.InputStreamHandler
+        private Application.Models.TransaqConnector.Ingoing.orders_ns.order? GetOrderByTransactionId(int transactionid) => _requestHandler?.InputStreamHandler
                                                                                                                                             .Orders
-                                                                                                                                            .FirstOrDefault(x => x.transactionid == transactionid);
+                                                                                                                                            .First(x => x.transactionid == transactionid);
 
-        private Application.Models.TransaqConnector.Ingoing.trades_ns.trade? GetTradeByOrderNo(Int64 orderno) => _requestHandler.InputStreamHandler
+        private Application.Models.TransaqConnector.Ingoing.trades_ns.trade? GetTradeByOrderNo(Int64 orderno) => _requestHandler?.InputStreamHandler
                                                                                                                                 .Trades
-                                                                                                                                .FirstOrDefault(x => x.orderno == orderno);
+                                                                                                                                .First(x => x.orderno == orderno);
         
         public async Task<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>> GetSecurities()
         {

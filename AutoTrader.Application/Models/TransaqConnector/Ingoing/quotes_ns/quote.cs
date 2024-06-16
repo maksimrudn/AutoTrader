@@ -30,5 +30,10 @@ namespace AutoTrader.Application.Models.TransaqConnector.Ingoing.quotes_ns
             // Значение «-1» одновременно и в поле sell и в поле buy означает, что
             //строка с данной ценой (или с данным значением пары price + source)
             //удалена из «стакана».
+
+        public string GetKey()
+        {
+            return $"{price}";
+        }
     }
 }
