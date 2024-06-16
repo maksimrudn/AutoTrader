@@ -36,11 +36,11 @@ namespace AutoTrader.Infrastructure.Stock
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(_mailSettings.SMTPServer, int.Parse(_mailSettings.SMTPPort) , false);
-                await client.AuthenticateAsync(_mailSettings.NotificationEmail, _mailSettings.NotificationEmailPassword);
-                await client.SendAsync(emailMessage);
+                await client.ConnectAsync(_mailSettings.SMTPServer, int.Parse(_mailSettings.SMTPPort) , false).ConfigureAwait(false);
+                await client.AuthenticateAsync(_mailSettings.NotificationEmail, _mailSettings.NotificationEmailPassword).ConfigureAwait(false);
+                await client.SendAsync(emailMessage).ConfigureAwait(false);
 
-                await client.DisconnectAsync(true);
+                await client.DisconnectAsync(true).ConfigureAwait(false);
             }
         }
     }

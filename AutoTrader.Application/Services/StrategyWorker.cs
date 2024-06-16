@@ -80,12 +80,12 @@ namespace AutoTrader.Application.Services
                                                                 // Check if the current time is within the range
                     if (!(currentTime.TimeOfDay >= startTime && currentTime.TimeOfDay <= endTime))
                     {
-                        await Task.Delay(_settings.Delay);
+                        await Task.Delay(_settings.Delay).ConfigureAwait(false);
                         continue;
                     }
                 }
 
-                var res = await _connectors.Master.GetHistoryData(_settings.Seccode, TradingMode.Futures, _settings.Period, 2);
+                var res = await _connectors.Master.GetHistoryData(_settings.Seccode, TradingMode.Futures, _settings.Period, 2).ConfigureAwait(false);
 
                 double prevPrice = res[0].close;
                 double curPrice = res[1].close;
@@ -95,7 +95,7 @@ namespace AutoTrader.Application.Services
                 // Signal must be send only once at minute. Initial value lastSignalTime NOW - 1D
                 if ((DateTime.Now - lastSignalTime).TotalMinutes < 1)
                 {
-                    await Task.Delay(_settings.Delay);
+                    await Task.Delay(_settings.Delay).ConfigureAwait(false);
                     continue;
                 }
 
@@ -105,7 +105,7 @@ namespace AutoTrader.Application.Services
 
                     if (diff > _settings.Difference && prevPrice > curPrice)
                     {
-                        await _sendNotification(_settings, diff, res);
+                        await _sendNotification(_settings, diff, res).ConfigureAwait(false);
 
                         lastSignalTime = DateTime.Now;
                     }
@@ -116,7 +116,7 @@ namespace AutoTrader.Application.Services
 
                     if (diff > _settings.Difference && prevPrice > curPrice)
                     {
-                        await _sendNotification(_settings, diff, res);
+                        await _sendNotification(_settings, diff, res).ConfigureAwait(false);
                     }
                 }
                 else
@@ -125,7 +125,7 @@ namespace AutoTrader.Application.Services
 
                     if (diff > _settings.Difference)
                     {
-                        await _sendNotification(_settings, diff, res);
+                        await _sendNotification(_settings, diff, res).ConfigureAwait(false);
                     }
                 }
 
@@ -135,7 +135,7 @@ namespace AutoTrader.Application.Services
                     return;
                 }
 
-                await Task.Delay(_settings.Delay);
+                await Task.Delay(_settings.Delay).ConfigureAwait(false);
             }
         }
 
@@ -149,12 +149,12 @@ namespace AutoTrader.Application.Services
             }
             else if (_settings.NotificationType == NotificationTypes.Email)
             {
-                await _emailService.SendEmailAsync(_notificationEmail, "Autotrader", result);
+                await _emailService.SendEmailAsync(_notificationEmail, "Autotrader", result).ConfigureAwait(false);
             }
             else
             {
                 File.AppendAllText(_notificationFile, result);
-                await _emailService.SendEmailAsync(_notificationEmail, "Autotrader", result);
+                await _emailService.SendEmailAsync(_notificationEmail, "Autotrader", result).ConfigureAwait(false);
             }
         }
 

@@ -123,7 +123,7 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
             {
                 if (disposing)
                 {
-                    InputStreamHandler.ServerStatusUpdated.Dispose();
+
                 }
 
                 IntPtr pResult = _unInitialize();

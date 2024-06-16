@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AutoTrader.Application.Features.Logout
 {
-    public class Logout1Command: IRequest
+    public class LogoutMasterCommand: IRequest
     {
 
     }

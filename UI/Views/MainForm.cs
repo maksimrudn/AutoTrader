@@ -268,6 +268,8 @@ namespace AutoTraderUI
 
         public void HandleConnected(int connectorNumber)
         {
+            comboBoxConnectionType.Enabled = false;
+
             if (connectorNumber == 0)
             {
                 ((Control)tabPage1).Enabled = true;
@@ -290,6 +292,8 @@ namespace AutoTraderUI
 
         public void HandleDisconnected(int connNumber = -1)
         {
+            comboBoxConnectionType.Enabled = false;
+
             if (connNumber == 0)
             {
                 ((Control)tabPage1).Enabled = false;
@@ -431,7 +435,7 @@ namespace AutoTraderUI
         {
             _commandWrapperAction(async () =>
             {
-                var id = await _mediator.Send(new Logout1Command());
+                var id = await _mediator.Send(new LogoutMasterCommand());
                 this.HandleDisconnected(0);
             });
         }
@@ -440,7 +444,7 @@ namespace AutoTraderUI
         {
             _commandWrapperAction(async () =>
             {
-                var id = await _mediator.Send(new Logout2Command());
+                var id = await _mediator.Send(new LogoutSlaveCommand());
                 this.HandleDisconnected(1);
             });
         }

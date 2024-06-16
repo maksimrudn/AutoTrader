@@ -21,14 +21,14 @@ namespace AutoTrader.Application.Features.Login
             _settingsService.UpdateSettings(request.Settings);
 
             var validator = new LoginSlaveCommandValidator();
-            var validationResult = await validator.ValidateAsync(request);
+            var validationResult = await validator.ValidateAsync(request).ConfigureAwait(false);
 
             if (validationResult.Errors.Count > 0)
                 throw new Exceptions.ValidationException(validationResult);
 
             ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), request.Settings.ConnectionType);
 
-            await _stockClients.Slave.Login(request.Settings.GetUsername(), request.Settings.GetPassword(), connType);
+            await _stockClients.Slave.Login(request.Settings.GetUsername(), request.Settings.GetPassword(), connType).ConfigureAwait(false);
 
             var resp = new LoginResponse()
             {

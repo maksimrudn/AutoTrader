@@ -19,7 +19,7 @@ namespace AutoTrader.Application.Helpers
             }
             else
             {
-                await cl.CreateNewComboOrder(co);
+                await cl.CreateNewComboOrder(co).ConfigureAwait(false);
             }
         }
 
@@ -40,15 +40,15 @@ namespace AutoTrader.Application.Helpers
 
             Task md1 = Task.Run(async () =>
             {
-                await StockOperationHelper.HandleComboOperation(stockClients.Master, comboOrder1);
+                await StockOperationHelper.HandleComboOperation(stockClients.Master, comboOrder1).ConfigureAwait(false);
             });
 
             Task md2 = Task.Run(async () =>
             {
-                await StockOperationHelper.HandleComboOperation(stockClients.Slave, comboOrder2);
+                await StockOperationHelper.HandleComboOperation(stockClients.Slave, comboOrder2).ConfigureAwait(false);
             });
 
-            await Task.WhenAll(md1, md2);
+            await Task.WhenAll(md1, md2).ConfigureAwait(false);
         }
     }
 }

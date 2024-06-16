@@ -41,7 +41,7 @@ namespace AutoTrader.Application.Features.ComboBuy
             co.Seccode = request.Settings.Seccode;
             co.OrderDirection = OrderDirection.Buy;
 
-            await StockOperationHelper.HandleComboOperation(_stockClients.Master, co);
+            await StockOperationHelper.HandleComboOperation(_stockClients.Master, co).ConfigureAwait(false);
 
             return Unit.Value;
         }

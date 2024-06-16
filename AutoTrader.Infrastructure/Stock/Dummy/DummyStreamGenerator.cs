@@ -18,7 +18,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
             using (StreamReader reader = new StreamReader(filepath))
             {
                 string? line;
-                while ((line = await reader.ReadLineAsync()) != null)
+                while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
                 {
                     handleData(line);
                 }

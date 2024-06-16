@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public class DualStockClient: IDualStockClient, IAsyncDisposable
+    public class DualStockClient: IDualStockClient, IDisposable
     {
         public IStockClient Master { get; }
 
@@ -20,13 +20,13 @@ namespace AutoTrader.Infrastructure.Stock
 
 
         private bool _disposed = false;
-        public async ValueTask DisposeAsync()
+        public void Dispose()
         {
-            await DisposeAsync(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual async ValueTask DisposeAsync(bool dispossing)
+        protected virtual void Dispose(bool dispossing)
         {
             if (!_disposed)
             {
@@ -35,8 +35,8 @@ namespace AutoTrader.Infrastructure.Stock
 
                 }
 
-                await Master.DisposeAsync();
-                await Slave.DisposeAsync();
+                Master.Dispose();
+                Slave.Dispose();
                 _disposed = true;
             }            
         }

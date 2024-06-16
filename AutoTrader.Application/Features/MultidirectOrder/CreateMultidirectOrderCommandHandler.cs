@@ -30,7 +30,7 @@ namespace AutoTrader.Application.Features.MultidirectOrder
         public async Task<Unit> Handle(CreateMultidirectOrderCommand request, CancellationToken cancellationToken)
         {
             var validator = new CreateMultidirectOrderCommandValidator();
-            var validationResult = await validator.ValidateAsync(request.Settings);
+            var validationResult = await validator.ValidateAsync(request.Settings).ConfigureAwait(false);
 
             if (validationResult.Errors.Count > 0)
                 throw new Exceptions.ValidationException(validationResult);
@@ -49,7 +49,7 @@ namespace AutoTrader.Application.Features.MultidirectOrder
             bool bymarket = request.Settings.ByMarket;
             string seccode = request.Settings.Seccode;
 
-            await StockOperationHelper.MakeMultidirect(_stockClients, price, vol, sl, tp, bymarket, seccode);
+            await StockOperationHelper.MakeMultidirect(_stockClients, price, vol, sl, tp, bymarket, seccode).ConfigureAwait(false);
 
             return Unit.Value;
         }

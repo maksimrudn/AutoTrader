@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 {
-    public interface IStockClient : IAsyncDisposable
+    public interface IStockClient : IDisposable
     {
         bool Connected { get; }
 

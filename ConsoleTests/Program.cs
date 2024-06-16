@@ -20,7 +20,7 @@ namespace ConsoleTests
 
             var factory = new TransaqConnectorFactory();
 
-            await using (var cl = new StockClientMaster(factory))
+            using (var cl = new StockClientMaster(factory))
             {
 
                 //try

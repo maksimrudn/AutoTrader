@@ -226,7 +226,7 @@ namespace AutoTrader.Infrastructure.Stock
                 var waitPositions = _requestHandler.InputStreamHandler.PositionsLoaded.WaitOne();
                 try
                 {
-                    await waitServerStatus;
+                    await waitServerStatus.ConfigureAwait(false);
 
                     if (!Connected)
                     {
@@ -242,7 +242,7 @@ namespace AutoTrader.Infrastructure.Stock
 
                 try
                 {
-                    await waitPositions;
+                    await waitPositions.ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -256,7 +256,7 @@ namespace AutoTrader.Infrastructure.Stock
                 }
 
                 _getMCPortfolioPositions();
-                await _requestHandler.InputStreamHandler.MC_portfolioLoaded.WaitOne();
+                await _requestHandler.InputStreamHandler.MC_portfolioLoaded.WaitOne().ConfigureAwait(false);
             }
         }
 
@@ -272,7 +272,7 @@ namespace AutoTrader.Infrastructure.Stock
                 throw new StockClientException(res.message);
             }
 
-            await _requestHandler.InputStreamHandler.ServerStatusUpdated.WaitOne();
+            await _requestHandler.InputStreamHandler.ServerStatusUpdated.WaitOne().ConfigureAwait(false);
             // cleaning up of resources
             _requestHandler.Dispose();
             _requestHandler = null;
@@ -308,13 +308,13 @@ namespace AutoTrader.Infrastructure.Stock
 
         volatile bool _disposed = false;
 
-        public async ValueTask DisposeAsync()
+        public void Dispose()
         {
-            await DisposeAsync(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        public async ValueTask DisposeAsync(bool disposing)
+        public void Dispose(bool disposing)
         {
             if (!_disposed)
             {
@@ -326,7 +326,7 @@ namespace AutoTrader.Infrastructure.Stock
 
         ~BaseStockClient()
         {
-            DisposeAsync(false).GetAwaiter().GetResult();
+            Dispose(false);
         }
 
         public void SubscribeQuotations(TradingMode tradingMode, string seccode)
@@ -374,7 +374,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             if (sendResult.success == true)
             {
-                await _requestHandler.InputStreamHandler.CandlesLoaded[seccode].WaitOne();
+                await _requestHandler.InputStreamHandler.CandlesLoaded[seccode].WaitOne().ConfigureAwait(false);
             }
             else
             {
@@ -407,7 +407,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             if (sendResult.success == true)
             {
-                await _requestHandler.InputStreamHandler.WaitForCurrentCandle[seccode].WaitOne();
+                await _requestHandler.InputStreamHandler.WaitForCurrentCandle[seccode].WaitOne().ConfigureAwait(false);
 
                 res = _requestHandler.InputStreamHandler.CurrentCandle[seccode];
             }
@@ -623,7 +623,15 @@ namespace AutoTrader.Infrastructure.Stock
 
             if (co.OrderDirection == null) throw new Exception("Не установлен параметр BuySell");
 
-            await CreateNewComboOrder(co.TradingMode, co.Seccode, co.OrderDirection, co.ByMarket, co.Price, co.Vol, co.SL, co.TP);
+            await CreateNewComboOrder(co.TradingMode, 
+                                    co.Seccode, 
+                                    co.OrderDirection, 
+                                    co.ByMarket, 
+                                    co.Price, 
+                                    co.Vol, 
+                                    co.SL, 
+                                    co.TP)
+                                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -662,10 +670,10 @@ namespace AutoTrader.Infrastructure.Stock
             await Task.Run(async () =>
             {
                 while (ord == null) { 
-                    await Task.Delay(10);
+                    await Task.Delay(10).ConfigureAwait(false);
                     ord = GetOrderByTransactionId(tid); 
                 }
-            });
+            }).ConfigureAwait(false);
 
             // получение номера выполненного поручения
             Application.Models.TransaqConnector.Ingoing.trades_ns.trade? tr = null;
@@ -674,10 +682,10 @@ namespace AutoTrader.Infrastructure.Stock
             {
                 while (tr == null)
                 {
-                    await Task.Delay(10);
+                    await Task.Delay(10).ConfigureAwait(false);
                     tr = GetTradeByOrderNo(ord.orderno);
                 }
-            });
+            }).ConfigureAwait(false);
 
             var closeOrderDirection = (orderDirection == OrderDirection.Buy) ? OrderDirection.Sell : OrderDirection.Buy;
 
@@ -732,7 +740,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             if (sendResult.success == true)
             {
-                await _requestHandler.InputStreamHandler.SecuritiesLoaded.WaitOne();
+                await _requestHandler.InputStreamHandler.SecuritiesLoaded.WaitOne().ConfigureAwait(false);
 
                 res = _requestHandler.InputStreamHandler.Securities.ToList();
             }

@@ -17,18 +17,18 @@ using AutoTrader.Application.Models;
 
 namespace AutoTrader.Application.Features.Logout
 {
-    public class Logout1CommandHandler : IRequestHandler<Logout1Command>
+    public class LogoutSlaveCommandHandler : IRequestHandler<LogoutSlaveCommand>
     {
         private readonly IDualStockClient _stockClients;
 
-        public Logout1CommandHandler(IDualStockClient stockClients)
+        public LogoutSlaveCommandHandler(IDualStockClient stockClients)
         {
             this._stockClients = stockClients;
         }
 
-        public async Task<Unit> Handle(Logout1Command request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(LogoutSlaveCommand request, CancellationToken cancellationToken)
         {
-            await _stockClients.Master.Logout();
+            await _stockClients.Slave.Logout().ConfigureAwait(false);
 
             return Unit.Value;
         }
