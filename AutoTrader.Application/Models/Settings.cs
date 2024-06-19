@@ -23,6 +23,10 @@ namespace AutoTrader.Application.Models
 
         public string Password { get; set; }
 
+        public string OldPassword { get; set; }
+
+        public string NewPassword { get; set; }
+
         public string Username2 { get; set; }
 
         public string Password2 { get; set; }
@@ -86,9 +90,51 @@ namespace AutoTrader.Application.Models
             return res;
         }
 
+        public string GetNewPassword()
+        {
+            string res;
+
+            try
+            {
+                res = Crypter.Decrypt(NewPassword);
+            }
+            catch
+            {
+                res = NewPassword;
+            }
+
+            return res;
+        }
+
+        public string GetOldPassword()
+        {
+            string res;
+
+            try
+            {
+                res = Crypter.Decrypt(OldPassword);
+            }
+            catch
+            {
+                res = OldPassword;
+            }
+
+            return res;
+        }
+
         public void SetPassword(string text)
         {
             Password = Crypter.Encrypt(text);
+        }
+
+        public void SetOldPassword(string text)
+        {
+            OldPassword = Crypter.Encrypt(text);
+        }
+
+        public void SetNewPassword(string text)
+        {
+            NewPassword = Crypter.Encrypt(text);
         }
 
         public void SetUsername2(string text)

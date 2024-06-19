@@ -30,7 +30,7 @@ namespace AutoTrader.Application.Features.ChangePassword
 
         public async Task<Unit> Handle(ChangePassword1Command request, CancellationToken cancellationToken)
         {            
-            _stockClients.Master.ChangePassword(request.Settings.Username, request.Settings.Password);
+            _stockClients.Master.ChangePassword(request.Settings.GetOldPassword(), request.Settings.GetNewPassword());
             _settingsService.UpdateSettings(request.Settings);
 
             return Unit.Value;

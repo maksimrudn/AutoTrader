@@ -170,6 +170,8 @@ namespace AutoTraderUI
         {
             textBoxUsername.Text = settings.GetUsername();
             textBoxPassword.Text = settings.GetPassword();
+            textBoxPasswordOld.Text = settings.GetOldPassword();
+            textBoxPasswordNew.Text = settings.GetNewPassword();
             textBoxUsername2.Text = settings.GetUsername2();
             textBoxPassword2.Text = settings.GetPassword2();
             textBoxTP.Text = settings.TP.ToString();
@@ -218,6 +220,8 @@ namespace AutoTraderUI
 
             this.Invoke(new MethodInvoker(() => { settings.SetUsername(textBoxUsername.Text); }));
             this.Invoke(new MethodInvoker(() => { settings.SetPassword(textBoxPassword.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.SetOldPassword(textBoxPasswordOld.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.SetNewPassword(textBoxPasswordNew.Text); }));
             this.Invoke(new MethodInvoker(() => { settings.SetUsername2(textBoxUsername2.Text); }));
             this.Invoke(new MethodInvoker(() => { settings.SetPassword2(textBoxPassword2.Text); }));
             this.Invoke(new MethodInvoker(() => { settings.TP = int.Parse(textBoxTP.Text); }));

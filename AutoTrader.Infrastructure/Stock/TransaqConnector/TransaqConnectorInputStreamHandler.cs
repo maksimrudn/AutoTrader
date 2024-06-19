@@ -126,7 +126,7 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         {
             string nodeName = _getNodeName(result);
             Debug.WriteLine(nodeName);
-            //File.AppendAllText("stream.csv", result+"\n");
+            File.AppendAllText("stream.csv", result+"\n");
             switch (nodeName)
             {
                 case "server_status":

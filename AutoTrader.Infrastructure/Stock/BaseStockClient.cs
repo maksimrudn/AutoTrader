@@ -235,9 +235,13 @@ namespace AutoTrader.Infrastructure.Stock
                 }
                 catch (Exception ex)
                 {
-                    _requestHandler.Dispose();
-                    _requestHandler = null;
                     throw;
+                }
+                finally
+                {
+                    // todo: solve problem on exception while authorization. Library can't be disposed on bad authorization at this point and suspends closing of application
+                    //_requestHandler.Dispose();
+                    //_requestHandler = null;
                 }
 
                 try
