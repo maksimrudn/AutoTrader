@@ -44,7 +44,7 @@
             textBoxPrice = new System.Windows.Forms.TextBox();
             label8 = new System.Windows.Forms.Label();
             buttonComboSell = new System.Windows.Forms.Button();
-            dataGridView1 = new System.Windows.Forms.DataGridView();
+            dataGridViewFortsPositions = new System.Windows.Forms.DataGridView();
             button1 = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             textBoxVolume = new System.Windows.Forms.TextBox();
@@ -127,7 +127,7 @@
             labelTime = new System.Windows.Forms.Label();
             comboBoxTimezone = new System.Windows.Forms.ComboBox();
             label21 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewFortsPositions).BeginInit();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -224,14 +224,14 @@
             buttonComboSell.UseVisualStyleBackColor = true;
             buttonComboSell.Click += buttonComboSell_Click;
             // 
-            // dataGridView1
+            // dataGridViewFortsPositions
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new System.Drawing.Point(14, 369);
-            dataGridView1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new System.Drawing.Size(698, 99);
-            dataGridView1.TabIndex = 21;
+            dataGridViewFortsPositions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewFortsPositions.Location = new System.Drawing.Point(14, 369);
+            dataGridViewFortsPositions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            dataGridViewFortsPositions.Name = "dataGridViewFortsPositions";
+            dataGridViewFortsPositions.Size = new System.Drawing.Size(698, 99);
+            dataGridViewFortsPositions.TabIndex = 21;
             // 
             // button1
             // 
@@ -340,7 +340,7 @@
             tabPage1.Controls.Add(buttonStartMultidirectTimer);
             tabPage1.Controls.Add(buttonMakeMultidirect);
             tabPage1.Controls.Add(groupBox1);
-            tabPage1.Controls.Add(dataGridView1);
+            tabPage1.Controls.Add(dataGridViewFortsPositions);
             tabPage1.Controls.Add(comboBoxSeccode);
             tabPage1.Controls.Add(button1);
             tabPage1.Controls.Add(buttonComboSell);
@@ -366,21 +366,21 @@
             tabPage1.Text = "Trading";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // quotationsUnSubscribebutton
+            // buttonQuotationsUnSubscribe
             // 
             buttonQuotationsUnSubscribe.Location = new System.Drawing.Point(208, 583);
             buttonQuotationsUnSubscribe.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            buttonQuotationsUnSubscribe.Name = "quotationsUnSubscribebutton";
+            buttonQuotationsUnSubscribe.Name = "buttonQuotationsUnSubscribe";
             buttonQuotationsUnSubscribe.Size = new System.Drawing.Size(187, 27);
             buttonQuotationsUnSubscribe.TabIndex = 33;
             buttonQuotationsUnSubscribe.Text = "UnSubscribe to Quotations ";
             buttonQuotationsUnSubscribe.UseVisualStyleBackColor = true;
             // 
-            // quotationsSubscribebutton
+            // buttonQuotationsSubscribe
             // 
             buttonQuotationsSubscribe.Location = new System.Drawing.Point(14, 583);
             buttonQuotationsSubscribe.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            buttonQuotationsSubscribe.Name = "quotationsSubscribebutton";
+            buttonQuotationsSubscribe.Name = "buttonQuotationsSubscribe";
             buttonQuotationsSubscribe.Size = new System.Drawing.Size(187, 27);
             buttonQuotationsSubscribe.TabIndex = 33;
             buttonQuotationsSubscribe.Text = "Subscribe to Quotations ";
@@ -1138,7 +1138,7 @@
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "MainForm";
             Text = "AUTO TRADER";
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewFortsPositions).EndInit();
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
@@ -1175,7 +1175,7 @@
         private System.Windows.Forms.CheckBox checkBoxByMarket;
         private System.Windows.Forms.TextBox textBoxPrice;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridViewFortsPositions;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxVolume;

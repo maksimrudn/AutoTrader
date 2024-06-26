@@ -7,6 +7,7 @@ using AutoTrader.Infrastructure.Stock;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace AutoTrader.Infrastructure
 {
@@ -14,7 +15,9 @@ namespace AutoTrader.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            bool dummyMode = false;
+            var buildConfigurationName = GetBuildConfigurationName();
+
+            bool dummyMode = buildConfigurationName == "Debug_Dummy"? true: false;
 
             var s = configuration.GetSection("EmailSettings");
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
@@ -30,6 +33,12 @@ namespace AutoTrader.Infrastructure
             services.AddSingleton<IDualStockClient, DualStockClient>();
 
             return services;
+        }
+
+        private static string GetBuildConfigurationName()
+        {
+            var assemblyConfigurationAttribute = typeof(InfrastructureServiceRegistration).Assembly.GetCustomAttribute<AssemblyConfigurationAttribute>();
+            return assemblyConfigurationAttribute?.Configuration;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoTrader.Application.Contracts.Infrastructure.Stock;
+﻿using AutoTrader.Application.Contracts.Infrastructure;
+using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Infrastructure.Contracts.Transaq;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;
 using System;

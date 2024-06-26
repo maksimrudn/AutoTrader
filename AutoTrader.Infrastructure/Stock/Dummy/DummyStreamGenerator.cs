@@ -11,7 +11,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
     {
         static string _dummy_data_folder = @"Stock\Dummy\Data\";
 
-        public static async void Generate(string filename, Action<string> handleData)
+        public static async Task Generate(string filename, Action<string> handleData)
         {
             string filepath = @$"{MainHelper.GetWorkFolder()}{_dummy_data_folder}{filename}";
 

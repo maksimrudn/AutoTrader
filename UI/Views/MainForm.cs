@@ -23,6 +23,7 @@ using AutoTrader.Application.Services;
 using AutoTraderUI.Views;
 using AutoTrader.Application.Helpers;
 using System.Linq;
+using System.ComponentModel;
 
 namespace AutoTraderUI
 {
@@ -37,6 +38,9 @@ namespace AutoTraderUI
         readonly Settings _settings;
         readonly Action<Func<Task>> _commandWrapperAction = null;
         List<string> _seccodeList = new List<string>();
+
+        private readonly BindingList<forts_position> _fortsPositionsBindingList = new BindingList<forts_position>();
+
 
         System.Timers.Timer _timerMultidirectOrder;
         CancellationTokenSource _ct_timerMultidirectOrder = new CancellationTokenSource();
@@ -74,6 +78,8 @@ namespace AutoTraderUI
             comboBoxSeccode.SelectedValueChanged += ComboBoxSeccode_SelectedValueChanged;
             _dualStockClient.Master.MCPositionsUpdated += MCPositionsUpdated;
             _dualStockClient.Master.SecuritiesUpdated += SecuritiesUpdated;
+
+            dataGridViewFortsPositions.DataSource = _fortsPositionsBindingList;
 
             _commandWrapperAction = async (act) =>
             {
@@ -380,12 +386,52 @@ namespace AutoTraderUI
                 {
                     labelTime.Text = $"Time: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
                 }));
+
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    UpdateFortsPositions(_dualStockClient.Master.FortsPositions);
+
+                }));
+            }
+        }
+
+        private void UpdateFortsPositions(IEnumerable<forts_position> newPositions)
+        {
+            var existingPositions = _fortsPositionsBindingList.ToDictionary(p => p.GetKey()); // Assuming forts_position has an Id property for unique identification.
+
+            foreach (var newPosition in newPositions)
+            {
+                if (existingPositions.TryGetValue(newPosition.GetKey(), out var existingPosition))
+                {
+                    // Update existing position
+                    existingPosition.openbuys = newPosition.openbuys; // Update properties as needed
+                    existingPosition.opensells = newPosition.opensells;
+                    existingPosition.varmargin = newPosition.varmargin;
+                    existingPosition.openbuys = existingPosition.openbuys;
+                                                                              // Trigger notification to the DataGridView (if BindingList does not auto-refresh)
+                    _fortsPositionsBindingList.ResetItem(_fortsPositionsBindingList.IndexOf(existingPosition));
+                }
+                else
+                {
+                    // Add new position
+                    _fortsPositionsBindingList.Add(newPosition);
+                }
+            }
+
+            // Remove positions that are no longer in the new list
+            for (int i = _fortsPositionsBindingList.Count - 1; i >= 0; i--)
+            {
+                var position = _fortsPositionsBindingList[i];
+                if (!newPositions.Any(p => p.GetKey() == position.GetKey()))
+                {
+                    _fortsPositionsBindingList.Remove(position);
+                }
             }
         }
 
         private void TestButton_Click(object sender, EventArgs e)
         {
-            _emailService.SendEmailAsync("m.rudneov@yandex.ru", "Autotrader", "test");
+            //_emailService.SendEmailAsync("m.rudneov@yandex.ru", "Autotrader", "test");
 
             //try
             //{

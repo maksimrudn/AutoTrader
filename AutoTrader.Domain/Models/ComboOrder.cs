@@ -23,8 +23,16 @@ namespace AutoTrader.Domain.Models
 
         public int Price { get; set; }
 
+        /// <summary>
+        /// Sl в пунктах
+        /// Если равно 0, то стоп ордер открыт не будет
+        /// </summary>
         public int SL { get; set; }
 
+        /// <summary>
+        /// TP в пунктах
+        /// Если равно 0, то стоп ордер открыт не будет
+        /// </summary>
         public int TP { get; set; }
 
         public int Vol { get; set; }
@@ -32,6 +40,8 @@ namespace AutoTrader.Domain.Models
         public bool ByMarket { get; set; }
 
         public OrderDirection OrderDirection { get; set; }
+
+        public StopLoseOrderType StopLoseOrderType { get; set; } = StopLoseOrderType.ConditionalOrder;
 
         public object Clone()
         {

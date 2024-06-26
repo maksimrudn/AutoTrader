@@ -20,6 +20,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoTrader.Infrastructure.Stock
 {
@@ -175,14 +176,20 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        public positions? Positions => _requestHandler?.InputStreamHandler.Positions;
+        public positions Positions => _requestHandler?.InputStreamHandler.Positions;
+
+        public List<forts_position> FortsPositions => _requestHandler?.InputStreamHandler.FortsPositions ?? new List<forts_position>();
+
+        public List<Application.Models.TransaqConnector.Ingoing.trades_ns.trade>? Trades => _requestHandler?.InputStreamHandler.Trades;
+
+        public List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? Orders => _requestHandler?.InputStreamHandler.Orders;
 
         public mc_portfolio? MCPortfolio => _requestHandler?.InputStreamHandler.mc_portfolio;
 
         public List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? OpenOrders => _requestHandler?.InputStreamHandler
                                                                                                                 .Orders
                                                                                                                 .Where(x => x.status == status.active || x.status == status.watching)
-                                                                                                                .ToList();    
+                                                                                                                .ToList();
 
         private void OnMCPositionsUpdatedHandler(object? sender, TransaqEventArgs<mc_portfolio> e) => MCPositionsUpdated?.Invoke(sender, e);
 
@@ -222,8 +229,8 @@ namespace AutoTrader.Infrastructure.Stock
             {
                 // Waiting for server_status information
                 // Or for receiving of clients (that is inderect means connection is successfull)
-                var waitServerStatus = _requestHandler.InputStreamHandler.ServerStatusUpdated.WaitOne();
-                var waitPositions = _requestHandler.InputStreamHandler.PositionsLoaded.WaitOne();
+                var waitServerStatus = _requestHandler.InputStreamHandler.ServerStatusUpdated.WaitOne(2*60*1000);
+                var waitPositions = _requestHandler.InputStreamHandler.PositionsLoaded.WaitOne(2*60*1000);
                 try
                 {
                     await waitServerStatus.ConfigureAwait(false);
@@ -232,6 +239,10 @@ namespace AutoTrader.Infrastructure.Stock
                     {
                         throw new StockClientException(CommonErrors.ServerConnectionError, _requestHandler.InputStreamHandler.ServerStatus?.InnerText);
                     }
+                }
+                catch (TimeoutException ex)
+                {
+                    throw new Exception("Waiting of server_status exception");
                 }
                 catch (Exception ex)
                 {
@@ -248,9 +259,13 @@ namespace AutoTrader.Infrastructure.Stock
                 {
                     await waitPositions.ConfigureAwait(false);
                 }
-                catch (Exception ex)
+                catch (TimeoutException ex)
                 {
                     throw new StockClientException(CommonErrors.PositionsWaitingTimeout);
+                }
+                catch (Exception ex)
+                {
+                    throw;
                 }
 
                 if (_requestHandler.InputStreamHandler.ServerStatus?.connected == "error")
@@ -259,7 +274,7 @@ namespace AutoTrader.Infrastructure.Stock
                                                     _requestHandler.InputStreamHandler.ServerStatus.InnerText);
                 }
 
-                _getMCPortfolioPositions();
+                GetMCPortfolioPositions();
                 await _requestHandler.InputStreamHandler.MC_portfolioLoaded.WaitOne().ConfigureAwait(false);
             }
         }
@@ -297,7 +312,7 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        protected void _getMCPortfolioPositions()
+        protected void GetMCPortfolioPositions()
         {
             var com = command.CreateGetMCPortfolioCommand(_requestHandler.InputStreamHandler.Positions.money_position.client);
 
@@ -620,6 +635,9 @@ namespace AutoTrader.Infrastructure.Stock
             return res;
         }
 
+        /// <summary>
+        /// Выставляет открывающую заявку и при наличии условий по sl, tp закрывающие заявки
+        /// </summary>
         public async Task CreateNewComboOrder(ComboOrder co)
         {
             if (!Connected)
@@ -627,47 +645,13 @@ namespace AutoTrader.Infrastructure.Stock
 
             if (co.OrderDirection == null) throw new Exception("Не установлен параметр BuySell");
 
-            await CreateNewComboOrder(co.TradingMode, 
-                                    co.Seccode, 
-                                    co.OrderDirection, 
-                                    co.ByMarket, 
-                                    co.Price, 
-                                    co.Vol, 
-                                    co.SL, 
-                                    co.TP)
-                                .ConfigureAwait(false);
-        }
 
-        /// <summary>
-        /// Выставляет открывающую заявку и при наличии условий по sl, tp закрывающие заявки
-        /// </summary>
-        /// <param name="board"></param>
-        /// <param name="seccode"></param>
-        /// <param name="buysell"></param>
-        /// <param name="bymarket"></param>
-        /// <param name="price"></param>
-        /// <param name="volume"></param>
-        /// <param name="slDistance"></param>
-        /// <param name="tpDistance"></param>
-        public async Task CreateNewComboOrder(TradingMode tradingMode, 
-                                        string seccode, 
-                                        OrderDirection orderDirection,
-                                        bool bymarket,
-                                        int price,
-                                        int volume, 
-                                        int slDistance, 
-                                        int tpDistance,
-                                        int comboType = 1)
-        {
-            if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
-
-            int tid = CreateNewOrder(tradingMode, 
-                                seccode,
-                                orderDirection, 
-                                bymarket, 
-                                price, 
-                                volume);
+            int tid = CreateNewOrder(co.TradingMode,
+                                co.Seccode,
+                                co.OrderDirection,
+                                co.ByMarket,
+                                co.Price,
+                                co.Vol);
 
             Application.Models.TransaqConnector.Ingoing.orders_ns.order? ord = null;
 
@@ -676,6 +660,11 @@ namespace AutoTrader.Infrastructure.Stock
                 while (ord == null) { 
                     await Task.Delay(10).ConfigureAwait(false);
                     ord = GetOrderByTransactionId(tid); 
+                }
+
+                if (ord.status != status.matched)
+                {
+                    throw new Exception($"Order {ord.orderno} is not matched. Further processing is not possible");
                 }
             }).ConfigureAwait(false);
 
@@ -691,30 +680,30 @@ namespace AutoTrader.Infrastructure.Stock
                 }
             }).ConfigureAwait(false);
 
-            var closeOrderDirection = (orderDirection == OrderDirection.Buy) ? OrderDirection.Sell : OrderDirection.Buy;
+            var closeOrderDirection = (co.OrderDirection == OrderDirection.Buy) ? OrderDirection.Sell : OrderDirection.Buy;
 
-            if (comboType == 1)
+            if (co.StopLoseOrderType == StopLoseOrderType.ConditionalOrder)
             {
                 // открытие sl заявки
-                if (slDistance > 0)
+                if (co.SL > 0)
                 {
-                    double slPrice = (orderDirection == OrderDirection.Buy) ? tr.price - slDistance : tr.price + slDistance;
-                    var closeCondition = (orderDirection == OrderDirection.Buy) ? cond_type.LastDown : cond_type.LastUp;
+                    double slPrice = (co.OrderDirection == OrderDirection.Buy) ? tr.price - co.SL : tr.price + co.SL;
+                    var closeCondition = (co.OrderDirection == OrderDirection.Buy) ? cond_type.LastDown : cond_type.LastUp;
 
-                    CreateNewConditionOrder(tradingMode,
-                                    seccode,
+                    CreateNewConditionOrder(co.TradingMode,
+                                    co.Seccode,
                                     closeOrderDirection,
-                                    bymarket,
+                                    co.ByMarket,
                                     closeCondition,
                                     slPrice,
-                                    volume);
+                                    co.Vol);
                 }
 
                 // открытие tp заявки
-                if (tpDistance > 0)
+                if (co.TP > 0)
                 {
-                    double tpPrice = (orderDirection == OrderDirection.Buy) ? tr.price + tpDistance : tr.price - tpDistance;
-                    CreateNewOrder(tradingMode, seccode, closeOrderDirection, bymarket, tpPrice, volume);
+                    double tpPrice = (co.OrderDirection == OrderDirection.Buy) ? tr.price + co.TP : tr.price - co.TP;
+                    CreateNewOrder(co.TradingMode, co.Seccode, closeOrderDirection, co.ByMarket, tpPrice, co.Vol);
                 }
             }
             else
@@ -726,11 +715,11 @@ namespace AutoTrader.Infrastructure.Stock
 
         private Application.Models.TransaqConnector.Ingoing.orders_ns.order? GetOrderByTransactionId(int transactionid) => _requestHandler?.InputStreamHandler
                                                                                                                                             .Orders
-                                                                                                                                            .First(x => x.transactionid == transactionid);
+                                                                                                                                            .FirstOrDefault(x => x.transactionid == transactionid);
 
         private Application.Models.TransaqConnector.Ingoing.trades_ns.trade? GetTradeByOrderNo(Int64 orderno) => _requestHandler?.InputStreamHandler
                                                                                                                                 .Trades
-                                                                                                                                .First(x => x.orderno == orderno);
+                                                                                                                                .FirstOrDefault(x => x.orderno == orderno);
         
         public async Task<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>> GetSecurities()
         {

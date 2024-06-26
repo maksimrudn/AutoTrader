@@ -46,7 +46,9 @@ namespace AutoTrader.Application.Common
                         var cancellationToken = cts.Token;
 
                         // If the token is cancelled, cancel the waiter.
-                        var registration = cancellationToken.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
+                        var registration = cancellationToken.Register(() =>     
+                                                            tcs.TrySetException(new TimeoutException()), 
+                                                                                useSynchronizationContext: false);
                         
                         // If the waiter completes or faults, unregister our interest in cancellation.
                         tcs.Task.ContinueWith(

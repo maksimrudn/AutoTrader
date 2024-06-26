@@ -35,6 +35,20 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         }
 
         [Fact]
+        public async Task LoginWithPositions()
+        {
+            var stockClient = new StockClientMaster(_factory);
+
+            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername,
+                                    DummyTransaqConnectorRequestHandler.CorrectPassword,
+                                    Domain.Models.Types.ConnectionType.Prod);
+
+            stockClient.Connected.ShouldBeTrue();
+            stockClient.FortsClientId.ShouldNotBeNull()
+                                        .ShouldNotBeEmpty();
+        }
+
+        [Fact]
         public async Task ReLoginAfterConnectionError()
         {
             var stockClient = new StockClientMaster(_factory);

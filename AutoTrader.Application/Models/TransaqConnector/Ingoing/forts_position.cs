@@ -101,5 +101,10 @@ namespace AutoTrader.Application.Models.TransaqConnector.Ingoing
         /// коэффициент ГО для спота
         /// </summary>
         public double kgo { get; set; }
+
+        public string GetKey()
+        {
+            return $"{client}-{union}-{secid}-{seccode}";
+        }
     }
 }

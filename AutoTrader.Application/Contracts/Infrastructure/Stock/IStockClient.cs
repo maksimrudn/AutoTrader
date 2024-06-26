@@ -5,31 +5,25 @@ using AutoTrader.Domain.Models;
 using AutoTrader.Domain.Models.Types;
 using System;
 using System.Collections.Generic;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 {
-    public interface IStockClient : IDisposable
+    public interface IStockClient : IStockAccountData, IDisposable
     {
-        bool Connected { get; }
+        List<Models.TransaqConnector.Ingoing.trades_ns.trade>? Trades { get; }
 
-        string? FortsClientId { get; }
-
-        Models.TransaqConnector.Ingoing.positions? Positions { get; }
+        List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? Orders { get; }
 
         List<Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesBuy { get; }
 
         List<Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesSell { get; }
-
-        string? Union { get; }
-
-        double? Money { get; }
-
+                
         event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
         event EventHandler<TransaqEventArgs<List<Models.TransaqConnector.Ingoing.securities_ns.security>?>> SecuritiesUpdated;
 
         List<Models.TransaqConnector.Ingoing.securities_ns.security>? Securities { get; }
-
 
         Task Login(string username, 
                     string password, 
@@ -38,16 +32,6 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
         Task Logout();
 
         void ChangePassword(string oldpass, string newpass);
-
-        Task CreateNewComboOrder(TradingMode tradingMode,
-                                        string seccode,
-                                        OrderDirection orderDirection,
-                                        bool bymarket,
-                                        int price,
-                                        int volume,
-                                        int slDistance,
-                                        int tpDistance,
-                                        int comboType = 1);
 
         Task CreateNewComboOrder(ComboOrder co);
 
