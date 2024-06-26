@@ -338,3 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/AutoTrader.Infrastructure/Stock/Dummy/Data/LoginWithInitialData/trades.csv
