@@ -44,3 +44,17 @@ Application uses Transaq connector.
   - **Path:** AutoTrader.Application.Features
 - Concurrency
   - **Path:** AutoTrader.Infrastructure.Stock.TransaqConnector.TransaqConnectorInputStreamHandler
+
+
+
+# Stock Client Class Diagram
+
+![Main Screenshot](Documentation/images/stock_client_class_diagram.png)
+
+# Login Sequence Diagram
+
+![Main Screenshot](Documentation/images/login_seq.png)
+
+# Create Combo Order Sequence Diagram
+
+![Main Screenshot](Documentation/images/create_combo_order_seq.png)
