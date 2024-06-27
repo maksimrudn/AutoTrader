@@ -29,7 +29,7 @@ namespace AutoTraderUI
 {
     public partial class MainForm : Form, IMainFormView
     {
-        readonly System.Timers.Timer _timerClock;
+        readonly System.Timers.Timer _timerUpdateUI;
         readonly IEmailService _emailService;
         readonly IMediator _mediator;
         readonly ISettingsService _settingsService;
@@ -40,6 +40,7 @@ namespace AutoTraderUI
         List<string> _seccodeList = new List<string>();
 
         private readonly BindingList<forts_position> _fortsPositionsBindingList = new BindingList<forts_position>();
+        private readonly BindingList<string> _seccodeBindingList = new BindingList<string>();
 
 
         System.Timers.Timer _timerMultidirectOrder;
@@ -61,23 +62,17 @@ namespace AutoTraderUI
             _strategyManager = strategyManager;
             
             _strategyManager.ObserverListChanged += ObserversCollection_ObserverListChanged;
-            _dualStockClient.Master.MCPositionsUpdated += (target, args) =>
-            {
-                this.LoadPositions(args.data);
-            };
 
             comboBoxConnectionType.DataSource = new List<string> { string.Empty, "Prod", "Demo" };
 
-            _timerClock = new System.Timers.Timer();
-            _timerClock.Interval = 1000;
-            _timerClock.Elapsed += new ElapsedEventHandler(TimerClock_Elapsed);
+            _timerUpdateUI = new System.Timers.Timer();
+            _timerUpdateUI.Interval = 1000;
+            _timerUpdateUI.Elapsed += new ElapsedEventHandler(TimerUpdateUI_Elapsed);
 
             comboBoxTimezone.Items.Add(4);
             comboBoxTimezone.Items.Add(7);
             comboBoxTimezone.SelectedValueChanged += TimezoneChanged;
             comboBoxSeccode.SelectedValueChanged += ComboBoxSeccode_SelectedValueChanged;
-            _dualStockClient.Master.MCPositionsUpdated += MCPositionsUpdated;
-            _dualStockClient.Master.SecuritiesUpdated += SecuritiesUpdated;
 
             dataGridViewFortsPositions.DataSource = _fortsPositionsBindingList;
 
@@ -103,7 +98,7 @@ namespace AutoTraderUI
 
         protected override void OnClosed(EventArgs e)
         {
-            _timerClock.Stop();
+            _timerUpdateUI.Stop();
             _ct_timerMultidirectOrder.Cancel();
 
             base.OnClosed(e);
@@ -112,7 +107,7 @@ namespace AutoTraderUI
         protected override void OnLoad(EventArgs e)
         {
             this.LoadSettings(_settings);
-            _timerClock.Start(); 
+            _timerUpdateUI.Start(); 
             base.OnLoad(e);
         }
 
@@ -157,20 +152,7 @@ namespace AutoTraderUI
         #endregion
 
         #region HELPER METHODS
-        public void LoadSeccodeList(List<string> lst)
-        {
-            List<string> seccodes = new List<string>()
-            {
-                string.Empty
-            };
-
-            seccodes.AddRange(lst);
-
-            this.Invoke(new MethodInvoker(() =>
-            {
-                comboBoxSeccode.DataSource = seccodes;
-            }));
-        }
+        
 
         public void LoadSettings(Settings settings)
         {
@@ -242,40 +224,11 @@ namespace AutoTraderUI
             this.Invoke(new MethodInvoker(() => { settings.MultidirectExecuteTime = dateTimePickerMultidirectExecute.Value; }));
         }
 
-        public void LoadPositions(mc_portfolio portfolio)
-        {
-            this.BeginInvoke(new MethodInvoker(() =>
-            {
-                dataGridViewPositions.Rows.Clear();
-
-                foreach (var pos in portfolio.securities)
-                {
-                    dataGridViewPositions.Rows.Add(new object[]
-                    {
-                    pos.seccode,
-                    //pos.name,
-                    pos.balance_prc,
-                    pos.price,
-                    pos.balance,
-                        //pos.securityElement.unrealized_pnl
-                    });
-                }
-            }));
-        }
-
         public void ShowMessage(string msg)
         {
             MessageBox.Show(msg);
         }
-
-        public void SetSelectedSeccode(string seccode)
-        {
-            this.Invoke(new MethodInvoker(() =>
-            {
-                comboBoxSeccode.SelectedItem = seccode;
-            }));
-        }
-
+                
         public void HandleConnected(int connectorNumber)
         {
             comboBoxConnectionType.Enabled = false;
@@ -376,7 +329,7 @@ namespace AutoTraderUI
             _settingsService.UpdateSettings(_settings);
         }
 
-        private void TimerClock_Elapsed(object sender, ElapsedEventArgs e)
+        private void TimerUpdateUI_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (_ct_timerMultidirectOrder.IsCancellationRequested) return;
 
@@ -393,6 +346,42 @@ namespace AutoTraderUI
 
                 }));
             }
+        }
+
+        private void UpdateSecurities(List<AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns.security>? Securities)
+        {
+            if (Securities == null) return;
+
+            _seccodeList = Securities.Where(x => x.board == AutoTrader.Application.Models.TransaqConnector.Outgoing.boardsCode.FUT.ToString())
+                                    .Select(x => x.seccode)
+                                    .OrderBy(x => x).ToList();
+
+            this.LoadSeccodeList(_seccodeList);
+            _isInitializedComboboxSeccode = true;
+            this.SetSelectedSeccode(_settings.Seccode);
+        }
+
+        public void LoadSeccodeList(List<string> lst)
+        {
+            List<string> seccodes = new List<string>()
+            {
+                string.Empty
+            };
+
+            seccodes.AddRange(lst);
+
+            this.Invoke(new MethodInvoker(() =>
+            {
+                comboBoxSeccode.DataSource = seccodes;
+            }));
+        }
+
+        public void SetSelectedSeccode(string seccode)
+        {
+            this.Invoke(new MethodInvoker(() =>
+            {
+                comboBoxSeccode.SelectedItem = seccode;
+            }));
         }
 
         private void UpdateFortsPositions(IEnumerable<forts_position> newPositions)
@@ -462,6 +451,12 @@ namespace AutoTraderUI
                 this.Union1 = resp.Union;
                 this.FreeMoney = resp.FreeMoney;
                 this.FreeMoney1 = resp.FreeMoney;
+
+                this.Invoke(new MethodInvoker(() =>
+                {
+                    UpdateSecurities(_dualStockClient.Master.Securities);
+                    
+                }));
             });
         }
 
@@ -487,6 +482,8 @@ namespace AutoTraderUI
             {
                 var id = await _mediator.Send(new LogoutMasterCommand());
                 this.HandleDisconnected(0);
+
+                _isInitializedComboboxSeccode = false;
             });
         }
 
@@ -663,7 +660,7 @@ namespace AutoTraderUI
             {
                 _timerMultidirectOrder.Stop();
 
-                await StockOperationHelper.MakeMultidirect(_dualStockClient, _settings.Price,
+                await _dualStockClient.MakeMultidirect(_settings.Price,
                                     _settings.Volume,
                                     _settings.SL,
                                     _settings.TP,
@@ -677,27 +674,16 @@ namespace AutoTraderUI
             }
         }
 
+        bool _isInitializedComboboxSeccode = false;
         private void ComboBoxSeccode_SelectedValueChanged(object sender, EventArgs e)
         {
+            if (!_isInitializedComboboxSeccode) return;
+
             _settings.Seccode = (string)comboBoxSeccode.SelectedValue;
             _settingsService.UpdateSettings(_settings);
         }
 
-        private void MCPositionsUpdated(object sender,
-                                                TransaqEventArgs<mc_portfolio> e)
-        {
-            this.LoadPositions(e.data);
-        }
-
-        private void SecuritiesUpdated(object sender, TransaqEventArgs<List<AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns.security>> e)
-        {
-            _seccodeList = e.data.Where(x => x.board == AutoTrader.Application.Models.TransaqConnector.Outgoing.boardsCode.FUT.ToString())
-                                    .Select(x => x.seccode)
-                                    .OrderBy(x => x).ToList();
-
-            this.LoadSeccodeList(_seccodeList);
-            this.SetSelectedSeccode(_settings.Seccode);
-        }
+        
         #endregion
     }
 }

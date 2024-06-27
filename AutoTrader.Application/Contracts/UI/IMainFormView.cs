@@ -34,7 +34,6 @@ namespace AutoTrader.Application.Contracts.UI
         void HandleConnected(int conectorNumber);
         void HandleDisconnected(int connNumber);
         void UpdateSettings(Settings settings);
-        void LoadPositions(mc_portfolio portfolio);
         void FreezUI();
         void UnFreezUI();
     }

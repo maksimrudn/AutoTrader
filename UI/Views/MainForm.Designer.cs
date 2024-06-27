@@ -17,7 +17,7 @@
         {
             if (!_disposed)
             {                
-                _timerClock.Dispose();
+                _timerUpdateUI.Dispose();
                 _ct_timerMultidirectOrder.Dispose();
 
                 if (disposing && (components != null))
@@ -103,20 +103,6 @@
             label5 = new System.Windows.Forms.Label();
             textBoxUsername2 = new System.Windows.Forms.TextBox();
             label6 = new System.Windows.Forms.Label();
-            tabPage4 = new System.Windows.Forms.TabPage();
-            groupBox5 = new System.Windows.Forms.GroupBox();
-            dataGridViewPositions = new System.Windows.Forms.DataGridView();
-            Code = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            BalancePrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            Price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            Vol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            PNL = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            groupBox2 = new System.Windows.Forms.GroupBox();
-            textBoxFreeMoney2 = new System.Windows.Forms.TextBox();
-            label20 = new System.Windows.Forms.Label();
-            textBoxFreeMoney1 = new System.Windows.Forms.TextBox();
-            label19 = new System.Windows.Forms.Label();
             tabPage5 = new System.Windows.Forms.TabPage();
             buttonStopAll = new System.Windows.Forms.Button();
             buttonRunAll = new System.Windows.Forms.Button();
@@ -127,6 +113,12 @@
             labelTime = new System.Windows.Forms.Label();
             comboBoxTimezone = new System.Windows.Forms.ComboBox();
             label21 = new System.Windows.Forms.Label();
+            groupBox2 = new System.Windows.Forms.GroupBox();
+            textBoxFreeMoney2 = new System.Windows.Forms.TextBox();
+            label20 = new System.Windows.Forms.Label();
+            textBoxFreeMoney1 = new System.Windows.Forms.TextBox();
+            label19 = new System.Windows.Forms.Label();
+            groupBox5 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)dataGridViewFortsPositions).BeginInit();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -138,12 +130,10 @@
             tabPage3.SuspendLayout();
             groupBoxChangePassword2.SuspendLayout();
             groupBox3.SuspendLayout();
-            tabPage4.SuspendLayout();
-            groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridViewPositions).BeginInit();
-            groupBox2.SuspendLayout();
             tabPage5.SuspendLayout();
             groupBoxObservers.SuspendLayout();
+            groupBox2.SuspendLayout();
+            groupBox5.SuspendLayout();
             SuspendLayout();
             // 
             // textBoxSL
@@ -171,7 +161,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label2.Location = new System.Drawing.Point(10, 13);
+            label2.Location = new System.Drawing.Point(14, 99);
             label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(110, 13);
@@ -227,7 +217,7 @@
             // dataGridViewFortsPositions
             // 
             dataGridViewFortsPositions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewFortsPositions.Location = new System.Drawing.Point(14, 369);
+            dataGridViewFortsPositions.Location = new System.Drawing.Point(8, 65);
             dataGridViewFortsPositions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             dataGridViewFortsPositions.Name = "dataGridViewFortsPositions";
             dataGridViewFortsPositions.Size = new System.Drawing.Size(698, 99);
@@ -236,10 +226,10 @@
             // button1
             // 
             button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            button1.Location = new System.Drawing.Point(14, 300);
+            button1.Location = new System.Drawing.Point(8, 22);
             button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(700, 62);
+            button1.Size = new System.Drawing.Size(700, 37);
             button1.TabIndex = 20;
             button1.Text = "CLOSE ALL FUTURES POSITIONS";
             button1.UseVisualStyleBackColor = true;
@@ -310,7 +300,7 @@
             // 
             comboBoxSeccode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             comboBoxSeccode.FormattingEnabled = true;
-            comboBoxSeccode.Location = new System.Drawing.Point(14, 35);
+            comboBoxSeccode.Location = new System.Drawing.Point(18, 121);
             comboBoxSeccode.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             comboBoxSeccode.Name = "comboBoxSeccode";
             comboBoxSeccode.Size = new System.Drawing.Size(140, 23);
@@ -321,7 +311,6 @@
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
-            tabControl1.Controls.Add(tabPage4);
             tabControl1.Controls.Add(tabPage5);
             tabControl1.Location = new System.Drawing.Point(14, 46);
             tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -332,6 +321,8 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(groupBox5);
+            tabPage1.Controls.Add(groupBox2);
             tabPage1.Controls.Add(buttonQuotationsUnSubscribe);
             tabPage1.Controls.Add(buttonQuotationsSubscribe);
             tabPage1.Controls.Add(checkBoxShutdown);
@@ -340,9 +331,7 @@
             tabPage1.Controls.Add(buttonStartMultidirectTimer);
             tabPage1.Controls.Add(buttonMakeMultidirect);
             tabPage1.Controls.Add(groupBox1);
-            tabPage1.Controls.Add(dataGridViewFortsPositions);
             tabPage1.Controls.Add(comboBoxSeccode);
-            tabPage1.Controls.Add(button1);
             tabPage1.Controls.Add(buttonComboSell);
             tabPage1.Controls.Add(textBoxDifference);
             tabPage1.Controls.Add(textBoxTP);
@@ -482,7 +471,7 @@
             // 
             // textBoxDifference
             // 
-            textBoxDifference.Location = new System.Drawing.Point(500, 510);
+            textBoxDifference.Location = new System.Drawing.Point(494, 543);
             textBoxDifference.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             textBoxDifference.Name = "textBoxDifference";
             textBoxDifference.Size = new System.Drawing.Size(116, 23);
@@ -493,7 +482,7 @@
             // 
             labelDifference.AutoSize = true;
             labelDifference.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            labelDifference.Location = new System.Drawing.Point(497, 492);
+            labelDifference.Location = new System.Drawing.Point(491, 525);
             labelDifference.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             labelDifference.Name = "labelDifference";
             labelDifference.Size = new System.Drawing.Size(223, 13);
@@ -890,132 +879,6 @@
             label6.TabIndex = 5;
             label6.Text = "Username";
             // 
-            // tabPage4
-            // 
-            tabPage4.Controls.Add(groupBox5);
-            tabPage4.Controls.Add(groupBox2);
-            tabPage4.Location = new System.Drawing.Point(4, 24);
-            tabPage4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabPage4.Name = "tabPage4";
-            tabPage4.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            tabPage4.Size = new System.Drawing.Size(772, 618);
-            tabPage4.TabIndex = 3;
-            tabPage4.Text = "Portfolio";
-            tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // groupBox5
-            // 
-            groupBox5.Controls.Add(dataGridViewPositions);
-            groupBox5.Location = new System.Drawing.Point(7, 96);
-            groupBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox5.Name = "groupBox5";
-            groupBox5.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox5.Size = new System.Drawing.Size(757, 395);
-            groupBox5.TabIndex = 1;
-            groupBox5.TabStop = false;
-            groupBox5.Text = "Positions";
-            // 
-            // dataGridViewPositions
-            // 
-            dataGridViewPositions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewPositions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Code, NameColumn, BalancePrice, Price, Vol, PNL });
-            dataGridViewPositions.Location = new System.Drawing.Point(7, 22);
-            dataGridViewPositions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            dataGridViewPositions.Name = "dataGridViewPositions";
-            dataGridViewPositions.ReadOnly = true;
-            dataGridViewPositions.RowHeadersVisible = false;
-            dataGridViewPositions.Size = new System.Drawing.Size(743, 366);
-            dataGridViewPositions.TabIndex = 0;
-            // 
-            // Code
-            // 
-            Code.HeaderText = "Code";
-            Code.Name = "Code";
-            Code.ReadOnly = true;
-            // 
-            // NameColumn
-            // 
-            NameColumn.HeaderText = "Name";
-            NameColumn.Name = "NameColumn";
-            NameColumn.ReadOnly = true;
-            // 
-            // BalancePrice
-            // 
-            BalancePrice.HeaderText = "Balance Price";
-            BalancePrice.Name = "BalancePrice";
-            BalancePrice.ReadOnly = true;
-            // 
-            // Price
-            // 
-            Price.HeaderText = "Price";
-            Price.Name = "Price";
-            Price.ReadOnly = true;
-            // 
-            // Vol
-            // 
-            Vol.HeaderText = "Vol";
-            Vol.Name = "Vol";
-            Vol.ReadOnly = true;
-            // 
-            // PNL
-            // 
-            PNL.HeaderText = "PNL";
-            PNL.Name = "PNL";
-            PNL.ReadOnly = true;
-            // 
-            // groupBox2
-            // 
-            groupBox2.Controls.Add(textBoxFreeMoney2);
-            groupBox2.Controls.Add(label20);
-            groupBox2.Controls.Add(textBoxFreeMoney1);
-            groupBox2.Controls.Add(label19);
-            groupBox2.Location = new System.Drawing.Point(7, 7);
-            groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            groupBox2.Size = new System.Drawing.Size(757, 82);
-            groupBox2.TabIndex = 0;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Money";
-            // 
-            // textBoxFreeMoney2
-            // 
-            textBoxFreeMoney2.Location = new System.Drawing.Point(97, 45);
-            textBoxFreeMoney2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            textBoxFreeMoney2.Name = "textBoxFreeMoney2";
-            textBoxFreeMoney2.ReadOnly = true;
-            textBoxFreeMoney2.Size = new System.Drawing.Size(174, 23);
-            textBoxFreeMoney2.TabIndex = 3;
-            // 
-            // label20
-            // 
-            label20.AutoSize = true;
-            label20.Location = new System.Drawing.Point(7, 48);
-            label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label20.Name = "label20";
-            label20.Size = new System.Drawing.Size(78, 15);
-            label20.TabIndex = 2;
-            label20.Text = "Free money 2";
-            // 
-            // textBoxFreeMoney1
-            // 
-            textBoxFreeMoney1.Location = new System.Drawing.Point(97, 15);
-            textBoxFreeMoney1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            textBoxFreeMoney1.Name = "textBoxFreeMoney1";
-            textBoxFreeMoney1.ReadOnly = true;
-            textBoxFreeMoney1.Size = new System.Drawing.Size(174, 23);
-            textBoxFreeMoney1.TabIndex = 1;
-            // 
-            // label19
-            // 
-            label19.AutoSize = true;
-            label19.Location = new System.Drawing.Point(7, 18);
-            label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            label19.Name = "label19";
-            label19.Size = new System.Drawing.Size(78, 15);
-            label19.TabIndex = 0;
-            label19.Text = "Free money 1";
-            // 
             // tabPage5
             // 
             tabPage5.Controls.Add(buttonStopAll);
@@ -1125,6 +988,72 @@
             label21.TabIndex = 37;
             label21.Text = "Timezone";
             // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(textBoxFreeMoney2);
+            groupBox2.Controls.Add(label20);
+            groupBox2.Controls.Add(textBoxFreeMoney1);
+            groupBox2.Controls.Add(label19);
+            groupBox2.Location = new System.Drawing.Point(14, 9);
+            groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox2.Size = new System.Drawing.Size(286, 82);
+            groupBox2.TabIndex = 34;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Money";
+            // 
+            // textBoxFreeMoney2
+            // 
+            textBoxFreeMoney2.Location = new System.Drawing.Point(97, 45);
+            textBoxFreeMoney2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxFreeMoney2.Name = "textBoxFreeMoney2";
+            textBoxFreeMoney2.ReadOnly = true;
+            textBoxFreeMoney2.Size = new System.Drawing.Size(174, 23);
+            textBoxFreeMoney2.TabIndex = 3;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new System.Drawing.Point(8, 48);
+            label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label20.Name = "label20";
+            label20.Size = new System.Drawing.Size(78, 15);
+            label20.TabIndex = 2;
+            label20.Text = "Free money 2";
+            // 
+            // textBoxFreeMoney1
+            // 
+            textBoxFreeMoney1.Location = new System.Drawing.Point(97, 15);
+            textBoxFreeMoney1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxFreeMoney1.Name = "textBoxFreeMoney1";
+            textBoxFreeMoney1.ReadOnly = true;
+            textBoxFreeMoney1.Size = new System.Drawing.Size(174, 23);
+            textBoxFreeMoney1.TabIndex = 1;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new System.Drawing.Point(8, 18);
+            label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label19.Name = "label19";
+            label19.Size = new System.Drawing.Size(78, 15);
+            label19.TabIndex = 0;
+            label19.Text = "Free money 1";
+            // 
+            // groupBox5
+            // 
+            groupBox5.Controls.Add(button1);
+            groupBox5.Controls.Add(dataGridViewFortsPositions);
+            groupBox5.Location = new System.Drawing.Point(8, 306);
+            groupBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox5.Size = new System.Drawing.Size(719, 176);
+            groupBox5.TabIndex = 35;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Positions";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1156,13 +1085,11 @@
             groupBoxChangePassword2.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
-            tabPage4.ResumeLayout(false);
-            groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridViewPositions).EndInit();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
             tabPage5.ResumeLayout(false);
             groupBoxObservers.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            groupBox5.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1232,20 +1159,6 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.ComboBox comboBoxConnectionType;
         private System.Windows.Forms.CheckBox checkBoxShutdown;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.DataGridView dataGridViewPositions;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox textBoxFreeMoney2;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.TextBox textBoxFreeMoney1;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Code;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NameColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BalancePrice;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Price;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Vol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PNL;
         private System.Windows.Forms.Button buttonQuotationsSubscribe;
         private System.Windows.Forms.Button buttonQuotationsUnSubscribe;
         private System.Windows.Forms.Button testButton;
@@ -1259,5 +1172,11 @@
         private System.Windows.Forms.Button buttonRunAll;
         private System.Windows.Forms.ComboBox comboBoxTimezone;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox textBoxFreeMoney2;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox textBoxFreeMoney1;
+        private System.Windows.Forms.Label label19;
     }
 }

@@ -14,11 +14,21 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
         string? FortsClientId { get; }
 
         Models.TransaqConnector.Ingoing.positions? Positions { get; }
-
+        // todo: use dictionary instead list
         List<forts_position> FortsPositions { get; }
 
         string? Union { get; }
 
         double? Money { get; }
+
+        List<Models.TransaqConnector.Ingoing.securities_ns.security>? Securities { get; }
+
+        List<Models.TransaqConnector.Ingoing.trades_ns.trade>? Trades { get; }
+
+        List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? Orders { get; }
+
+        List<Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesBuy { get; }
+
+        List<Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesSell { get; }
     }
 }

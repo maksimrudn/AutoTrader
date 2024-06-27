@@ -69,9 +69,6 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
             }
         }
 
-
-        public List<client> Clients = new();       // клиенты-счета различных площадок forts: market=4
-
         private readonly ReaderWriterLockSlim _mc_portfolioLock = new();
         private mc_portfolio _mc_portfolio = new();
         public mc_portfolio mc_portfolio
@@ -134,8 +131,6 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         /// </summary>
         public ConcurrentDictionary<string, candles> Candles { get; set; } = new ConcurrentDictionary<string, candles>();
         public candlekinds Candlekinds { get; set; }
-        public event EventHandler<TransaqEventArgs<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
-        public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
 
         public void HandleData(string result)
         {
@@ -168,7 +163,6 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                     var securities = (securities)XMLHelper.Deserialize(result, typeof(securities));
 
                     _securitiesHandle(securities.security);
-                    SecuritiesUpdated?.Invoke(this, new TransaqEventArgs<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>(Securities));
                     SecuritiesLoaded.Set();
                     break;
 
@@ -180,11 +174,6 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
 
                 case "client":
                     var clientInfo = (client)XMLHelper.Deserialize(result, typeof(client));
-
-                    // todo реализовать проверку на присутствие и удаление элемента перед добавлением
-                    Clients.Add(clientInfo);
-
-                    //ServerStatusUpdated.Set();
 
                     if (clientInfo.forts_acc != null)
                     {
@@ -230,7 +219,6 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                     _mc_portfolioLock.ExitWriteLock();
 
                     MC_portfolioLoaded.Set();
-                    MCPositionsUpdated?.Invoke(this, new TransaqEventArgs<mc_portfolio>(mc_portfolio));
 
                     break;
 

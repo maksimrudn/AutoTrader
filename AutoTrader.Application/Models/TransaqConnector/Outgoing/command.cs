@@ -21,13 +21,14 @@ namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
 
             res.login = login;
             res.password = password;
-
+            // todo: specify utc time
             res.host = server;
             res.portValue = port;
             res.logsdir = MainHelper.GetWorkFolder();// +"\0";
             res.rqdelayValue = 100;
             res.session_timeoutValue = 25000;
-            res.request_timeoutValue = 10000;            
+            res.request_timeoutValue = 10000;
+            // todo: <push_u_limits>, <push_pos_equity>
 
             return res;
         }

@@ -48,11 +48,6 @@ namespace AutoTrader.Infrastructure.Stock
 
         protected abstract ITransaqConnectorRequestHandler CreateRequestHandler();
 
-
-        public event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
-
-        public event EventHandler<TransaqEventArgs<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>>> SecuritiesUpdated;
-
         public bool Connected => _requestHandler?.InputStreamHandler.ServerStatus?.connected == "true";
        
         public List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities => _requestHandler?.InputStreamHandler.Securities ?? new ();
@@ -191,16 +186,12 @@ namespace AutoTrader.Infrastructure.Stock
                                                                                                                 .Where(x => x.status == status.active || x.status == status.watching)
                                                                                                                 .ToList();
 
-        private void OnMCPositionsUpdatedHandler(object? sender, TransaqEventArgs<mc_portfolio> e) => MCPositionsUpdated?.Invoke(sender, e);
-
-        
-        public async Task Login(string username, string password, ConnectionType connectionType)
+        public async Task Login(string username, string password, ConnectionType connectionType = ConnectionType.Prod)
         {
             if (Connected)
                 throw new StockClientException(CommonErrors.AlreadyLoggedIn);
 
             _requestHandler = CreateRequestHandler();
-            _requestHandler.InputStreamHandler.MCPositionsUpdated += OnMCPositionsUpdatedHandler;
 
             string server;
             int port;

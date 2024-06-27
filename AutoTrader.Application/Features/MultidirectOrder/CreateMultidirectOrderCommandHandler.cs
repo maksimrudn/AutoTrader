@@ -49,7 +49,7 @@ namespace AutoTrader.Application.Features.MultidirectOrder
             bool bymarket = request.Settings.ByMarket;
             string seccode = request.Settings.Seccode;
 
-            await StockOperationHelper.MakeMultidirect(_stockClients, price, vol, sl, tp, bymarket, seccode).ConfigureAwait(false);
+            await _stockClients.MakeMultidirect(price, vol, sl, tp, bymarket, seccode).ConfigureAwait(false);
 
             return Unit.Value;
         }

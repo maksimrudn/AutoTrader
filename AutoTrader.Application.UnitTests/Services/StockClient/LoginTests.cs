@@ -32,6 +32,8 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
             stockClient.Connected.ShouldBeTrue();
             stockClient.FortsClientId.ShouldNotBeNull()
                                         .ShouldNotBeEmpty();
+
+            // todo: implement check of securities
         }
 
         [Fact]

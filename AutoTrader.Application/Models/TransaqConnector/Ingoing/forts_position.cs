@@ -5,6 +5,7 @@ using System.Text;
 
 namespace AutoTrader.Application.Models.TransaqConnector.Ingoing
 {
+    // todo: implement IGetKey interface
     public class forts_position
     {
         /// <summary>

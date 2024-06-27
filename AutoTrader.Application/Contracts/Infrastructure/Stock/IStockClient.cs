@@ -11,20 +11,7 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 {
     public interface IStockClient : IStockAccountData, IDisposable
     {
-        List<Models.TransaqConnector.Ingoing.trades_ns.trade>? Trades { get; }
-
-        List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? Orders { get; }
-
-        List<Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesBuy { get; }
-
-        List<Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesSell { get; }
-                
-        event EventHandler<TransaqEventArgs<mc_portfolio>> MCPositionsUpdated;
-
-        event EventHandler<TransaqEventArgs<List<Models.TransaqConnector.Ingoing.securities_ns.security>?>> SecuritiesUpdated;
-
-        List<Models.TransaqConnector.Ingoing.securities_ns.security>? Securities { get; }
-
+        // todo: extract commands to the distinct interface
         Task Login(string username, 
                     string password, 
                     ConnectionType connectionType);
