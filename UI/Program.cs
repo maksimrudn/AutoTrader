@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,6 +21,7 @@ namespace AutoTraderUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.ThreadException += GlobalExceptionHandler;
 
             var host = CreateHostBuilder().Build();
             ServiceProvider = host.Services;
@@ -34,6 +36,11 @@ namespace AutoTraderUI
                 await DisposeServices();
             }
         }
+        
+        private static void GlobalExceptionHandler(object sender, ThreadExceptionEventArgs e)
+        {
+            MessageBox.Show($"An error occurred: {e.Exception.Message}");
+        }
 
         static IHostBuilder CreateHostBuilder()
         {
@@ -45,8 +52,8 @@ namespace AutoTraderUI
                 })
                 .ConfigureServices((context, services) => {
 
-                    services.AddInfrastructureServices(context.Configuration);
-                    services.AddApplicationServices();
+                    services.AddInfrastructureServices(context.Configuration)
+                            .AddApplicationServices();
 
                     services.AddSingleton<IMainFormView, MainForm>();
                     services.AddSingleton<MainForm>(serviceProvider =>

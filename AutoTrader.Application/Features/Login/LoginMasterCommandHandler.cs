@@ -13,8 +13,8 @@ namespace AutoTrader.Application.Features.Login
 
         public LoginMasterCommandHandler(ISettingsService settingsService, IDualStockClient stockClients)
         {
-            this._settingsService = settingsService;
-            this._stockClients = stockClients;
+            _settingsService = settingsService;
+            _stockClients = stockClients;
         }
 
         public async Task<LoginResponse> Handle(LoginMasterCommand request, CancellationToken cancellationToken)

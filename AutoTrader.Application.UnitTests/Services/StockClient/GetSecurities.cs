@@ -1,9 +1,4 @@
 ﻿using AutoTrader.Infrastructure.Stock.Dummy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shouldly;
 using AutoTrader.Application.Exceptions;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;

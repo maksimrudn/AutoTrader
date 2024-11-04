@@ -9,10 +9,10 @@ namespace AutoTrader.Infrastructure.Settings
     public class SettingsService: ISettingsService
     {
         private readonly IConfiguration _configuration;
-        string _settingsFilename = MainHelper.GetWorkFolder() + "Settings.xml";
+        private readonly string _settingsFilename = MainHelper.GetWorkFolder() + "Settings.xml";
 
         public SettingsService(IConfiguration configuration) {
-            this._configuration = configuration;
+            _configuration = configuration;
         }
 
         public AutoTrader.Application.Models.Settings GetSettings()

@@ -1,4 +1,4 @@
-﻿namespace AutoTraderUI
+﻿namespace AutoTraderUI.Views
 {
     partial class MainForm
     {
@@ -17,7 +17,7 @@
         {
             if (!_disposed)
             {                
-                _timerUpdateUI.Dispose();
+                _timerUpdateUi.Dispose();
                 _ct_timerMultidirectOrder.Dispose();
 
                 if (disposing && (components != null))

@@ -1,18 +1,9 @@
-﻿using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Helpers;
+﻿using AutoTrader.Application.Helpers;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing;
 using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using AutoTrader.Application.UnManaged;
 using AutoTrader.Infrastructure.Contracts.Transaq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace AutoTrader.Infrastructure.Stock.TransaqConnector
 {

@@ -2,7 +2,6 @@
 using AutoTrader.Application.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace AutoTrader.Application
 {

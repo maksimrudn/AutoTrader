@@ -1,19 +1,8 @@
-﻿using AutoMapper;
-using AutoTrader.Application.Contracts.Infrastructure;
+﻿using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Domain.Models.Types;
 using AutoTrader.Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoTrader.Application.Helpers;
-using AutoTrader.Application.Contracts.UI;
-using AutoTrader.Application.Models.TransaqConnector.Outgoing;
-using System.Diagnostics;
-using AutoTrader.Application.Models;
 
 namespace AutoTrader.Application.Features.ComboSell
 {
@@ -24,8 +13,8 @@ namespace AutoTrader.Application.Features.ComboSell
 
         public ComboSellCommandHandler(ISettingsService settingsService, IDualStockClient stockClients)
         {
-            this._settingsService = settingsService;
-            this._stockClients = stockClients;
+            _settingsService = settingsService;
+            _stockClients = stockClients;
         }
 
         public async Task<Unit> Handle(ComboSellCommand request, CancellationToken cancellationToken)

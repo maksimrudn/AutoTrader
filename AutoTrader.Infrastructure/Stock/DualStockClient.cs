@@ -1,21 +1,13 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Helpers;
 using AutoTrader.Domain.Models.Types;
 using AutoTrader.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoTrader.Infrastructure.Stock
 {
-    public class DualStockClient: IDualStockClient, IDisposable
+    public sealed class DualStockClient: IDualStockClient, IDisposable
     {
         public IStockClient Master { get; }
-
         public IStockClient Slave { get; }
-
         public DualStockClient(StockClientMaster stockClientMaster, StockClientSlave stockClientSlave) {
             Master = stockClientMaster;
             Slave = stockClientSlave;
@@ -48,9 +40,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             await Task.WhenAll(md1, md2).ConfigureAwait(false);
         }
-
-
-
+        
         private bool _disposed = false;
         public void Dispose()
         {
@@ -58,7 +48,7 @@ namespace AutoTrader.Infrastructure.Stock
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool dispossing)
+        private void Dispose(bool dispossing)
         {
             if (!_disposed)
             {

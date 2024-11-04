@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
@@ -29,14 +26,14 @@ namespace AutoTraderUI.Controls
         {
             DataGridViewManageButtonCell cell =
                 (DataGridViewManageButtonCell)base.Clone();
-            cell.Enabled = this.Enabled;
+            cell.Enabled = Enabled;
             return cell;
         }
 
         // By default, enable the button cell.
         public DataGridViewManageButtonCell()
         {
-            this.enabledValue = true;
+            enabledValue = true;
         }
 
         protected override void Paint(Graphics graphics,
@@ -49,7 +46,7 @@ namespace AutoTraderUI.Controls
         {
             // The button cell is disabled, so paint the border,  
             // background, and disabled button for the cell.
-            if (!this.enabledValue)
+            if (!enabledValue)
             {
                 // Draw the cell background, if specified.
                 if ((paintParts & DataGridViewPaintParts.Background) ==
@@ -72,7 +69,7 @@ namespace AutoTraderUI.Controls
                 // Calculate the area in which to draw the button.
                 Rectangle buttonArea = cellBounds;
                 Rectangle buttonAdjustment =
-                    this.BorderWidths(advancedBorderStyle);
+                    BorderWidths(advancedBorderStyle);
                 buttonArea.X += buttonAdjustment.X;
                 buttonArea.Y += buttonAdjustment.Y;
                 buttonArea.Height -= buttonAdjustment.Height;
@@ -83,11 +80,11 @@ namespace AutoTraderUI.Controls
                     PushButtonState.Disabled);
 
                 // Draw the disabled button text. 
-                if (this.FormattedValue is String)
+                if (FormattedValue is String)
                 {
                     TextRenderer.DrawText(graphics,
-                        (string)this.FormattedValue,
-                        this.DataGridView.Font,
+                        (string)FormattedValue,
+                        DataGridView.Font,
                         buttonArea, SystemColors.GrayText);
                 }
             }
@@ -105,7 +102,7 @@ namespace AutoTraderUI.Controls
     {
         public DataGridViewManageButtonColumn()
         {
-            this.CellTemplate = new DataGridViewManageButtonCell();
+            CellTemplate = new DataGridViewManageButtonCell();
         }
     }
 

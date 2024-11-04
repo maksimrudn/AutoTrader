@@ -1,9 +1,4 @@
 ﻿using AutoTrader.Domain.Models.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoTrader.Domain.Models
 {
@@ -45,7 +40,7 @@ namespace AutoTrader.Domain.Models
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 }

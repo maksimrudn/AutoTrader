@@ -1,18 +1,6 @@
-﻿using AutoMapper;
-using AutoTrader.Application.Contracts.Infrastructure;
+﻿using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Domain.Models.Types;
-using AutoTrader.Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoTrader.Application.Helpers;
-using AutoTrader.Application.Contracts.UI;
-using AutoTrader.Application.Models;
-using FluentValidation;
 
 namespace AutoTrader.Application.Features.MultidirectOrder
 {
@@ -23,8 +11,8 @@ namespace AutoTrader.Application.Features.MultidirectOrder
 
         public CreateMultidirectOrderCommandHandler(ISettingsService settingsService, IDualStockClient stockClients)
         {
-            this._settingsService = settingsService;
-            this._stockClients = stockClients;
+            _settingsService = settingsService;
+            _stockClients = stockClients;
         }
 
         public async Task<Unit> Handle(CreateMultidirectOrderCommand request, CancellationToken cancellationToken)

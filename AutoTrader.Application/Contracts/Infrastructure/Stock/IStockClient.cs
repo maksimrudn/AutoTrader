@@ -1,11 +1,6 @@
-﻿using AutoTrader.Application.Models;
-using AutoTrader.Application.Models.TransaqConnector.Ingoing;
-using AutoTrader.Application.Models.TransaqConnector.Outgoing;
+﻿using AutoTrader.Application.Models.TransaqConnector.Ingoing;
 using AutoTrader.Domain.Models;
 using AutoTrader.Domain.Models.Types;
-using System;
-using System.Collections.Generic;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 {
@@ -68,6 +63,6 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 
         int GetOpenPositions(string seccode);
 
-        List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? OpenOrders { get; }
+        List<Models.TransaqConnector.Ingoing.orders_ns.order>? OpenOrders { get; }
     }
 }

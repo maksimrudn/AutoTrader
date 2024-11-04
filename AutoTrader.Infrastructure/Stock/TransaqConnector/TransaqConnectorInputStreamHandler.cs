@@ -1,41 +1,30 @@
 ﻿using AutoTrader.Application.Common;
 using AutoTrader.Application.Extensions;
 using AutoTrader.Application.Helpers;
-using AutoTrader.Application.Models;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing;
-using AutoTrader.Domain.Models;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace AutoTrader.Infrastructure.Stock.TransaqConnector
 {
     public class TransaqConnectorInputStreamHandler
     {
-        public TransaqConnectorInputStreamHandler()
-        {
-        }
-
-        public AsyncAutoResetEvent ServerStatusUpdated = new(false);
-        public AsyncAutoResetEvent PositionsLoaded = new(false);
-        public AsyncAutoResetEvent SecuritiesLoaded = new(false);
-        public AsyncAutoResetEvent TradesLoaded = new(false);
-        public ConcurrentDictionary<string, AsyncAutoResetEvent> WaitForCurrentCandle = new();
-        public AsyncAutoResetEvent MC_portfolioLoaded = new(false);
-        public ConcurrentDictionary<string, AsyncAutoResetEvent> CandlesLoaded = new();
-
         /// <summary>
         /// Результат подключения к серверу
         /// Заполняется с помощью обработчика _handleData
         /// </summary>
         private readonly ReaderWriterLockSlim _serverStatusLock = new();
-        private server_status? _serverStatus = null;
+        private server_status? _serverStatus;
+        
+        public readonly AsyncAutoResetEvent ServerStatusUpdated = new(false);
+        public readonly AsyncAutoResetEvent PositionsLoaded = new(false);
+        public readonly AsyncAutoResetEvent SecuritiesLoaded = new(false);
+        public readonly AsyncAutoResetEvent TradesLoaded = new(false);
+        public readonly ConcurrentDictionary<string, AsyncAutoResetEvent> WaitForCurrentCandle = new();
+        public readonly AsyncAutoResetEvent MC_portfolioLoaded = new(false);
+        public readonly ConcurrentDictionary<string, AsyncAutoResetEvent> CandlesLoaded = new();
+        
         public server_status? ServerStatus
         {
             get {
@@ -129,7 +118,7 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         /// <summary>
         /// for history data
         /// </summary>
-        public ConcurrentDictionary<string, candles> Candles { get; set; } = new ConcurrentDictionary<string, candles>();
+        public ConcurrentDictionary<string, candles> Candles { get; set; } = new();
         public candlekinds Candlekinds { get; set; }
 
         public void HandleData(string result)

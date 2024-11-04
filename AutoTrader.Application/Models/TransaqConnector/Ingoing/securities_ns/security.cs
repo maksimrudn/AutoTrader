@@ -1,5 +1,4 @@
 ﻿using System.Xml.Serialization;
-using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 
 namespace AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns
 {

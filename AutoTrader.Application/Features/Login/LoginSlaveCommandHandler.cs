@@ -12,8 +12,8 @@ namespace AutoTrader.Application.Features.Login
 
         public LoginSlaveCommandHandler(ISettingsService settingsService, IDualStockClient stockClients)
         {
-            this._settingsService = settingsService;
-            this._stockClients = stockClients;
+            _settingsService = settingsService;
+            _stockClients = stockClients;
         }
 
         public async Task<LoginResponse> Handle(LoginSlaveCommand request, CancellationToken cancellationToken)

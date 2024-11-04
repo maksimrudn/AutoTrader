@@ -4,11 +4,6 @@ using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoTrader.Infrastructure.Stock
 {
@@ -18,8 +13,8 @@ namespace AutoTrader.Infrastructure.Stock
         private readonly EmailSettings _mailSettings;
 
         public EmailService(IConfiguration configuration, IOptions<EmailSettings> mailSettings) {
-            this._configuration = configuration;
-            this._mailSettings = mailSettings.Value;
+            _configuration = configuration;
+            _mailSettings = mailSettings.Value;
         }
 
         public async Task SendEmailAsync(string email, string subject, string message)

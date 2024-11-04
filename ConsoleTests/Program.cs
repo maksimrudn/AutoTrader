@@ -2,7 +2,6 @@
 using AutoTrader.Domain.Models.Types;
 using AutoTrader.Infrastructure.Stock;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ConsoleTests
 {
