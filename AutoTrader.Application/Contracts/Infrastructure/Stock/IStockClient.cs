@@ -12,7 +12,7 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
     public interface IStockClient : IStockAccountData, IDisposable
     {
         // todo: extract commands to the distinct interface
-        Task Login(string username, 
+        Task LoginAsync(string username, 
                     string password, 
                     ConnectionType connectionType);
 
@@ -55,7 +55,7 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
                                         int volume, 
                                         long orderno = 0);
 
-        Task<List<Models.TransaqConnector.Ingoing.securities_ns.security>?> GetSecurities();
+        Task<List<Models.TransaqConnector.Ingoing.securities_ns.stock_security>?> GetSecurities();
 
         void SubscribeQuotes(TradingMode tradingMode, string seccode);
 

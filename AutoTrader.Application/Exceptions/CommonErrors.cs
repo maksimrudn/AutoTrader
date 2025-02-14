@@ -16,7 +16,7 @@ namespace AutoTrader.Application.Exceptions
         public static ExceptionData AlreadyLoggedIn = new(AlreadyLoggedInCode, "User is logged in already");
 
         public static int UnAuthorizedCode { get; } = 3;        
-        public static ExceptionData UnAuthorized = new(UnAuthorizedCode, "User is unauthorized");
+        public static ExceptionData Unauthorized = new(UnAuthorizedCode, "User is unauthorized");
 
         public static int ServerStatusWaitingTimeoutCode { get; } = 4;
         public static ExceptionData ServerStatusWaitingTimeout = new(ServerStatusWaitingTimeoutCode, "server_status response waiting timeout");

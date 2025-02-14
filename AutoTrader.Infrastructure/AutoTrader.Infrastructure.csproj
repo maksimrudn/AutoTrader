@@ -98,4 +98,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Stock\Dummy\TxmlServerEmulator.Data.cs">
+      <DependentUpon>TxmlServerEmulator.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

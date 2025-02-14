@@ -32,6 +32,6 @@ namespace AutoTrader.Application.Models.TransaqConnector.Ingoing
         /// </summary>
         public spot_limit spot_limit { get; set; }
 
-
+        public united_limits united_limits { get; set; }
     }
 }

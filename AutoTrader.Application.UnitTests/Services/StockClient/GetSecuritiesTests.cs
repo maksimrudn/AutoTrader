@@ -1,9 +1,4 @@
 ﻿using AutoTrader.Infrastructure.Stock.Dummy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shouldly;
 using AutoTrader.Application.Exceptions;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;
@@ -13,19 +8,19 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
 {
     public class GetSecurities
     {
-        TransaqConnectorFactory _factory;
+        ITransaqConnectorFactory _factory;
 
         public GetSecurities()
         {
-            _factory = new TransaqConnectorFactory(true);
+            _factory = new TransaqConnectorEmulatorFactory();
         }
 
         [Fact]
-        public async Task Success()
+        public async Task GetSecurities_DefaulScenario_Success()
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, 
+            await stockClient.LoginAsync(DummyTransaqConnectorRequestHandler.CorrectUsername, 
                                     DummyTransaqConnectorRequestHandler.CorrectPassword, 
                                     Domain.Models.Types.ConnectionType.Prod);
 
@@ -35,7 +30,7 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         }
 
         [Fact]
-        public async Task UnAuthorizedException()
+        public async Task GetSecurities_Unauthorized_UnauthorizedException()
         {
             var stockClient = new StockClientMaster(_factory);
 

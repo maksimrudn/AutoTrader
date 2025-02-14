@@ -20,6 +20,8 @@ namespace AutoTrader.Application.Models.TransaqConnector.Ingoing.orders_ns
         public string seccode { get; set; }
 
         public string client { get; set; }
+        
+        public string union { get; set; }
 
         public status status { get; set; }
 

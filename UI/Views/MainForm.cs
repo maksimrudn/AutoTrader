@@ -348,7 +348,7 @@ namespace AutoTraderUI
             }
         }
 
-        private void UpdateSecurities(List<AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns.security>? Securities)
+        private void UpdateSecurities(List<AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns.stock_security>? Securities)
         {
             if (Securities == null) return;
 

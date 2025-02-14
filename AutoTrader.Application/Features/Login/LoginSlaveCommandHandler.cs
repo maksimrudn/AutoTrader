@@ -28,7 +28,7 @@ namespace AutoTrader.Application.Features.Login
 
             ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), request.Settings.ConnectionType);
 
-            await _stockClients.Slave.Login(request.Settings.GetUsername(), request.Settings.GetPassword(), connType).ConfigureAwait(false);
+            await _stockClients.Slave.LoginAsync(request.Settings.GetUsername(), request.Settings.GetPassword(), connType).ConfigureAwait(false);
 
             var resp = new LoginResponse()
             {
