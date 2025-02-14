@@ -192,6 +192,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                         var portfolio_security = _mcPortfolio.securities.FirstOrDefault(x => x.seccode == commandInfo.security.seccode);
                         if (portfolio_security == null)
                         {
+                            portfolio_security = new security();
                             _mcPortfolio.securities.Add(new security()
                             {
                                 market = 4,
@@ -221,7 +222,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
 
         private void SendResponseStream(command_id cmd)
         {
-            List<Func<List<string>>> streamDelegates = _responseStreamGenerators[cmd].Values.Cast<Func<List<string>>>().ToList();
+            List<Func<List<string>>> streamDelegates = _responseStreamGenerators[cmd];
             foreach (Func<List<string>> stream in streamDelegates)
             {
                 Task.Run(async () =>

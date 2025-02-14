@@ -3,6 +3,7 @@ using AutoTrader.Application.Models.TransaqConnector.Ingoing.mc_portfolio_ns;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing.mc_portfolio_ns.money_ns;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing.orders_ns;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing.trades_ns;
 using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using AutoTrader.Infrastructure.Contracts.Transaq;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;
@@ -87,7 +88,8 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                 shortname = "Деньги КЦБ ММВБ (RUR)",
                 saldo = TestInitialSaldoBalance,
                 saldoin = TestInitialSaldoBalance
-            }
+            },
+            forts_position =  new List<forts_position>()
         };
 
         private readonly mc_portfolio _mcPortfolio = new mc_portfolio()
@@ -134,7 +136,10 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
             order = new List<order>()
         };
         
-        private readonly trades _trades = new trades();
+        private readonly trades _trades = new trades()
+        {
+            trade = new List<trade>()
+        };
 
         private readonly stock_securities _stockSecurities = new stock_securities()
         {
