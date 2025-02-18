@@ -66,13 +66,21 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                     }
                 },
                 {
-                    // todo: check again which packets are sent in response on this command
                     command_id.neworder, new List<Func<List<string>>>()
                     {
                         ()=> new List<string>() { _orders.ToXml()},
                         ()=> new List<string>() { _trades.ToXml()},
-                        ()=> new List<string>() { _positions.ToXml()},
-                        ()=> new List<string>() { _mcPortfolio.ToXml()},
+                        () => _positions.forts_position
+                            .Select(x =>
+                            {
+                                var p = new positions
+                                {
+                                    forts_position = new List<forts_position> { x },
+                                    forts_money = _positions.forts_money
+                                };
+                                return p.ToXml();
+                            })
+                            .ToList()
                     }
                 }
             };
@@ -128,6 +136,45 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                         res.success = false;
                         res.message = "[145]Недостаток обеспечения в сумме";
                     }
+                    // limit order
+                    else if (commandInfo.bymarket == null && commandInfo.buysell == buysell.B.ToString() && commandInfo.priceValue == LimitOrderPrice)
+                    {
+                        res.success = true;
+                        res.transactionid = 1;
+                        
+                        var order = new order()
+                        {
+                            transactionid = 1,
+                            orderno = 1,
+                            board = commandInfo.security.board,
+                            union = TestUnion,
+                            seccode = commandInfo.security.seccode,
+                            client = commandInfo.client,
+                            quantity = commandInfo.quantityValue.Value,
+                            status = status.active,
+                            buysell = commandInfo.buysell
+                        };
+                        _orders.order.Add(order);
+                        
+                        var position = _positions.forts_position.FirstOrDefault(x => x.seccode == commandInfo.security.seccode);
+                        if (position == null)
+                        {
+                            position = new forts_position();
+                            position.client = commandInfo.client;
+                            position.seccode = commandInfo.security.seccode;
+                        }
+                        if (commandInfo.buysell == buysell.B.ToString())
+                        {
+                            position.openbuys += commandInfo.quantityValue.Value;
+                        }
+                        else
+                        {
+                            position.opensells += commandInfo.quantityValue.Value;
+                        }
+                        
+                        SendResponseStream(commandInfo.id);
+                    }
+                    // order execution
                     else
                     {
                         res.success = true;
@@ -136,6 +183,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                         // Orders handling
                         var order = new order()
                         {
+                            transactionid = 1,
                             orderno = 1,
                             board = commandInfo.security.board,
                             union = TestUnion,
@@ -166,6 +214,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                             position = new forts_position();
                             position.client = commandInfo.client;
                             position.seccode = commandInfo.security.seccode;
+                            _positions.forts_position.Add(position);
                         }
                         
                         if (commandInfo.buysell == buysell.B.ToString())
@@ -178,7 +227,6 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                             position.totalnet -= commandInfo.quantityValue.Value;
                             position.todaysell += commandInfo.quantityValue.Value;
                         }
-                        _positions.forts_position.Add(position);
 
                         if (_positions.forts_money == null)
                         {

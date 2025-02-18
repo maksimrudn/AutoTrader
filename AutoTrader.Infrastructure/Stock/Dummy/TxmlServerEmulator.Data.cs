@@ -22,6 +22,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
         public const int TestInitialSaldoBalance = 30_000;
         public const int DefaultGO = 15_000;
         public const int MaxOrderVolume = 10;
+        public const int LimitOrderPrice = 95000;
         
 
         private readonly List<client> _clients = new List<client>()

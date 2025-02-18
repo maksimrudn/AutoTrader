@@ -451,10 +451,7 @@ namespace AutoTrader.Infrastructure.Stock
                 throw new StockClientException(CommonErrors.Unauthorized);
 
             int res = 0;
-
             command cmd = command.CreateMoveOrderCommand(transactionid, 0, 2, 0);
-
-
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
             if (sendResult.success == true)
@@ -660,46 +657,46 @@ namespace AutoTrader.Infrastructure.Stock
                                 co.Price,
                                 co.Vol);
 
-            Application.Models.TransaqConnector.Ingoing.orders_ns.order? ord = null;
+            Application.Models.TransaqConnector.Ingoing.orders_ns.order? order = null;
 
             await Task.Run(async () =>
             {
-                while (ord == null) { 
+                while (order == null) { 
                     await Task.Delay(10).ConfigureAwait(false);
-                    ord = GetOrderByTransactionId(tid); 
+                    order = GetOrderByTransactionId(tid); 
                 }
 
-                if (ord.status != status.matched)
+                if (order.status != status.matched)
                 {
-                    throw new Exception($"Order {ord.orderno} is not matched. Further processing is not possible");
+                    throw new Exception($"Order {order.orderno} is not matched. Further processing is not possible");
                 }
             }).ConfigureAwait(false);
 
             // получение номера выполненного поручения
-            Application.Models.TransaqConnector.Ingoing.trades_ns.trade? tr = null;
+            Application.Models.TransaqConnector.Ingoing.trades_ns.trade? trade = null;
 
             await Task.Run(async () =>
             {
-                while (tr == null)
+                while (trade == null)
                 {
                     await Task.Delay(10).ConfigureAwait(false);
-                    tr = GetTradeByOrderNo(ord.orderno);
+                    trade = GetTradeByOrderNo(order.orderno);
                 }
             }).ConfigureAwait(false);
 
-            var closeOrderDirection = (co.OrderDirection == OrderDirection.Buy) ? OrderDirection.Sell : OrderDirection.Buy;
+            var closingOrderDirection = (co.OrderDirection == OrderDirection.Buy) ? OrderDirection.Sell : OrderDirection.Buy;
 
             if (co.StopLoseOrderType == StopLoseOrderType.ConditionalOrder)
             {
                 // открытие sl заявки
                 if (co.SL > 0)
                 {
-                    double slPrice = (co.OrderDirection == OrderDirection.Buy) ? tr.price - co.SL : tr.price + co.SL;
+                    double slPrice = (co.OrderDirection == OrderDirection.Buy) ? trade.price - co.SL : trade.price + co.SL;
                     var closeCondition = (co.OrderDirection == OrderDirection.Buy) ? cond_type.LastDown : cond_type.LastUp;
 
                     CreateNewConditionOrder(co.TradingMode,
                                     co.Seccode,
-                                    closeOrderDirection,
+                                    closingOrderDirection,
                                     co.ByMarket,
                                     closeCondition,
                                     slPrice,
@@ -709,8 +706,8 @@ namespace AutoTrader.Infrastructure.Stock
                 // открытие tp заявки
                 if (co.TP > 0)
                 {
-                    double tpPrice = (co.OrderDirection == OrderDirection.Buy) ? tr.price + co.TP : tr.price - co.TP;
-                    CreateNewOrder(co.TradingMode, co.Seccode, closeOrderDirection, co.ByMarket, tpPrice, co.Vol);
+                    double tpPrice = (co.OrderDirection == OrderDirection.Buy) ? trade.price + co.TP : trade.price - co.TP;
+                    CreateNewOrder(co.TradingMode, co.Seccode, closingOrderDirection, co.ByMarket, tpPrice, co.Vol);
                 }
             }
             else

@@ -508,9 +508,13 @@ namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
         }
 
 
-        //Usecredit, nosplit и bymarket должны быть заданы пустым тегом, либо отсутствовать вообще.
+        /// <summary>
+        /// Usecredit, nosplit и bymarket должны быть заданы пустым тегом, либо отсутствовать вообще.
+        /// Так как иначе будет выполнена рыночная заявка вместо лимитированной
+        /// При наличии тега bymarket, тег price игнорируется и может отсутствовать.
+        /// </summary>
         [XmlElement(IsNullable = false)]
-        public string bymarket { get; set; }  //При наличии тега bymarket, тег price игнорируется и может отсутствовать.
+        public string bymarket { get; set; }  
         [XmlIgnore]
         public bymarket? bymarketValue
         {
