@@ -4,11 +4,6 @@ using AutoTrader.Application.Models.TransaqConnector.Ingoing.mc_portfolio_ns.mon
 using AutoTrader.Application.Models.TransaqConnector.Ingoing.orders_ns;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing.trades_ns;
-using AutoTrader.Application.Models.TransaqConnector.Outgoing;
-using AutoTrader.Infrastructure.Contracts.Transaq;
-using AutoTrader.Infrastructure.Stock.TransaqConnector;
-using System.Collections;
-using System.Collections.Specialized;
 
 namespace AutoTrader.Infrastructure.Stock.Dummy
 {

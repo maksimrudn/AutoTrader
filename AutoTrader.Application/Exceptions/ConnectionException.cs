@@ -1,6 +1,4 @@
-﻿using FluentValidation.Results;
-
-namespace AutoTrader.Application.Exceptions
+﻿namespace AutoTrader.Application.Exceptions
 {
     public class ConnectionException : Exception
     {

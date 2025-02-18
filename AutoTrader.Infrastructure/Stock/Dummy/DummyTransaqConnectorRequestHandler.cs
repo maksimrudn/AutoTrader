@@ -2,7 +2,6 @@
 using AutoTrader.Application.Models.TransaqConnector.Outgoing;
 using AutoTrader.Infrastructure.Contracts.Transaq;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;
-using System.Collections;
 using System.Collections.Specialized;
 
 namespace AutoTrader.Infrastructure.Stock.Dummy

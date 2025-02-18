@@ -1,11 +1,9 @@
-﻿using AutoTrader.Application.Exceptions;
-using AutoTrader.Application.Models.TransaqConnector.Ingoing;
+﻿using AutoTrader.Application.Models.TransaqConnector.Ingoing;
 using AutoTrader.Domain.Models;
 using AutoTrader.Domain.Models.Types;
 using AutoTrader.Infrastructure.Stock;
 using AutoTrader.Infrastructure.Stock.Dummy;
 using AutoTrader.Infrastructure.Stock.TransaqConnector;
-using Shouldly;
 
 namespace AutoTrader.Application.UnitTests.Services.StockClient
 {

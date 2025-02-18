@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AutoTrader.Application.Models.TransaqConnector.Ingoing
+﻿namespace AutoTrader.Application.Models.TransaqConnector.Ingoing
 {
     // todo: implement IGetKey interface
     public class forts_position

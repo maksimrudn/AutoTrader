@@ -1,14 +1,7 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Models;
-using AutoTrader.Infrastructure.Stock;
-using EmptyFiles;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoTrader.Application.UnitTests.Mocks
 {

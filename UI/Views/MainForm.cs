@@ -21,7 +21,6 @@ using System.Threading;
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Services;
 using AutoTraderUI.Views;
-using AutoTrader.Application.Helpers;
 using System.Linq;
 using System.ComponentModel;
 

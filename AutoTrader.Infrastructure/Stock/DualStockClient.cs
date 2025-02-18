@@ -1,12 +1,6 @@
 ﻿using AutoTrader.Application.Contracts.Infrastructure.Stock;
-using AutoTrader.Application.Helpers;
 using AutoTrader.Domain.Models.Types;
 using AutoTrader.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoTrader.Infrastructure.Stock
 {

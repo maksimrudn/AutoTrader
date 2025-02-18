@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
+﻿namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
 {
     // don't change name of model and values
     // todo: create separate model and implement mepping to infrastructure layer

@@ -1,5 +1,4 @@
-﻿using AutoTrader.Application.Contracts.Infrastructure;
-using AutoTrader.Infrastructure.Contracts.Transaq;
+﻿using AutoTrader.Infrastructure.Contracts.Transaq;
 using AutoTrader.Infrastructure.Stock.Dummy;
 
 namespace AutoTrader.Infrastructure.Stock.TransaqConnector

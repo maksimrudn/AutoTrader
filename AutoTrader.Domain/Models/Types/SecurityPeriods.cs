@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutoTrader.Domain.Models.Types
+﻿namespace AutoTrader.Domain.Models.Types
 {
     /// <summary>
     /// В period необходимо указать нужное значение поля <id> из структуры <candlekinds>

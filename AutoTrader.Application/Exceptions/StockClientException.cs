@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AutoTrader.Application.Exceptions
+﻿namespace AutoTrader.Application.Exceptions
 {
     public class StockClientException:Exception
     {

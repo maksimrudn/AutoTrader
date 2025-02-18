@@ -1,17 +1,9 @@
 ﻿using AutoTrader.Application.Common;
 using AutoTrader.Application.Extensions;
 using AutoTrader.Application.Helpers;
-using AutoTrader.Application.Models;
 using AutoTrader.Application.Models.TransaqConnector.Ingoing;
-using AutoTrader.Domain.Models;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace AutoTrader.Infrastructure.Stock.TransaqConnector

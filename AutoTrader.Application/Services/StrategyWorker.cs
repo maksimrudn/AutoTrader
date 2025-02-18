@@ -2,14 +2,7 @@
 using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Domain.Models.Strategies;
 using AutoTrader.Domain.Models.Types;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AutoTrader.Application.Services
 {
