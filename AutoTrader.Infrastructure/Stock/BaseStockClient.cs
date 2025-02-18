@@ -398,7 +398,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
-            if (sendResult.success == true)
+            if (sendResult.success)
             {
                 await _requestHandler.InputStreamHandler.CandlesLoaded[seccode].WaitOne().ConfigureAwait(false);
             }
@@ -431,7 +431,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
-            if (sendResult.success == true)
+            if (sendResult.success)
             {
                 await _requestHandler.InputStreamHandler.WaitForCurrentCandle[seccode].WaitOne().ConfigureAwait(false);
 
@@ -454,7 +454,7 @@ namespace AutoTrader.Infrastructure.Stock
             command cmd = command.CreateMoveOrderCommand(transactionid, 0, 2, 0);
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
-            if (sendResult.success == true)
+            if (sendResult.success)
             {
                 res = sendResult.transactionid;
             }
@@ -475,7 +475,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
-            if (sendResult.success == true)
+            if (sendResult.success)
             {
                 res = sendResult.transactionid;
             }
@@ -509,7 +509,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
-            if (sendResult.success == true)
+            if (sendResult.success)
             {
                 res = sendResult.transactionid;
             }
@@ -585,7 +585,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
-            if (sendResult.success == true)
+            if (sendResult.success)
             {
                 res = sendResult.transactionid;
             }
@@ -627,7 +627,7 @@ namespace AutoTrader.Infrastructure.Stock
 
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
-            if (sendResult.success == true)
+            if (sendResult.success)
             {
                 res = sendResult.transactionid;
             }
@@ -735,7 +735,7 @@ namespace AutoTrader.Infrastructure.Stock
             _requestHandler.InputStreamHandler.SecuritiesLoaded.Reset();
             result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
-            if (sendResult.success == true)
+            if (sendResult.success)
             {
                 await _requestHandler.InputStreamHandler.SecuritiesLoaded.WaitOne().ConfigureAwait(false);
 
