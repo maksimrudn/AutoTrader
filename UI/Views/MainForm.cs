@@ -1,57 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using AutoTrader.Application.Models.TransaqConnector.Ingoing;
+using AutoTrader.Domain.Models.Strategies;
 using AutoTrader.Application.Contracts.Infrastructure;
-using AutoTrader.Application.Contracts.Infrastructure.Stock;
+using AutoTrader.Application.Models;
 using AutoTrader.Application.Contracts.UI;
-using AutoTrader.Application.Enums;
+using AutoTrader.Application.Features.Login;
+using MediatR;
+using AutoTrader.Application.Features.Logout;
 using AutoTrader.Application.Features.ChangePassword;
 using AutoTrader.Application.Features.ComboBuy;
 using AutoTrader.Application.Features.ComboSell;
-using AutoTrader.Application.Features.Login;
-using AutoTrader.Application.Features.Logout;
 using AutoTrader.Application.Features.MultidirectOrder;
 using AutoTrader.Application.Features.SubscribeOnQuotations;
-using AutoTrader.Application.Models;
-using AutoTrader.Application.Models.TransaqConnector.Ingoing;
-using AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns;
-using AutoTrader.Application.Models.TransaqConnector.Outgoing;
+using System.Threading;
+using AutoTrader.Application.Contracts.Infrastructure.Stock;
 using AutoTrader.Application.Services;
-using AutoTrader.Domain.Models.Strategies;
-using MediatR;
-using Timer = System.Timers.Timer;
+using AutoTraderUI.Views;
+using System.Linq;
+using System.ComponentModel;
 
-namespace AutoTraderUI.Views
+namespace AutoTraderUI
 {
     public partial class MainForm : Form, IMainFormView
     {
-        private readonly Timer _timerUpdateUi;
-        private readonly IMediator _mediator;
-        private readonly ISettingsService _settingsService;
-        private readonly IDualStockClient _dualStockClient;
-        private readonly StrategyManager _strategyManager;
-        private readonly Settings _settings;
-        private readonly Action<Func<Task>> _commandWrapperAction;
-        private List<string> _seccodeList = new();
+        readonly System.Timers.Timer _timerUpdateUI;
+        readonly IEmailService _emailService;
+        readonly IMediator _mediator;
+        readonly ISettingsService _settingsService;
+        readonly IDualStockClient _dualStockClient;
+        readonly StrategyManager _strategyManager;
+        readonly Settings _settings;
+        readonly Action<Func<Task>> _commandWrapperAction = null;
+        List<string> _seccodeList = new List<string>();
 
-        private readonly BindingList<forts_position> _fortsPositionsBindingList = new();
+        private readonly BindingList<forts_position> _fortsPositionsBindingList = new BindingList<forts_position>();
+        private readonly BindingList<string> _seccodeBindingList = new BindingList<string>();
 
-        Timer _timerMultidirectOrder;
-        private readonly CancellationTokenSource _ct_timerMultidirectOrder = new();
 
-        public MainForm(IMediator mediator,
+        System.Timers.Timer _timerMultidirectOrder;
+        CancellationTokenSource _ct_timerMultidirectOrder = new CancellationTokenSource();
+
+        public MainForm(IEmailService emailService,
+                        IMediator mediator,
                         ISettingsService settingsService,
                         IDualStockClient dualStockClient,
                         StrategyManager strategyManager)
         {
             InitializeComponent();
 
+            _emailService = emailService;
             _mediator = mediator;
             _settingsService = settingsService;
             _settings = _settingsService.GetSettings();
@@ -62,9 +64,9 @@ namespace AutoTraderUI.Views
 
             comboBoxConnectionType.DataSource = new List<string> { string.Empty, "Prod", "Demo" };
 
-            _timerUpdateUi = new Timer();
-            _timerUpdateUi.Interval = 1000;
-            _timerUpdateUi.Elapsed += TimerUpdateUI_Elapsed;
+            _timerUpdateUI = new System.Timers.Timer();
+            _timerUpdateUI.Interval = 1000;
+            _timerUpdateUI.Elapsed += new ElapsedEventHandler(TimerUpdateUI_Elapsed);
 
             comboBoxTimezone.Items.Add(4);
             comboBoxTimezone.Items.Add(7);
@@ -73,84 +75,84 @@ namespace AutoTraderUI.Views
 
             dataGridViewFortsPositions.DataSource = _fortsPositionsBindingList;
 
-            _commandWrapperAction = async act =>
+            _commandWrapperAction = async (act) =>
             {
                 try
                 {
-                    FreezUi();
+                    this.FreezUI();
                     await act();
                 }
                 catch (Exception ex)
                 {
-                    ShowMessage(ex.Message);
+                    this.ShowMessage(ex.Message);
                 }
                 finally
                 {
-                    UnFreezUi();
+                    this.UnFreezUI();
                 }
             };
-            
-            _timerMultidirectOrder = new Timer();
-            _timerMultidirectOrder.Interval = 100;
-            _timerMultidirectOrder.Elapsed += timer_Elapsed;
-            
+
             HandleDisconnected();
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            _timerUpdateUi.Stop();
+            _timerUpdateUI.Stop();
             _ct_timerMultidirectOrder.Cancel();
+
             base.OnClosed(e);
         }
 
         protected override void OnLoad(EventArgs e)
         {
-            LoadSettings(_settings);
-            _timerUpdateUi.Start(); 
+            this.LoadSettings(_settings);
+            _timerUpdateUI.Start(); 
             base.OnLoad(e);
         }
 
         #region FIELDS
 
-        public int Timezone => int.Parse(comboBoxTimezone.SelectedItem.ToString() ?? throw new ArgumentNullException());
-        public string ComboBoxConnectionType => comboBoxConnectionType.Text;
+        public int Timezone { get { return int.Parse(comboBoxTimezone.SelectedItem.ToString()); } }
+        public string ComboBoxConnectionType { get { return comboBoxConnectionType.Text; } }
+
         public string ComboBoxSeccode
         {
             get
             {
                 string res = "";
-                Invoke(new MethodInvoker(delegate { res = comboBoxSeccode.Text; }));
+
+                this.Invoke(new MethodInvoker(delegate { res = comboBoxSeccode.Text; }));
+
                 return res;
             }
         }
-        public string Username1 => textBoxUsername.Text;
-        public string Password1 => textBoxPassword.Text;
-        public string ClientId1 { set => textBoxClientId.Text = value; }
-        public string FreeMoney { set => textBoxFreeMoney.Text = value; }
-        public string FreeMoney1 { set => textBoxFreeMoney1.Text = value; }
-        public string FreeMoney2 { set => textBoxFreeMoney2.Text = value; }
+        public string Username1 { get { return textBoxUsername.Text; } }
+        public string Password1 { get { return textBoxPassword.Text; } }
+        public string ClientId1 { set { textBoxClientId.Text = value; } }
+
+        public string FreeMoney { set { textBoxFreeMoney.Text = value; } }
+        public string FreeMoney1 { set { textBoxFreeMoney1.Text = value; } }
+        public string FreeMoney2 { set { textBoxFreeMoney2.Text = value; } }
+
         public double ObserveDifference
         {
             get
             {
                 double res = 0;
-                Invoke(new MethodInvoker(
-                    delegate
-                    {
-                        res = string.IsNullOrEmpty(textBoxDifference.Text) ? 
-                            0 : 
-                            double.Parse(textBoxDifference.Text);
-                    }));
+
+                this.Invoke(new MethodInvoker(delegate { res = string.IsNullOrEmpty(textBoxDifference.Text) ? 0 : double.Parse(textBoxDifference.Text); }));
+
                 return res;
             }
         }
 
-        public string Union1 { set => textBoxUnion.Text = value; }
+        public string Union1 { set { textBoxUnion.Text = value; } }
 
         #endregion
 
         #region HELPER METHODS
+        
+
         public void LoadSettings(Settings settings)
         {
             textBoxUsername.Text = settings.GetUsername();
@@ -189,22 +191,36 @@ namespace AutoTraderUI.Views
 
         public void UpdateSettings(Settings settings)
         {
-            Invoke(new MethodInvoker(() => { settings.SetUsername(textBoxUsername.Text); }));
-            Invoke(new MethodInvoker(() => { settings.SetPassword(textBoxPassword.Text); }));
-            Invoke(new MethodInvoker(() => { settings.SetOldPassword(textBoxPasswordOld.Text); }));
-            Invoke(new MethodInvoker(() => { settings.SetNewPassword(textBoxPasswordNew.Text); }));
-            Invoke(new MethodInvoker(() => { settings.SetUsername2(textBoxUsername2.Text); }));
-            Invoke(new MethodInvoker(() => { settings.SetPassword2(textBoxPassword2.Text); }));
-            Invoke(new MethodInvoker(() => { settings.TP = int.Parse(textBoxTP.Text); }));
-            Invoke(new MethodInvoker(() => { settings.SL = int.Parse(textBoxSL.Text); }));
-            Invoke(new MethodInvoker(() => { settings.Price = int.Parse(textBoxPrice.Text); }));
-            Invoke(new MethodInvoker(() => { settings.Volume = int.Parse(textBoxVolume.Text); }));
-            Invoke(new MethodInvoker(() => { settings.Seccode = comboBoxSeccode.Text; }));
-            Invoke(new MethodInvoker(() => { settings.ByMarket = checkBoxByMarket.Checked; }));
-            Invoke(new MethodInvoker(() => { settings.ComboOrderType = radioButtonComboTypeContidion.Checked ? 1 : 2; }));
-            Invoke(new MethodInvoker(() => { settings.ConnectionType = comboBoxConnectionType.Text; }));
-            Invoke(new MethodInvoker(() => { settings.MultidirectExecuteTime = dateTimePickerMultidirectExecute.Value; }));
-            Invoke(new MethodInvoker(() => { settings.MultidirectExecuteTime = dateTimePickerMultidirectExecute.Value; }));
+            //settings.SetUsername(textBoxUsername.Text);
+            //settings.SetPassword(textBoxPassword.Text);
+            //settings.SetUsername2(textBoxUsername2.Text);
+            //settings.SetPassword2(textBoxPassword2.Text);
+            //settings.TP = int.Parse(textBoxTP.Text);
+            //settings.SL = int.Parse(textBoxSL.Text);
+            //settings.Price = int.Parse(textBoxPrice.Text);
+            //settings.Volume = int.Parse(textBoxVolume.Text);
+            //settings.Seccode = comboBoxSeccode.Text;
+            //settings.ByMarket = checkBoxByMarket.Checked;
+            //settings.ComboOrderType = radioButtonComboTypeContidion.Checked ? 1 : 2;
+            //settings.ConnectionType = comboBoxConnectionType.Text;
+            //settings.MultidirectExecuteTime = dateTimePickerMultidirectExecute.Value;
+
+            this.Invoke(new MethodInvoker(() => { settings.SetUsername(textBoxUsername.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.SetPassword(textBoxPassword.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.SetOldPassword(textBoxPasswordOld.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.SetNewPassword(textBoxPasswordNew.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.SetUsername2(textBoxUsername2.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.SetPassword2(textBoxPassword2.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.TP = int.Parse(textBoxTP.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.SL = int.Parse(textBoxSL.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.Price = int.Parse(textBoxPrice.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.Volume = int.Parse(textBoxVolume.Text); }));
+            this.Invoke(new MethodInvoker(() => { settings.Seccode = comboBoxSeccode.Text; }));
+            this.Invoke(new MethodInvoker(() => { settings.ByMarket = checkBoxByMarket.Checked; }));
+            this.Invoke(new MethodInvoker(() => { settings.ComboOrderType = radioButtonComboTypeContidion.Checked ? 1 : 2; }));
+            this.Invoke(new MethodInvoker(() => { settings.ConnectionType = comboBoxConnectionType.Text; }));
+            this.Invoke(new MethodInvoker(() => { settings.MultidirectExecuteTime = dateTimePickerMultidirectExecute.Value; }));
+            this.Invoke(new MethodInvoker(() => { settings.MultidirectExecuteTime = dateTimePickerMultidirectExecute.Value; }));
         }
 
         public void ShowMessage(string msg)
@@ -212,16 +228,11 @@ namespace AutoTraderUI.Views
             MessageBox.Show(msg);
         }
                 
-        public void HandleConnected(StockUserConnectionTypes connectionType)
+        public void HandleConnected(int connectorNumber)
         {
-            if (!Enum.IsDefined(typeof(StockUserConnectionTypes), connectionType))
-            {
-                throw new ArgumentException("Invalid enum value passed.");
-            }
-            
             comboBoxConnectionType.Enabled = false;
 
-            if (connectionType == StockUserConnectionTypes.Master)
+            if (connectorNumber == 0)
             {
                 ((Control)tabPage1).Enabled = true;
                 groupBoxChangePassword.Enabled = true;
@@ -241,15 +252,11 @@ namespace AutoTraderUI.Views
             }
         }
 
-        public void HandleDisconnected(StockUserConnectionTypes? connectionType = null)
+        public void HandleDisconnected(int connNumber = -1)
         {
-            if (connectionType != null && !Enum.IsDefined(typeof(StockUserConnectionTypes), connectionType))
-            {
-                throw new ArgumentException("Invalid enum value passed.");
-            }
-            
             comboBoxConnectionType.Enabled = false;
-            if (connectionType == StockUserConnectionTypes.Master)
+
+            if (connNumber == 0)
             {
                 ((Control)tabPage1).Enabled = false;
                 groupBoxChangePassword.Enabled = false;
@@ -263,7 +270,7 @@ namespace AutoTraderUI.Views
                 textBoxPassword.Enabled = true;
                 textBoxUsername.Enabled = true;
             }
-            else if (connectionType == StockUserConnectionTypes.Slave)
+            else if (connNumber == 1)
             {
                 groupBoxChangePassword2.Enabled = false;
                 buttonLogin2.Enabled = true;
@@ -293,14 +300,14 @@ namespace AutoTraderUI.Views
             }
         }
             
-        public void FreezUi()
+        public void FreezUI()
         {
             tabControl1.Enabled = false;
             comboBoxTimezone.Enabled = false;
             testButton.Enabled = false;
         }
 
-        public void UnFreezUi()
+        public void UnFreezUI()
         {
             tabControl1.Enabled = true;
             comboBoxTimezone.Enabled = true;
@@ -312,12 +319,12 @@ namespace AutoTraderUI.Views
         #region EVENT HANDLERS
         private void ObserversCollection_ObserverListChanged(object sender, List<StrategySettings> e)
         {
-            UpdateObserversListInformation(e);
+            this.UpdateObserversListInformation(e);
         }
 
         private void TimezoneChanged(object sender, EventArgs eventArgs)
         {
-            _settings.Timezone = Timezone;
+            _settings.Timezone = this.Timezone;
             _settingsService.UpdateSettings(_settings);
         }
 
@@ -327,41 +334,42 @@ namespace AutoTraderUI.Views
 
             if (!_disposed)
             {
-                Invoke(new MethodInvoker(() =>
+                this.Invoke(new MethodInvoker(() =>
                 {
                     labelTime.Text = $"Time: {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
                 }));
 
-                Invoke(new MethodInvoker(() =>
+                this.Invoke(new MethodInvoker(() =>
                 {
                     UpdateFortsPositions(_dualStockClient.Master.FortsPositions);
+
                 }));
             }
         }
 
-        private void UpdateSecurities(List<security>? securities)
+        private void UpdateSecurities(List<AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns.stock_security>? Securities)
         {
-            if (securities == null) return;
+            if (Securities == null) return;
 
-            _seccodeList = securities.Where(x => x.board == boardsCode.FUT.ToString())
+            _seccodeList = Securities.Where(x => x.board == AutoTrader.Application.Models.TransaqConnector.Outgoing.boardsCode.FUT.ToString())
                                     .Select(x => x.seccode)
                                     .OrderBy(x => x).ToList();
 
-            LoadSeccodeList(_seccodeList);
+            this.LoadSeccodeList(_seccodeList);
             _isInitializedComboboxSeccode = true;
-            SetSelectedSeccode(_settings.Seccode);
+            this.SetSelectedSeccode(_settings.Seccode);
         }
 
         public void LoadSeccodeList(List<string> lst)
         {
-            List<string> seccodes = new List<string>
+            List<string> seccodes = new List<string>()
             {
                 string.Empty
             };
 
             seccodes.AddRange(lst);
 
-            Invoke(new MethodInvoker(() =>
+            this.Invoke(new MethodInvoker(() =>
             {
                 comboBoxSeccode.DataSource = seccodes;
             }));
@@ -369,7 +377,7 @@ namespace AutoTraderUI.Views
 
         public void SetSelectedSeccode(string seccode)
         {
-            Invoke(new MethodInvoker(() =>
+            this.Invoke(new MethodInvoker(() =>
             {
                 comboBoxSeccode.SelectedItem = seccode;
             }));
@@ -411,7 +419,6 @@ namespace AutoTraderUI.Views
 
         private void TestButton_Click(object sender, EventArgs e)
         {
-            // todo: use this code for email testing
             //_emailService.SendEmailAsync("m.rudneov@yandex.ru", "Autotrader", "test");
 
             //try
@@ -424,93 +431,100 @@ namespace AutoTraderUI.Views
             //}
         }
 
-        private void buttonLogin_Click(object sender, EventArgs e)
+        private async void buttonLogin_Click(object sender, EventArgs e)
         {
             _commandWrapperAction(async () =>
             {
-                UpdateSettings(_settings);
-                var resp = await _mediator.Send(new LoginMasterCommand
+                this.UpdateSettings(_settings);
+
+                var resp = await _mediator.Send(new LoginMasterCommand()
                 {
                     Settings = _settings
                 });
+
                 _seccodeList = resp.SeccodeList;
-                LoadSeccodeList(resp.SeccodeList);
-                SetSelectedSeccode(resp.SelectedSeccode);
-                HandleConnected(StockUserConnectionTypes.Master);
-                ClientId1 = resp.ClientId ?? string.Empty;
-                Union1 = resp.Union ?? string.Empty;
-                FreeMoney = resp.FreeMoney ?? string.Empty;
-                FreeMoney1 = resp.FreeMoney ?? string.Empty;
-                Invoke(new MethodInvoker(() =>
+                this.LoadSeccodeList(resp.SeccodeList);
+                this.SetSelectedSeccode(resp.SelectedSeccode);
+                this.HandleConnected(0);
+                this.ClientId1 = resp.ClientId;
+                this.Union1 = resp.Union;
+                this.FreeMoney = resp.FreeMoney;
+                this.FreeMoney1 = resp.FreeMoney;
+
+                this.Invoke(new MethodInvoker(() =>
                 {
                     UpdateSecurities(_dualStockClient.Master.Securities);
+                    
                 }));
             });
         }
 
-        private void buttonLogin2_Click(object sender, EventArgs e)
+        private async void buttonLogin2_Click(object sender, EventArgs e)
         {
             _commandWrapperAction(async () =>
             {
-                UpdateSettings(_settings);
-                var resp = await _mediator.Send(new LoginSlaveCommand
+                this.UpdateSettings(_settings);
+
+                var resp = await _mediator.Send(new LoginSlaveCommand()
                 {
                     Settings = _settings
                 });
-                HandleConnected(StockUserConnectionTypes.Slave);
-                FreeMoney2 = resp.FreeMoney ?? string.Empty;
+
+                this.HandleConnected(1);
+                this.FreeMoney2 = resp.FreeMoney;
             });
         }
 
-        private void buttonLogout_Click(object sender, EventArgs e)
+        private async void buttonLogout_Click(object sender, EventArgs e)
         {
             _commandWrapperAction(async () =>
             {
-                await _mediator.Send(new LogoutMasterCommand());
-                HandleDisconnected(0);
+                var id = await _mediator.Send(new LogoutMasterCommand());
+                this.HandleDisconnected(0);
+
                 _isInitializedComboboxSeccode = false;
             });
         }
 
-        private void buttonLogout2_Click(object sender, EventArgs e)
+        private async void buttonLogout2_Click(object sender, EventArgs e)
         {
             _commandWrapperAction(async () =>
             {
-                await _mediator.Send(new LogoutSlaveCommand());
-                HandleDisconnected(StockUserConnectionTypes.Slave);
+                var id = await _mediator.Send(new LogoutSlaveCommand());
+                this.HandleDisconnected(1);
             });
         }
 
-        private void buttonChangePassword_Click(object sender, EventArgs e)
+        private async void buttonChangePassword_Click(object sender, EventArgs e)
         {
             _commandWrapperAction(async () =>
             {
-                UpdateSettings(_settings);
-                var id = await _mediator.Send(new ChangePassword1Command
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new ChangePassword1Command()
                 {
                     Settings = _settings
                 });
             });
         }
 
-        private void buttonChangePassword2_Click(object sender, EventArgs e)
+        private async void buttonChangePassword2_Click(object sender, EventArgs e)
         {
             _commandWrapperAction(async () =>
             {
-                UpdateSettings(_settings);
-                var id = await _mediator.Send(new ChangePassword2Command
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new ChangePassword2Command()
                 {
                     Settings = _settings
                 });
             });
         }
 
-        private void buttonComboBuy_Click(object sender, EventArgs e)
+        private async void buttonComboBuy_Click(object sender, EventArgs e)
         {
             _commandWrapperAction(async () =>
             {
-                UpdateSettings(_settings);
-                var id = await _mediator.Send(new ComboBuyCommand
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new ComboBuyCommand()
                 {
                     Settings = _settings
                 });
@@ -521,8 +535,8 @@ namespace AutoTraderUI.Views
         {
             _commandWrapperAction(async () =>
             {
-                UpdateSettings(_settings);
-                await _mediator.Send(new ComboSellCommand
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new ComboSellCommand()
                 {
                     Settings = _settings
                 });
@@ -533,8 +547,8 @@ namespace AutoTraderUI.Views
         {
             _commandWrapperAction(async () =>
             {
-                UpdateSettings(_settings);
-                await _mediator.Send(new CreateMultidirectOrderCommand
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new CreateMultidirectOrderCommand()
                 {
                     Settings = _settings
                 });
@@ -545,10 +559,10 @@ namespace AutoTraderUI.Views
         {
             _commandWrapperAction(async () =>
             {
-                UpdateSettings(_settings);
-                var id = await _mediator.Send(new SubscribeOnQuotationsCommand
+                this.UpdateSettings(_settings);
+                var id = await _mediator.Send(new SubscribeOnQuotationsCommand()
                 {
-                    Seccode = ComboBoxSeccode
+                    Seccode = this.ComboBoxSeccode
                 });
             });
         }
@@ -561,11 +575,11 @@ namespace AutoTraderUI.Views
             {
                 try
                 {
-                    strategy.Start(Timezone);
+                    strategy.Start(this.Timezone);
                 }
                 catch (Exception ex)
                 {
-                    ShowMessage(ex.Message);
+                    this.ShowMessage(ex.Message);
                 }
             }
 
@@ -584,7 +598,7 @@ namespace AutoTraderUI.Views
                 }
                 catch (Exception ex)
                 {
-                    ShowMessage(ex.Message);
+                    this.ShowMessage(ex.Message);
                 }
             }
 
@@ -595,9 +609,9 @@ namespace AutoTraderUI.Views
         {
             var addForm = new CreateEditObserver(_seccodeList);
 
-            if (addForm.ShowDialog() == DialogResult.OK)
+            if (addForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                _strategyManager.Add(new StrategySettings
+                _strategyManager.Add(new StrategySettings()
                 {
                     Seccode = addForm.Seccode,
                     Difference = addForm.Difference,
@@ -610,18 +624,18 @@ namespace AutoTraderUI.Views
 
         private void buttonStartMultidirectTimer_Click(object sender, EventArgs e)
         {
-            UpdateSettings(_settings);
+            this.UpdateSettings(_settings);
             _settingsService.UpdateSettings(_settings);
 
             if (!_dualStockClient.Master.Connected || !_dualStockClient.Slave.Connected)
             {
-                ShowMessage("Не все клиенты авторизованы!");
+                this.ShowMessage("Не все клиенты авторизованы!");
                 return;
             }
 
             if (string.IsNullOrEmpty(_settings.Seccode))
             {
-                ShowMessage("Не выбран код инструмента");
+                this.ShowMessage("Не выбран код инструмента");
                 return;
             }
 
@@ -631,6 +645,9 @@ namespace AutoTraderUI.Views
             //    return;
             //}
 
+            _timerMultidirectOrder = new System.Timers.Timer();
+            _timerMultidirectOrder.Interval = 100;
+            _timerMultidirectOrder.Elapsed += new ElapsedEventHandler(timer_Elapsed);
             _timerMultidirectOrder.Start();
         }
 
@@ -656,7 +673,7 @@ namespace AutoTraderUI.Views
             }
         }
 
-        bool _isInitializedComboboxSeccode;
+        bool _isInitializedComboboxSeccode = false;
         private void ComboBoxSeccode_SelectedValueChanged(object sender, EventArgs e)
         {
             if (!_isInitializedComboboxSeccode) return;
@@ -664,6 +681,8 @@ namespace AutoTraderUI.Views
             _settings.Seccode = (string)comboBoxSeccode.SelectedValue;
             _settingsService.UpdateSettings(_settings);
         }
+
+        
         #endregion
     }
 }

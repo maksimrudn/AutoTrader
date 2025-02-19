@@ -112,8 +112,11 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         private readonly ConcurrentDictionary<long, Application.Models.TransaqConnector.Ingoing.trades_ns.trade> _trades = new();
         public List<Application.Models.TransaqConnector.Ingoing.trades_ns.trade> Trades => _trades.Values.ToList();
 
-        private readonly ConcurrentDictionary<string, Application.Models.TransaqConnector.Ingoing.securities_ns.security> _securities = new();
-        public List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities => _securities.Values.ToList();
+        private readonly ConcurrentDictionary<string, Application.Models.TransaqConnector.Ingoing.securities_ns.stock_security> _securities = new();
+        public List<Application.Models.TransaqConnector.Ingoing.securities_ns.stock_security> Securities => _securities.Values.ToList();
+        
+        private readonly ConcurrentDictionary<string, sec_info_upd> _secInfoUpds = new();
+        public List<sec_info_upd> SecInfoUpds => _secInfoUpds.Values.ToList();
 
         /// <summary>
         /// for history data
@@ -149,8 +152,7 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                     break;
 
                 case "securities":
-                    var securities = (securities)XMLHelper.Deserialize(result, typeof(securities));
-
+                    var securities = (stock_securities)XMLHelper.Deserialize(result, typeof(stock_securities));
                     _securitiesHandle(securities.security);
                     SecuritiesLoaded.Set();
                     break;
@@ -159,6 +161,8 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                     break;
 
                 case "sec_info_upd":
+                    var secInfoUpds = (sec_info_upd)XMLHelper.Deserialize(result, typeof(sec_info_upd));
+                    _secInfoUpdsHandle(secInfoUpds);
                     break;
 
                 case "client":
@@ -179,12 +183,11 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                     _positionsLock.EnterWriteLock();
                     if (positions.forts_collaterals != null) _positions.forts_collaterals = positions.forts_collaterals;
                     if (positions.forts_money != null) _positions.forts_money = positions.forts_money;
-                    
                     if (positions.money_position != null) _positions.money_position = positions.money_position;
                     if (positions.sec_position != null) _positions.sec_position = positions.sec_position;
                     if (positions.spot_limit != null) _positions.spot_limit = positions.spot_limit;
+                    if (positions.united_limits != null) _positions.united_limits = positions.united_limits;
                     _positionsLock.ExitWriteLock();
-
 
                     if (positions.forts_position != null)
                     {
@@ -193,9 +196,6 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
                             _fortsPositions.AddOrUpdate(position.GetKey(), position, (key, curValue) => position);
                         }
                     }
-
-
-
                     PositionsAreActual = true;
 
                     // Fix syncronization. Positions Loaded must be set when all necessary positions have been received
@@ -221,8 +221,6 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
 
                 case "orders":
                     var orders = (orders)XMLHelper.Deserialize(result, typeof(orders));
-
-
                     _ordersHandle(orders);
                     break;
 
@@ -252,7 +250,14 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
             }
         }
 
-        private void _securitiesHandle(List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> security)
+        private void _secInfoUpdsHandle(sec_info_upd secInfoUpds)
+        {
+            _secInfoUpds.AddOrUpdate(secInfoUpds.GetKey(),
+                secInfoUpds,
+                (key, existingSecurity) => secInfoUpds);
+        }
+
+        private void _securitiesHandle(List<Application.Models.TransaqConnector.Ingoing.securities_ns.stock_security> security)
         {
             foreach (var sec in security)
             {

@@ -16,7 +16,7 @@ namespace AutoTrader.Application.Contracts.Infrastructure.Stock
 
         double? Money { get; }
 
-        List<Models.TransaqConnector.Ingoing.securities_ns.security>? Securities { get; }
+        List<Models.TransaqConnector.Ingoing.securities_ns.stock_security>? Securities { get; }
 
         List<Models.TransaqConnector.Ingoing.trades_ns.trade>? Trades { get; }
 

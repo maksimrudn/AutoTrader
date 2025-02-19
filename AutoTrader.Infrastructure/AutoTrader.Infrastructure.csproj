@@ -99,7 +99,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Constants\" />
+    <Compile Update="Stock\Dummy\TxmlServerEmulator.Data.cs">
+      <DependentUpon>TxmlServerEmulator.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

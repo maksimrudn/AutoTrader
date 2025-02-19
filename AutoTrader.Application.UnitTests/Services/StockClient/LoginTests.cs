@@ -1,28 +1,27 @@
 ﻿using AutoTrader.Application.Exceptions;
-using AutoTrader.Infrastructure.Stock.Dummy;
-using Shouldly;
-using AutoTrader.Infrastructure.Stock.TransaqConnector;
 using AutoTrader.Infrastructure.Stock;
+using AutoTrader.Infrastructure.Stock.Dummy;
+using AutoTrader.Infrastructure.Stock.TransaqConnector;
+using Shouldly;
 
 namespace AutoTrader.Application.UnitTests.Services.StockClient
 {
     public class LoginTests
     {
-        TransaqConnectorFactory _factory;
+        ITransaqConnectorFactory _factory;
 
         public LoginTests()
         {
-            _factory = new TransaqConnectorFactory(true);
+            _factory = new TransaqConnectorEmulatorFactory();
         }
 
         [Fact]
-        public async Task Login()
+        public async Task Login_RightData_Success()
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, 
-                                    DummyTransaqConnectorRequestHandler.CorrectPassword, 
-                                    Domain.Models.Types.ConnectionType.Prod);
+            await stockClient.LoginAsync(Constants.TestUsername, 
+                Constants.TestPassword);
 
             stockClient.Connected.ShouldBeTrue();
             stockClient.FortsClientId.ShouldNotBeNull()
@@ -32,13 +31,12 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         }
 
         [Fact]
-        public async Task LoginWithPositions()
+        public async Task Login_WithPositions_Success()
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                    DummyTransaqConnectorRequestHandler.CorrectPassword,
-                                    Domain.Models.Types.ConnectionType.Prod);
+            await stockClient.LoginAsync(Constants.TestUsername,
+                Constants.TestPassword);
 
             stockClient.Connected.ShouldBeTrue();
             stockClient.FortsClientId.ShouldNotBeNull()
@@ -51,16 +49,14 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
             var stockClient = new StockClientMaster(_factory);
 
             var exception = await Should.ThrowAsync<StockClientException>(async () =>
-                                await stockClient.Login("wrong username",
-                                                    DummyTransaqConnectorRequestHandler.CorrectPassword,
-                                                    Domain.Models.Types.ConnectionType.Prod));
+                                await stockClient.LoginAsync("wrong username",
+                                    Constants.TestPassword));
 
             stockClient.Connected.ShouldBeFalse();
                         
             await Should.NotThrowAsync(async () =>
-                                await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                                        DummyTransaqConnectorRequestHandler.CorrectPassword,
-                                                        Domain.Models.Types.ConnectionType.Prod));
+                                await stockClient.LoginAsync(Constants.TestUsername,
+                                    Constants.TestPassword));
 
             stockClient.Connected.ShouldBeTrue();
             stockClient.FortsClientId.ShouldNotBeNull()
@@ -73,14 +69,12 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                        DummyTransaqConnectorRequestHandler.CorrectPassword,
-                                        Domain.Models.Types.ConnectionType.Prod);
+            await stockClient.LoginAsync(Constants.TestUsername,
+                Constants.TestPassword);
 
             var exception = await Should.ThrowAsync<StockClientException>(async () =>
-                                await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                                        DummyTransaqConnectorRequestHandler.CorrectPassword,
-                                                        Domain.Models.Types.ConnectionType.Prod));
+                                await stockClient.LoginAsync(Constants.TestUsername,
+                                    Constants.TestPassword));
 
             exception.ErrorCode.ShouldBeEquivalentTo(CommonErrors.AlreadyLoggedInCode);
         }
@@ -91,9 +85,8 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
             var stockClient = new StockClientMaster(_factory);
 
             var exception = await Should.ThrowAsync<StockClientException>(async () =>
-                                await stockClient.Login("wrong username",
-                                                    DummyTransaqConnectorRequestHandler.CorrectPassword,
-                                                    Domain.Models.Types.ConnectionType.Prod));
+                                await stockClient.LoginAsync("wrong username",
+                                    Constants.TestPassword));
             stockClient.Connected.ShouldBeFalse();
 
             exception.ErrorCode.ShouldBeEquivalentTo(CommonErrors.ServerConnectionErrorCode);
@@ -104,9 +97,8 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.Login(DummyTransaqConnectorRequestHandler.CorrectUsername, 
-                                    DummyTransaqConnectorRequestHandler.CorrectPassword, 
-                                    Domain.Models.Types.ConnectionType.Prod);
+            await stockClient.LoginAsync(Constants.TestUsername, 
+                Constants.TestPassword);
 
             stockClient.FortsClientId.ShouldNotBeNullOrEmpty();
             stockClient.Connected.ShouldBeTrue();

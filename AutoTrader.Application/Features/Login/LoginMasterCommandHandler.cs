@@ -29,11 +29,11 @@ namespace AutoTrader.Application.Features.Login
 
             ConnectionType connType = (ConnectionType)Enum.Parse(typeof(ConnectionType), request.Settings.ConnectionType);
 
-            await _stockClients.Master.Login(request.Settings.GetUsername(), 
+            await _stockClients.Master.LoginAsync(request.Settings.GetUsername(), 
                                             request.Settings.GetPassword(), connType)
                                         .ConfigureAwait(false);
 
-            var _seccodeList = (await _stockClients.Master.GetSecurities().ConfigureAwait(false))
+            var _seccodeList = _stockClients.Master.Securities
                                         .Where(x => x.board == boardsCode.FUT.ToString())
                                         .Select(x => x.seccode)
                                         .OrderBy(x => x)

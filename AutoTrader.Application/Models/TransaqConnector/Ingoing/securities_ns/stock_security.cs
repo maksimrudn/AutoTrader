@@ -2,7 +2,8 @@
 
 namespace AutoTrader.Application.Models.TransaqConnector.Ingoing.securities_ns
 {
-    public class security
+    [XmlRoot("security", Namespace = "")]
+    public class stock_security
     {
         /// <summary>
         /// внутренний код

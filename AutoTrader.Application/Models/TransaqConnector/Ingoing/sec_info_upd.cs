@@ -26,5 +26,10 @@ namespace AutoTrader.Application.Models.TransaqConnector.Ingoing
         public double bgo_buy { get; set; }
 
         public double point_cost { get; set; }
+        
+        public string GetKey()
+        {
+            return $"{secid}";
+        }
     }
 }

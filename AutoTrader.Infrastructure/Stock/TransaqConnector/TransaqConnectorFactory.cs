@@ -15,14 +15,14 @@ namespace AutoTrader.Infrastructure.Stock.TransaqConnector
         public ITransaqConnectorRequestHandler GetMaster()
         {
             return dummyMode ?
-                        new DummyTransaqConnectorRequestHandler() :
+                        new TxmlServerEmulator() :
                         new TransaqConnectorRequestHandler("txmlconnector1.dll");
         }
 
         public ITransaqConnectorRequestHandler GetSlave()
         {
             return dummyMode ?
-                        new DummyTransaqConnectorRequestHandler() :
+                        new TxmlServerEmulator() :
                         new TransaqConnectorRequestHandler("txmlconnector2.dll");
         }
     }

@@ -12,30 +12,31 @@ namespace AutoTrader.Infrastructure.Stock
 {
     public abstract class BaseStockClient: IStockClient
     {
-        protected readonly ITransaqConnectorFactory TransaqConnectorFactory;
-        protected ITransaqConnectorRequestHandler? RequestHandler;
 
-        private readonly Dictionary<TradingMode, boardsCode> _tradingModeMapping = new()
+        protected readonly ITransaqConnectorFactory _transaqConnectorFactory;
+        protected ITransaqConnectorRequestHandler? _requestHandler;
+
+        Dictionary<TradingMode, boardsCode> _tradingModeMapping = new Dictionary<TradingMode, boardsCode>()
         {
             { TradingMode.Futures, boardsCode.FUT }
         };
 
-        private readonly Dictionary<OrderDirection, buysell> _orderDirectionMapping = new()
+        Dictionary<OrderDirection, buysell> _orderDirectionMapping = new Dictionary<OrderDirection, buysell>()
         {
             { OrderDirection.Buy, buysell.B},
             { OrderDirection.Sell, buysell.S}
         };
 
-        protected BaseStockClient(ITransaqConnectorFactory transaqConnectorFactory)
+        public BaseStockClient(ITransaqConnectorFactory transaqConnectorFactory)
         {
-            TransaqConnectorFactory = transaqConnectorFactory;
+            _transaqConnectorFactory = transaqConnectorFactory;
         }
 
         protected abstract ITransaqConnectorRequestHandler CreateRequestHandler();
 
-        public bool Connected => RequestHandler?.InputStreamHandler.ServerStatus?.connected == "true";
+        public bool Connected => _requestHandler?.InputStreamHandler.ServerStatus?.connected == "true";
        
-        public List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> Securities => RequestHandler?.InputStreamHandler.Securities ?? new ();
+        public List<Application.Models.TransaqConnector.Ingoing.securities_ns.stock_security> Securities => _requestHandler?.InputStreamHandler.Securities ?? new ();
 
         [Obsolete]
         // todo: update this field inside StockClient on making order (in NewOrder method)
@@ -45,37 +46,48 @@ namespace AutoTrader.Infrastructure.Stock
         /// </summary>
         public bool? PositionsAreActual
         {
-            get => RequestHandler?.InputStreamHandler?.PositionsAreActual;
+            get => _requestHandler?.InputStreamHandler?.PositionsAreActual;
             set
             {
-                if (RequestHandler?.InputStreamHandler != null && value != null)
+                if (_requestHandler?.InputStreamHandler != null && value != null)
                 {
-                    RequestHandler.InputStreamHandler.PositionsAreActual = value.Value;
+                    _requestHandler.InputStreamHandler.PositionsAreActual = value.Value;
                 }
             }
         }
         
-        public string? FortsClientId => RequestHandler?.InputStreamHandler.Forts_client?.forts_acc;
+        public string? FortsClientId => _requestHandler?.InputStreamHandler.Forts_client?.forts_acc;
 
-        public double? Money => RequestHandler?.InputStreamHandler.mc_portfolio?.moneys.First(x => x.currency == "RUB").balance;        
+        public double? Money 
+        {
+            get
+            {
+                if (_requestHandler?.InputStreamHandler.mc_portfolio?.moneys.Count == 0)
+                    throw new Exception("No information about money have been loaded");
 
-        public string? Union=> RequestHandler?.InputStreamHandler.Forts_client?.union;
+                return _requestHandler?.InputStreamHandler.mc_portfolio?.moneys.First(x => x.currency == "RUB").balance;
+            }
+        }
 
-        public candlekinds? Candlekinds => RequestHandler?.InputStreamHandler.Candlekinds;
+        public string? Union=> _requestHandler?.InputStreamHandler.Forts_client?.union;
+
+        public candlekinds? Candlekinds => _requestHandler?.InputStreamHandler.Candlekinds;
+
 
         public List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>? QuotesBuy
         {
             get
             {
-                if (RequestHandler == null) return null;
+                if (_requestHandler == null) return null;
 
                 List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> quotes1;
-                quotes1 = new List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>(RequestHandler.InputStreamHandler.Quotes);
+
+                quotes1 = new List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>(_requestHandler.InputStreamHandler.Quotes);
+
                 var q = quotes1.Where(x => x.buy > 0 && x.sell == 0).OrderByDescending(x => x.price).ToList();
 
                 return q;
 
-                // todo: old implementation, remove after tests
                 //lock (_quotes)
                 //{
                 //    //var q = (from quotes in _quotes
@@ -93,15 +105,16 @@ namespace AutoTrader.Infrastructure.Stock
         {
             get
             {
-                if (RequestHandler == null) return null;
+                if (_requestHandler == null) return null;
 
                 List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote> quotes1;
-                quotes1 = new List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>(RequestHandler.InputStreamHandler.Quotes);
+
+                quotes1 = new List<Application.Models.TransaqConnector.Ingoing.quotes_ns.quote>(_requestHandler.InputStreamHandler.Quotes);
+
                 var q = quotes1.Where(x => x.sell > 0 && x.buy == 0).OrderBy(x => x.price).ToList();
 
                 return q;
 
-                // todo: old implementation, remove after tests
                 ////var q = _quotes.Where(x => x.buy > 0 && x.sell == 0).OrderBy(x => x.price).ToList();
                 //lock (_quotes)
                 //{
@@ -128,8 +141,8 @@ namespace AutoTrader.Infrastructure.Stock
 
                 lock (_bidLock)
                 {
-                    if (RequestHandler.InputStreamHandler.Quotes.Count > 0)
-                        res = RequestHandler.InputStreamHandler.Quotes.Where(x => x.buy > 0 && x.sell == 0).Max(x => x.price);
+                    if (_requestHandler.InputStreamHandler.Quotes.Count > 0)
+                        res = _requestHandler.InputStreamHandler.Quotes.Where(x => x.buy > 0 && x.sell == 0).Max(x => x.price);
                 }
 
                 return res;
@@ -145,35 +158,35 @@ namespace AutoTrader.Infrastructure.Stock
 
                 lock (_askObject)
                 {
-                    if (RequestHandler.InputStreamHandler.Quotes.Count > 0)
-                        res = RequestHandler.InputStreamHandler.Quotes.Where(x => x.sell > 0 && x.buy == 0).Min(x => x.price);
+                    if (_requestHandler.InputStreamHandler.Quotes.Count > 0)
+                        res = _requestHandler.InputStreamHandler.Quotes.Where(x => x.sell > 0 && x.buy == 0).Min(x => x.price);
                 }
 
                 return res;
             }
         }
 
-        public positions Positions => RequestHandler?.InputStreamHandler.Positions;
+        public positions Positions => _requestHandler?.InputStreamHandler.Positions;
 
-        public List<forts_position> FortsPositions => RequestHandler?.InputStreamHandler.FortsPositions ?? new List<forts_position>();
+        public List<forts_position> FortsPositions => _requestHandler?.InputStreamHandler.FortsPositions ?? new List<forts_position>();
 
-        public List<Application.Models.TransaqConnector.Ingoing.trades_ns.trade>? Trades => RequestHandler?.InputStreamHandler.Trades;
+        public List<Application.Models.TransaqConnector.Ingoing.trades_ns.trade>? Trades => _requestHandler?.InputStreamHandler.Trades;
 
-        public List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? Orders => RequestHandler?.InputStreamHandler.Orders;
+        public List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? Orders => _requestHandler?.InputStreamHandler.Orders;
 
-        public mc_portfolio? MCPortfolio => RequestHandler?.InputStreamHandler.mc_portfolio;
+        public mc_portfolio? MCPortfolio => _requestHandler?.InputStreamHandler.mc_portfolio;
 
-        public List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? OpenOrders => RequestHandler?.InputStreamHandler
+        public List<Application.Models.TransaqConnector.Ingoing.orders_ns.order>? OpenOrders => _requestHandler?.InputStreamHandler
                                                                                                                 .Orders
                                                                                                                 .Where(x => x.status == status.active || x.status == status.watching)
                                                                                                                 .ToList();
 
-        public async Task Login(string username, string password, ConnectionType connectionType = ConnectionType.Prod)
+        public async Task LoginAsync(string username, string password, ConnectionType connectionType = ConnectionType.Prod)
         {
             if (Connected)
                 throw new StockClientException(CommonErrors.AlreadyLoggedIn);
 
-            RequestHandler = CreateRequestHandler();
+            _requestHandler = CreateRequestHandler();
 
             string server;
             int port;
@@ -188,37 +201,42 @@ namespace AutoTrader.Infrastructure.Stock
                 port = 3939;
             }
 
-            var com = command.CreateConnectionCommand(username, password, server, port);
+            var cmd = command.CreateConnectionCommand(username, password, server, port);
 
             // отправляем команду подключения
-            var sendCommandResult = RequestHandler.ConnectorSendCommand(com);
+            var sendCommandResult = _requestHandler.ConnectorSendCommand(cmd);
 
             
             if (sendCommandResult.success == false)
             {
+                ResetRequestHandler();
                 throw new Exception(sendCommandResult.message);
             }
             else
             {
                 // Waiting for server_status information
                 // Or for receiving of clients (that is inderect means connection is successfull)
-                var waitServerStatus = RequestHandler.InputStreamHandler.ServerStatusUpdated.WaitOne(2*60*1000);
-                var waitPositions = RequestHandler.InputStreamHandler.PositionsLoaded.WaitOne(2*60*1000);
+                var waitServerStatus = _requestHandler.InputStreamHandler.ServerStatusUpdated.WaitOne(2*60*1000);
+                var waitPositions = _requestHandler.InputStreamHandler.PositionsLoaded.WaitOne(2*60*1000);
                 try
                 {
                     await waitServerStatus.ConfigureAwait(false);
 
                     if (!Connected)
                     {
-                        throw new StockClientException(CommonErrors.ServerConnectionError, RequestHandler.InputStreamHandler.ServerStatus?.InnerText);
+                        var ex = new StockClientException(CommonErrors.ServerConnectionError, _requestHandler.InputStreamHandler.ServerStatus?.InnerText);
+                        ResetRequestHandler();
+                        throw ex;
                     }
                 }
                 catch (TimeoutException ex)
                 {
+                    ResetRequestHandler();
                     throw new Exception("Waiting of server_status exception");
                 }
                 catch (Exception ex)
                 {
+                    ResetRequestHandler();
                     throw;
                 }
                 finally
@@ -230,25 +248,36 @@ namespace AutoTrader.Infrastructure.Stock
 
                 try
                 {
-                    await waitPositions.ConfigureAwait(false);
+                    //await waitPositions.ConfigureAwait(false);
                 }
                 catch (TimeoutException ex)
                 {
+                    ResetRequestHandler();
                     throw new StockClientException(CommonErrors.PositionsWaitingTimeout);
                 }
                 catch (Exception ex)
                 {
+                    ResetRequestHandler();
                     throw;
                 }
 
-                if (RequestHandler.InputStreamHandler.ServerStatus?.connected == "error")
+                if (_requestHandler.InputStreamHandler.ServerStatus?.connected == "error")
                 {
+                    ResetRequestHandler();
                     throw new StockClientException(CommonErrors.ServerConnectionError,
-                                                    RequestHandler.InputStreamHandler.ServerStatus.InnerText);
+                                                    _requestHandler.InputStreamHandler.ServerStatus.InnerText);
                 }
 
-                GetMCPortfolioPositions();
-                await RequestHandler.InputStreamHandler.MC_portfolioLoaded.WaitOne().ConfigureAwait(false);
+                try
+                {
+                    GetMCPortfolioPositions();
+                    await _requestHandler.InputStreamHandler.MC_portfolioLoaded.WaitOne().ConfigureAwait(false);
+                }
+                catch
+                {
+                    ResetRequestHandler();
+                    throw;
+                }
             }
         }
 
@@ -256,25 +285,34 @@ namespace AutoTrader.Infrastructure.Stock
         {
             if (!Connected) return;
 
-            var com = command.CreateDisconnectCommand();
-            var res = RequestHandler.ConnectorSendCommand(com);
+            var cmd = command.CreateDisconnectCommand();
+            var res = _requestHandler.ConnectorSendCommand(cmd);
+
             if (!res.success)
             {
                 throw new StockClientException(res.message);
             }
-            await RequestHandler.InputStreamHandler.ServerStatusUpdated.WaitOne().ConfigureAwait(false);
-            // cleaning up of resources
-            RequestHandler.Dispose();
-            RequestHandler = null;
+
+            await _requestHandler.InputStreamHandler.ServerStatusUpdated.WaitOne().ConfigureAwait(false);
+            
+            ResetRequestHandler();
+        }
+
+        private void ResetRequestHandler()
+        {
+            _requestHandler?.Dispose();
+            _requestHandler = null;
         }
 
         public void ChangePassword(string oldpass, string newpass)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
-            var com = command.CreateChangePasswordCommand(oldpass, newpass);
-            var res = RequestHandler.ConnectorSendCommand(com);
+            var cmd = command.CreateChangePasswordCommand(oldpass, newpass);
+
+            var res = _requestHandler.ConnectorSendCommand(cmd);
+
             if (!res.success)
             {
                 throw new Exception(res.message);
@@ -283,15 +321,19 @@ namespace AutoTrader.Infrastructure.Stock
 
         protected void GetMCPortfolioPositions()
         {
-            var com = command.CreateGetMCPortfolioCommand(RequestHandler.InputStreamHandler.Positions.money_position.client);
-            var res = RequestHandler.ConnectorSendCommand(com);
+            var cmd = command.CreateGetMCPortfolioCommand(_requestHandler.InputStreamHandler.Forts_client.id);
+
+            var res = _requestHandler.ConnectorSendCommand(cmd);
+
             if (!res.success)
             {
                 throw new Exception(res.message);
             }
         }
 
+
         volatile bool _disposed = false;
+
         public void Dispose()
         {
             Dispose(true);
@@ -302,7 +344,8 @@ namespace AutoTrader.Infrastructure.Stock
         {
             if (!_disposed)
             {
-                RequestHandler?.Dispose();
+                _requestHandler?.Dispose();
+
                 _disposed = true;
             }
         }
@@ -315,24 +358,25 @@ namespace AutoTrader.Infrastructure.Stock
         public void SubscribeQuotations(TradingMode tradingMode, string seccode)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             if (string.IsNullOrEmpty(seccode))
             {
                 throw new Exception("seccode is not identified");
             }
 
-            var com = command.CreateSubscribeQuotationsCommand(_tradingModeMapping[tradingMode], seccode);
-            var res = RequestHandler.ConnectorSendCommand(com);
-            // todo: check result of res
+            var cmd = command.CreateSubscribeQuotationsCommand(_tradingModeMapping[tradingMode], seccode);
+
+            var res = _requestHandler.ConnectorSendCommand(cmd);
         }
         public void SubscribeQuotes(TradingMode tradingMode, string seccode)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
-            var com = command.CreateSubscribeQuotesCommand(_tradingModeMapping[tradingMode], seccode);
-            var res = RequestHandler.ConnectorSendCommand(com);
+            var cmd = command.CreateSubscribeQuotesCommand(_tradingModeMapping[tradingMode], seccode);
+
+            var res = _requestHandler.ConnectorSendCommand(cmd);
         }
 
 
@@ -342,53 +386,56 @@ namespace AutoTrader.Infrastructure.Stock
                                                         int candlesCount = 1)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             candle res = null;
 
-            command com = command.CreateGetHistoryDataCommand(_tradingModeMapping[tradingMode], seccode, periodId, candlesCount);
+            command cmd = command.CreateGetHistoryDataCommand(_tradingModeMapping[tradingMode], seccode, periodId, candlesCount);
+
             // initialization must be before call of txml connector because response can be come fast
-            if (!RequestHandler.InputStreamHandler.CandlesLoaded.ContainsKey(seccode))
-                RequestHandler.InputStreamHandler.CandlesLoaded[seccode] = new AsyncAutoResetEvent(false);
-            result sendResult = RequestHandler.ConnectorSendCommand(com);
+            if (!_requestHandler.InputStreamHandler.CandlesLoaded.ContainsKey(seccode))
+                _requestHandler.InputStreamHandler.CandlesLoaded[seccode] = new AsyncAutoResetEvent(false);
+
+            result sendResult = _requestHandler.ConnectorSendCommand(cmd);
+
             if (sendResult.success)
             {
-                await RequestHandler.InputStreamHandler.CandlesLoaded[seccode].WaitOne().ConfigureAwait(false);
+                await _requestHandler.InputStreamHandler.CandlesLoaded[seccode].WaitOne().ConfigureAwait(false);
             }
             else
             {
                 throw new Exception(sendResult.message);
             }
 
-            return RequestHandler.InputStreamHandler.Candles[seccode].candlesValue;
+            return _requestHandler.InputStreamHandler.Candles[seccode].candlesValue;
         }
 
         public async Task<candle> GetCurrentCandle(string seccode, TradingMode tradingMode = TradingMode.Futures)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             candle res = null;
 
-            command com = new command();
-            com.id = command_id.gethistorydata;
-            com.security.board = _tradingModeMapping[tradingMode].ToString();
-            com.security.seccode = seccode;
-            com.periodValue = 1;
-            com.countValue = 1;
-            com.resetValue = true;
+            command cmd = new command();
+            cmd.id = command_id.gethistorydata;
+            cmd.security.board = _tradingModeMapping[tradingMode].ToString();
+            cmd.security.seccode = seccode;
+            cmd.periodValue = 1;
+            cmd.countValue = 1;
+            cmd.resetValue = true;
 
-            RequestHandler.InputStreamHandler.CurrentCandle = null;
-            if (!RequestHandler.InputStreamHandler.WaitForCurrentCandle.ContainsKey(seccode))
-                RequestHandler.InputStreamHandler.WaitForCurrentCandle[seccode] = new AsyncAutoResetEvent(false);
+            _requestHandler.InputStreamHandler.CurrentCandle = null;
+            if (!_requestHandler.InputStreamHandler.WaitForCurrentCandle.ContainsKey(seccode))
+                _requestHandler.InputStreamHandler.WaitForCurrentCandle[seccode] = new AsyncAutoResetEvent(false);
 
-            result sendResult = RequestHandler.ConnectorSendCommand(com);
+            result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
             if (sendResult.success)
             {
-                await RequestHandler.InputStreamHandler.WaitForCurrentCandle[seccode].WaitOne().ConfigureAwait(false);
+                await _requestHandler.InputStreamHandler.WaitForCurrentCandle[seccode].WaitOne().ConfigureAwait(false);
 
-                res = RequestHandler.InputStreamHandler.CurrentCandle[seccode];
+                res = _requestHandler.InputStreamHandler.CurrentCandle[seccode];
             }
             else
             {
@@ -401,11 +448,12 @@ namespace AutoTrader.Infrastructure.Stock
         public void CloseLimitOrder(int transactionid)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             int res = 0;
-            command com = command.CreateMoveOrderCommand(transactionid, 0, 2, 0);
-            result sendResult = RequestHandler.ConnectorSendCommand(com);
+            command cmd = command.CreateMoveOrderCommand(transactionid, 0, 2, 0);
+            result sendResult = _requestHandler.ConnectorSendCommand(cmd);
+
             if (sendResult.success)
             {
                 res = sendResult.transactionid;
@@ -419,11 +467,14 @@ namespace AutoTrader.Infrastructure.Stock
         public void CloseOrder(int transactionid)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             int res = 0;
-            command com = command.CreateCancelOrderCommand(transactionid);
-            result sendResult = RequestHandler.ConnectorSendCommand(com);
+
+            command cmd = command.CreateCancelOrderCommand(transactionid);
+
+            result sendResult = _requestHandler.ConnectorSendCommand(cmd);
+
             if (sendResult.success)
             {
                 res = sendResult.transactionid;
@@ -437,7 +488,7 @@ namespace AutoTrader.Infrastructure.Stock
         public int CreateNewOrder(TradingMode tradingMode, string seccode, OrderDirection orderDirection, bool bymarket, double price, int volume)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             int res = 0;
 
@@ -447,14 +498,17 @@ namespace AutoTrader.Infrastructure.Stock
             else
                 throw new Exception($"Tradning mode {tradingMode} is not supported");
 
-            command com = command.CreateNewOrder(FortsClientId, 
+            command cmd = command.CreateNewOrder(this.FortsClientId, 
                                                         board, 
                                                         seccode,
                                                         _orderDirectionMapping[orderDirection],
                                                         bymarket? AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.no, 
                                                         price, 
                                                         volume);
-            result sendResult = RequestHandler.ConnectorSendCommand(com);
+
+
+            result sendResult = _requestHandler.ConnectorSendCommand(cmd);
+
             if (sendResult.success)
             {
                 res = sendResult.transactionid;
@@ -477,9 +531,10 @@ namespace AutoTrader.Infrastructure.Stock
                                                     Int64 orderno = 0)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             buysell buysell = _orderDirectionMapping[orderDirection];
+
             return CreateNewStopOrder(tradingMode,
                                 seccode,
                                 orderDirection,
@@ -499,36 +554,36 @@ namespace AutoTrader.Infrastructure.Stock
                                     double correction = 0)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             int res = 0;
 
-            command com = new command();
-            com.id = command_id.newstoporder;
-            com.security = new Application.Models.TransaqConnector.Outgoing.command_ns.security();
-            com.security.board = _tradingModeMapping[tradingMode].ToString();
-            com.security.seccode = seccode;
+            command cmd = new command();
+            cmd.id = command_id.newstoporder;
+            cmd.security = new Application.Models.TransaqConnector.Outgoing.command_ns.security();
+            cmd.security.board = _tradingModeMapping[tradingMode].ToString();
+            cmd.security.seccode = seccode;
 
-            com.buysellValue = _orderDirectionMapping[orderDirection];
-            com.client = FortsClientId;
-            if (orderno != 0) com.linkedordernoValue = orderno;
+            cmd.buysellValue = _orderDirectionMapping[orderDirection];
+            cmd.client = FortsClientId;
+            if (orderno != 0) cmd.linkedordernoValue = orderno;
 
-            com.validforValue = validbefore.till_canceled;
+            cmd.validforValue = validbefore.till_canceled;
 
             //для стоп заявок все должно быть наоборот
-            com.stoploss = new stoploss();
-            com.stoploss.activationprice = SLPrice;
-            com.stoploss.bymarket = bymarket.yes;
-            com.stoploss.quantity = volume;
+            cmd.stoploss = new stoploss();
+            cmd.stoploss.activationprice = SLPrice;
+            cmd.stoploss.bymarket = bymarket.yes;
+            cmd.stoploss.quantity = volume;
 
-            com.takeprofit = new takeprofit();
-            com.takeprofit.activationprice = TPPrice;
-            if (correction != 0) com.takeprofit.correction = correction;
-            com.takeprofit.bymarket = bymarket.yes;
+            cmd.takeprofit = new takeprofit();
+            cmd.takeprofit.activationprice = TPPrice;
+            if (correction != 0) cmd.takeprofit.correction = correction;
+            cmd.takeprofit.bymarket = bymarket.yes;
             //com.takeprofit.orderprice = price - profitlimit;
-            com.takeprofit.quantity = volume;
+            cmd.takeprofit.quantity = volume;
 
-            result sendResult = RequestHandler.ConnectorSendCommand(com);
+            result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
             if (sendResult.success)
             {
@@ -551,26 +606,26 @@ namespace AutoTrader.Infrastructure.Stock
                                     int volume)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
 
             int res = 0;
 
-            command com = command.CreateNewCondOrderCommand(); ;
-            com.id = command_id.newcondorder;
-            com.security.board = _tradingModeMapping[tradingMode].ToString();
-            com.security.seccode = seccode;
-            com.buysellValue = _orderDirectionMapping[orderDirection];
-            com.client = FortsClientId;
+            command cmd = command.CreateNewCondOrderCommand(); ;
+            cmd.id = command_id.newcondorder;
+            cmd.security.board = _tradingModeMapping[tradingMode].ToString();
+            cmd.security.seccode = seccode;
+            cmd.buysellValue = _orderDirectionMapping[orderDirection];
+            cmd.client = FortsClientId;
             // параметры, которые говорят переносить заявку на следующий день
-            com.validafter = "0";
-            com.validbefore = "till_canceled";
+            cmd.validafter = "0";
+            cmd.validbefore = "till_canceled";
             /////////////////////////////////
-            com.cond_typeValue = condtype;
-            com.cond_valueValue = condvalue;
-            com.quantityValue = volume;
-            com.bymarketValue = bymarket ? AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.no;
+            cmd.cond_typeValue = condtype;
+            cmd.cond_valueValue = condvalue;
+            cmd.quantityValue = volume;
+            cmd.bymarketValue = bymarket ? AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.yes : AutoTrader.Application.Models.TransaqConnector.Outgoing.bymarket.no;
 
-            result sendResult = RequestHandler.ConnectorSendCommand(com);
+            result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
             if (sendResult.success)
             {
@@ -590,9 +645,11 @@ namespace AutoTrader.Infrastructure.Stock
         public async Task CreateNewComboOrder(ComboOrder co)
         {
             if (!Connected)
-                throw new StockClientException(CommonErrors.UnAuthorized);
+                throw new StockClientException(CommonErrors.Unauthorized);
+
             if (co.OrderDirection == null) throw new Exception("Не установлен параметр BuySell");
-            
+
+
             int tid = CreateNewOrder(co.TradingMode,
                                 co.Seccode,
                                 co.OrderDirection,
@@ -600,45 +657,46 @@ namespace AutoTrader.Infrastructure.Stock
                                 co.Price,
                                 co.Vol);
 
-            Application.Models.TransaqConnector.Ingoing.orders_ns.order? ord = null;
+            Application.Models.TransaqConnector.Ingoing.orders_ns.order? order = null;
+
             await Task.Run(async () =>
             {
-                while (ord == null) { 
+                while (order == null) { 
                     await Task.Delay(10).ConfigureAwait(false);
-                    ord = GetOrderByTransactionId(tid); 
+                    order = GetOrderByTransactionId(tid); 
                 }
 
-                if (ord.status != status.matched)
+                if (order.status != status.matched)
                 {
-                    throw new Exception($"Order {ord.orderno} is not matched. Further processing is not possible");
+                    throw new Exception($"Order {order.orderno} is not matched. Further processing is not possible");
                 }
             }).ConfigureAwait(false);
 
             // получение номера выполненного поручения
-            Application.Models.TransaqConnector.Ingoing.trades_ns.trade? tr = null;
+            Application.Models.TransaqConnector.Ingoing.trades_ns.trade? trade = null;
 
             await Task.Run(async () =>
             {
-                while (tr == null)
+                while (trade == null)
                 {
                     await Task.Delay(10).ConfigureAwait(false);
-                    tr = GetTradeByOrderNo(ord.orderno);
+                    trade = GetTradeByOrderNo(order.orderno);
                 }
             }).ConfigureAwait(false);
-            var closeOrderDirection = (co.OrderDirection == OrderDirection.Buy) 
-                                                    ? OrderDirection.Sell : 
-                                                    OrderDirection.Buy;
+
+            var closingOrderDirection = (co.OrderDirection == OrderDirection.Buy) ? OrderDirection.Sell : OrderDirection.Buy;
+
             if (co.StopLoseOrderType == StopLoseOrderType.ConditionalOrder)
             {
                 // открытие sl заявки
                 if (co.SL > 0)
                 {
-                    double slPrice = (co.OrderDirection == OrderDirection.Buy) ? tr.price - co.SL : tr.price + co.SL;
+                    double slPrice = (co.OrderDirection == OrderDirection.Buy) ? trade.price - co.SL : trade.price + co.SL;
                     var closeCondition = (co.OrderDirection == OrderDirection.Buy) ? cond_type.LastDown : cond_type.LastUp;
 
                     CreateNewConditionOrder(co.TradingMode,
                                     co.Seccode,
-                                    closeOrderDirection,
+                                    closingOrderDirection,
                                     co.ByMarket,
                                     closeCondition,
                                     slPrice,
@@ -648,8 +706,8 @@ namespace AutoTrader.Infrastructure.Stock
                 // открытие tp заявки
                 if (co.TP > 0)
                 {
-                    double tpPrice = (co.OrderDirection == OrderDirection.Buy) ? tr.price + co.TP : tr.price - co.TP;
-                    CreateNewOrder(co.TradingMode, co.Seccode, closeOrderDirection, co.ByMarket, tpPrice, co.Vol);
+                    double tpPrice = (co.OrderDirection == OrderDirection.Buy) ? trade.price + co.TP : trade.price - co.TP;
+                    CreateNewOrder(co.TradingMode, co.Seccode, closingOrderDirection, co.ByMarket, tpPrice, co.Vol);
                 }
             }
             else
@@ -659,29 +717,29 @@ namespace AutoTrader.Infrastructure.Stock
             }
         }
 
-        private Application.Models.TransaqConnector.Ingoing.orders_ns.order? GetOrderByTransactionId(int transactionid) => RequestHandler?.InputStreamHandler
+        private Application.Models.TransaqConnector.Ingoing.orders_ns.order? GetOrderByTransactionId(int transactionid) => _requestHandler?.InputStreamHandler
                                                                                                                                             .Orders
                                                                                                                                             .FirstOrDefault(x => x.transactionid == transactionid);
 
-        private Application.Models.TransaqConnector.Ingoing.trades_ns.trade? GetTradeByOrderNo(Int64 orderno) => RequestHandler?.InputStreamHandler
+        private Application.Models.TransaqConnector.Ingoing.trades_ns.trade? GetTradeByOrderNo(Int64 orderno) => _requestHandler?.InputStreamHandler
                                                                                                                                 .Trades
                                                                                                                                 .FirstOrDefault(x => x.orderno == orderno);
         
-        public async Task<List<Application.Models.TransaqConnector.Ingoing.securities_ns.security>> GetSecurities()
+        public async Task<List<Application.Models.TransaqConnector.Ingoing.securities_ns.stock_security>> GetSecurities()
         {
-            if (!Connected) throw new StockClientException(CommonErrors.UnAuthorized);
+            if (!Connected) throw new StockClientException(CommonErrors.Unauthorized);
 
-            List<Application.Models.TransaqConnector.Ingoing.securities_ns.security> res = new ();
-            command com = command.CreateGetSecurities();
+            List<Application.Models.TransaqConnector.Ingoing.securities_ns.stock_security> res = new ();
+            command cmd = command.CreateGetSecurities();
 
-            RequestHandler.InputStreamHandler.SecuritiesLoaded.Reset();
-            result sendResult = RequestHandler.ConnectorSendCommand(com);
+            _requestHandler.InputStreamHandler.SecuritiesLoaded.Reset();
+            result sendResult = _requestHandler.ConnectorSendCommand(cmd);
 
             if (sendResult.success)
             {
-                await RequestHandler.InputStreamHandler.SecuritiesLoaded.WaitOne().ConfigureAwait(false);
+                await _requestHandler.InputStreamHandler.SecuritiesLoaded.WaitOne().ConfigureAwait(false);
 
-                res = RequestHandler.InputStreamHandler.Securities.ToList();
+                res = _requestHandler.InputStreamHandler.Securities.ToList();
             }
             else
             {
@@ -694,13 +752,13 @@ namespace AutoTrader.Infrastructure.Stock
         // todo: finish implementation  of this method
         public int GetOpenPositions(string seccode)
         {
-            if (!Connected) throw new StockClientException(CommonErrors.UnAuthorized);
+            if (!Connected) throw new StockClientException(CommonErrors.Unauthorized);
 
             int res = 0;
 
             try
             {
-                var positions = RequestHandler.InputStreamHandler.Positions.forts_position.FirstOrDefault(x => x.seccode == seccode);
+                var positions = _requestHandler.InputStreamHandler.Positions.forts_position.FirstOrDefault(x => x.seccode == seccode);
 
                 res = positions.totalnet;
             }

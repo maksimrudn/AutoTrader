@@ -24,6 +24,7 @@ namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
             res.rqdelayValue = 100;
             res.session_timeoutValue = 25000;
             res.request_timeoutValue = 10000;
+            res.push_u_limits = 1;
             // todo: <push_u_limits>, <push_pos_equity>
 
             return res;
@@ -211,15 +212,14 @@ namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
 
         [XmlElement(IsNullable = false)]
         public string port { get; set; }
+        
         [XmlIgnore]
         public int? portValue 
         {
             get
             {
                 int res = 0;
-
                 if (port != null) res = int.Parse(port);
-
                 return res;
             }
             set
@@ -230,15 +230,14 @@ namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
 
         [XmlElement(IsNullable = false)]
         public string autopos { get ; set; }
+        
         [XmlIgnore]
         public bool? autoposValue
         {
             get
             {
                 bool? res = null;
-
                 if (autopos != null) res = bool.Parse(autopos);
-
                 return res;
             }
             set
@@ -505,9 +504,13 @@ namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
         }
 
 
-        //Usecredit, nosplit и bymarket должны быть заданы пустым тегом, либо отсутствовать вообще.
+        /// <summary>
+        /// Usecredit, nosplit и bymarket должны быть заданы пустым тегом, либо отсутствовать вообще.
+        /// Так как иначе будет выполнена рыночная заявка вместо лимитированной
+        /// При наличии тега bymarket, тег price игнорируется и может отсутствовать.
+        /// </summary>
         [XmlElement(IsNullable = false)]
-        public string bymarket { get; set; }  //При наличии тега bymarket, тег price игнорируется и может отсутствовать.
+        public string bymarket { get; set; }  
         [XmlIgnore]
         public bymarket? bymarketValue
         {
@@ -764,5 +767,35 @@ namespace AutoTrader.Application.Models.TransaqConnector.Outgoing
         [XmlElement(IsNullable = false)]
         public command_ns.quotes quotes { get; set; }
         #endregion
+
+        /// <summary>
+        /// Подписка на сообщение positions/united_limits Период в секундах
+        ///
+        /// Наличие элемента push_u_limits является инструкцией 
+        ///  обеспечивать для каждого юниона информирование 
+        ///     пользователя о текущих показателях Единого портфеля -
+        /// всякий раз при возникновении существенных событий 
+        ///     (изменение состояния заявок или сделок клиентов юниона), 
+        /// но не реже чем один раз в N секунд.
+        ///     Допустимыми значениями элемента push_u_limits являются 
+        ///     натуральные десятичные числа.
+        ///     Если значение элемента равно нулю 
+        ///     <push_u_limits>0</push_u_limits>, это эквивалентно 
+        /// отсутствию элемента <push_u_limits>.
+        /// </summary>
+        public int? push_u_limits { get; set; } = 10;
+        
+        /// <summary>
+        /// Период в секундах
+        /// Наличие элемента push_pos_equity является инструкцией 
+        /// раз в N секунд информировать пользователя о текущей 
+        /// стоимости позиций, передавая ему массив структур 
+        ///     <positions><sec_position>, соответствующих множеству 
+        /// удерживаемых клиентами позиций (за исключением позиций 
+        ///     FORTS).
+        /// Допустимыми значениями элемента push_pos_equity 
+        /// являются натуральные десятичные числа.
+        /// </summary>
+        public int? push_pos_equity { get; set; } = 1;
     }
 }
