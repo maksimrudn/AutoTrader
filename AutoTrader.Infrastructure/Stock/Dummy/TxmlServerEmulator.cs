@@ -96,7 +96,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
             switch (commandInfo.id)
             {
                 case command_id.connect:
-                    if (commandInfo.login == TestUsername && commandInfo.password == TestPassword)
+                    if (commandInfo.login == Constants.TestUsername && commandInfo.password == Constants.TestPassword)
                     {
                         res.success = true;
                         _serverStatus.connected = "true";
@@ -128,13 +128,13 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                     break;
 
                 case command_id.neworder:
-                    if (commandInfo.quantityValue > MaxOrderVolume)
+                    if (commandInfo.quantityValue > Constants.MaxOrderVolume)
                     {
                         res.success = false;
                         res.message = "[145]Недостаток обеспечения в сумме";
                     }
                     // limit order
-                    else if (commandInfo.bymarket == null && commandInfo.buysell == buysell.B.ToString() && commandInfo.priceValue == LimitOrderPrice)
+                    else if (commandInfo.bymarket == null && commandInfo.buysell == buysell.B.ToString() && commandInfo.priceValue == Constants.LimitOrderPrice)
                     {
                         res.success = true;
                         res.transactionid = 1;
@@ -144,7 +144,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                             transactionid = 1,
                             orderno = 1,
                             board = commandInfo.security.board,
-                            union = TestUnion,
+                            union = Constants.TestUnion,
                             seccode = commandInfo.security.seccode,
                             client = commandInfo.client,
                             quantity = commandInfo.quantityValue.Value,
@@ -183,7 +183,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                             transactionid = 1,
                             orderno = 1,
                             board = commandInfo.security.board,
-                            union = TestUnion,
+                            union = Constants.TestUnion,
                             seccode = commandInfo.security.seccode,
                             client = commandInfo.client,
                             quantity = commandInfo.quantityValue.Value,
@@ -229,7 +229,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                         {
                             _positions.forts_money = new forts_money()
                             {
-                                client = TestFortsClientId
+                                client = Constants.TestFortsClientId
                             };
                         }
                         

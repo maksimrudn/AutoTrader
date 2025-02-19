@@ -6,6 +6,8 @@ using System.Collections.Specialized;
 
 namespace AutoTrader.Infrastructure.Stock.Dummy
 {
+    // Todo: remove after refactoring of StockClient
+    [Obsolete]
     public class DummyTransaqConnectorRequestHandler : ITransaqConnectorRequestHandler
     {
         Dictionary<command_id, OrderedDictionary> _dataSequence = new()
@@ -71,7 +73,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
             switch (commandInfo.id)
             {
                 case command_id.connect:
-                    if (commandInfo.login == CorrectUsername && commandInfo.password == CorrectPassword)
+                    if (commandInfo.login == Constants.TestUsername && commandInfo.password == Constants.TestPassword)
                     {
                         res.success = true;
 
@@ -157,9 +159,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
             return res;
         }
 
-        public static string CorrectUsername { get; } = "TEST";
-        public static string CorrectPassword { get; } = "TEST";
-
+        
         public void Dispose()
         {
 

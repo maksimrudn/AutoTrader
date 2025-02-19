@@ -2,6 +2,8 @@
 
 namespace AutoTrader.Infrastructure.Stock.Dummy
 {
+    // Todo: remove after refactoring of StockClient
+    [Obsolete]
     public static class DummyStreamGenerator
     {
         static string _dummy_data_folder = @"Stock\Dummy\Data\";

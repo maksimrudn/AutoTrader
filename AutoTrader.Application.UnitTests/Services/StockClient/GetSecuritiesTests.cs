@@ -20,9 +20,8 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.LoginAsync(DummyTransaqConnectorRequestHandler.CorrectUsername, 
-                                    DummyTransaqConnectorRequestHandler.CorrectPassword, 
-                                    Domain.Models.Types.ConnectionType.Prod);
+            await stockClient.LoginAsync(Constants.TestUsername, 
+                Constants.TestPassword);
 
             var securities = await stockClient.GetSecurities();
             securities.ShouldNotBeNull();

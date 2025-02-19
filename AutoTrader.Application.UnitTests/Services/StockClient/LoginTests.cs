@@ -20,8 +20,8 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.LoginAsync(TxmlServerEmulator.TestUsername, 
-                                    TxmlServerEmulator.TestPassword);
+            await stockClient.LoginAsync(Constants.TestUsername, 
+                Constants.TestPassword);
 
             stockClient.Connected.ShouldBeTrue();
             stockClient.FortsClientId.ShouldNotBeNull()
@@ -35,8 +35,8 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.LoginAsync(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                    DummyTransaqConnectorRequestHandler.CorrectPassword);
+            await stockClient.LoginAsync(Constants.TestUsername,
+                Constants.TestPassword);
 
             stockClient.Connected.ShouldBeTrue();
             stockClient.FortsClientId.ShouldNotBeNull()
@@ -50,13 +50,13 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
 
             var exception = await Should.ThrowAsync<StockClientException>(async () =>
                                 await stockClient.LoginAsync("wrong username",
-                                                    DummyTransaqConnectorRequestHandler.CorrectPassword));
+                                    Constants.TestPassword));
 
             stockClient.Connected.ShouldBeFalse();
                         
             await Should.NotThrowAsync(async () =>
-                                await stockClient.LoginAsync(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                                        DummyTransaqConnectorRequestHandler.CorrectPassword));
+                                await stockClient.LoginAsync(Constants.TestUsername,
+                                    Constants.TestPassword));
 
             stockClient.Connected.ShouldBeTrue();
             stockClient.FortsClientId.ShouldNotBeNull()
@@ -69,12 +69,12 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.LoginAsync(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                        DummyTransaqConnectorRequestHandler.CorrectPassword);
+            await stockClient.LoginAsync(Constants.TestUsername,
+                Constants.TestPassword);
 
             var exception = await Should.ThrowAsync<StockClientException>(async () =>
-                                await stockClient.LoginAsync(DummyTransaqConnectorRequestHandler.CorrectUsername,
-                                                        DummyTransaqConnectorRequestHandler.CorrectPassword));
+                                await stockClient.LoginAsync(Constants.TestUsername,
+                                    Constants.TestPassword));
 
             exception.ErrorCode.ShouldBeEquivalentTo(CommonErrors.AlreadyLoggedInCode);
         }
@@ -86,7 +86,7 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
 
             var exception = await Should.ThrowAsync<StockClientException>(async () =>
                                 await stockClient.LoginAsync("wrong username",
-                                                    DummyTransaqConnectorRequestHandler.CorrectPassword));
+                                    Constants.TestPassword));
             stockClient.Connected.ShouldBeFalse();
 
             exception.ErrorCode.ShouldBeEquivalentTo(CommonErrors.ServerConnectionErrorCode);
@@ -97,8 +97,8 @@ namespace AutoTrader.Application.UnitTests.Services.StockClient
         {
             var stockClient = new StockClientMaster(_factory);
 
-            await stockClient.LoginAsync(DummyTransaqConnectorRequestHandler.CorrectUsername, 
-                                    DummyTransaqConnectorRequestHandler.CorrectPassword);
+            await stockClient.LoginAsync(Constants.TestUsername, 
+                Constants.TestPassword);
 
             stockClient.FortsClientId.ShouldNotBeNullOrEmpty();
             stockClient.Connected.ShouldBeTrue();

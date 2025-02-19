@@ -9,37 +9,29 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
 {
     public partial class TxmlServerEmulator
     {
-        public const string TestUsername = "TEST";
-        public const string TestPassword = "TEST";
-        public const string TestFortsClientId = "712asd";
-        public const string TestUnion = "432143RGMIM";
-        public const string TestMarket1Client = "7GASD/7GASD";
-        public const int TestInitialSaldoBalance = 30_000;
-        public const int DefaultGO = 15_000;
-        public const int MaxOrderVolume = 10;
-        public const int LimitOrderPrice = 95000;
+
         
 
         private readonly List<client> _clients = new List<client>()
         {
             new client()
             {
-                id = TestFortsClientId,
+                id = Constants.TestFortsClientId,
                 remove = false,
                 market = 4, // 4 - forts, futures
                 currency = "RUB",
                 type = "spot",
-                union = TestUnion,
-                forts_acc = TestFortsClientId
+                union = Constants.TestUnion,
+                forts_acc = Constants.TestFortsClientId
             },
             new client()
             {
-                id = TestMarket1Client,
+                id = Constants.TestMarket1Client,
                 remove = false,
                 market = 1,
                 currency = "RUB",
                 type = "leverage",
-                union = TestUnion,
+                union = Constants.TestUnion,
             },
             new client()
             {
@@ -48,7 +40,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                 market = 15,
                 currency = "RUB",
                 type = "leverage",
-                union = TestUnion,
+                union = Constants.TestUnion,
             },
             new client()
             {
@@ -57,7 +49,7 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                 market = 7,
                 currency = "USD",
                 type = "leverage",
-                union = TestUnion,
+                union = Constants.TestUnion,
             },
         };
         
@@ -77,33 +69,33 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
             money_position = new money_position()
             {
                 currency = "RUB",
-                client = TestMarket1Client,
-                union = TestUnion,
+                client = Constants.TestMarket1Client,
+                union = Constants.TestUnion,
                 markets = new List<market>() {new market() {id = 1,}},
                 asset = "FOND_MICEX",
                 shortname = "Деньги КЦБ ММВБ (RUR)",
-                saldo = TestInitialSaldoBalance,
-                saldoin = TestInitialSaldoBalance
+                saldo = Constants.TestInitialSaldoBalance,
+                saldoin = Constants.TestInitialSaldoBalance
             },
             forts_position =  new List<forts_position>()
         };
 
         private readonly mc_portfolio _mcPortfolio = new mc_portfolio()
         {
-            union = TestUnion,
-            client = TestMarket1Client,
-            open_equity = TestInitialSaldoBalance,
-            cover = TestInitialSaldoBalance,
+            union = Constants.TestUnion,
+            client = Constants.TestMarket1Client,
+            open_equity = Constants.TestInitialSaldoBalance,
+            cover = Constants.TestInitialSaldoBalance,
             portfolio_currency = new List<portfolio_currency>()
             {
                 new portfolio_currency()
                 {
                     currency = "RUB",
                     cross_rate = 1,
-                    open_balance = TestInitialSaldoBalance,
-                    equity = TestInitialSaldoBalance,
-                    balance = TestInitialSaldoBalance,
-                    cover = TestInitialSaldoBalance
+                    open_balance = Constants.TestInitialSaldoBalance,
+                    equity = Constants.TestInitialSaldoBalance,
+                    balance = Constants.TestInitialSaldoBalance,
+                    cover = Constants.TestInitialSaldoBalance
                 }
             },
             moneys = new List<money>()
@@ -112,14 +104,14 @@ namespace AutoTrader.Infrastructure.Stock.Dummy
                 {
                     name = "Фондовый рынок МБ",
                     currency = "RUB",
-                    open_balance = TestInitialSaldoBalance,
-                    cover = TestInitialSaldoBalance,
+                    open_balance = Constants.TestInitialSaldoBalance,
+                    cover = Constants.TestInitialSaldoBalance,
                     value_parts = new List<value_part>()
                     {
                         new value_part()
                         {
-                            open_balance = TestInitialSaldoBalance,
-                            balance = TestInitialSaldoBalance,
+                            open_balance = Constants.TestInitialSaldoBalance,
+                            balance = Constants.TestInitialSaldoBalance,
                         }
                     }
                 }
